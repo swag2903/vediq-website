@@ -187,181 +187,152 @@
   <!-- ========================================================================= -->
   <!-- 1. AUTHENTICATION VIEW (REAL LOGIN / REGISTRATION ENGINE) -->
   <!-- ========================================================================= -->
-  <main id="view-auth" class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-16 flex items-center justify-center">
+  <main id="view-auth" class="flex-1 w-full px-4 sm:px-6 py-10 sm:py-16 flex flex-col items-center justify-center">
     
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center w-full max-w-5xl">
+    <!-- GitHub-Style Brand Header (Image 2) -->
+    <div class="text-center mb-6 space-y-2.5">
+      <a href="index.html" class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-brand-ink text-brand-gold shadow-md hover:scale-105 transition" title="VedIQ Academy">
+        <svg class="w-6 h-6 text-brand-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </a>
+      <h1 id="authMainTitle" class="text-2xl sm:text-3xl font-light text-brand-ink tracking-tight font-display">
+        Sign in to VedIQ Academy
+      </h1>
+      <p class="text-xs text-brand-muted">Bharatiya Integral Gurukul • Parent Progress Portal</p>
+    </div>
+
+    <!-- Main Card Container (Centered, matching GitHub Image 2) -->
+    <div class="w-full max-w-sm space-y-4">
       
-      <!-- Left Column: Trust & Information -->
-      <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-brand-ochre border border-amber-200 text-xs font-bold uppercase tracking-wider">
-          <span class="w-2 h-2 rounded-full bg-brand-ochre animate-pulse"></span>
-          <span>Official Gurukul Student Portal</span>
-        </div>
-
-        <h1 class="text-3xl sm:text-5xl font-light text-brand-ink tracking-tight font-display leading-tight">
-          Clear, daily visibility into your child's <span class="font-bold text-brand-ochre">focus, habits & character</span>.
-        </h1>
-
-        <p class="text-xs sm:text-sm text-brand-muted leading-relaxed max-w-lg mx-auto lg:mx-0">
-          Enter with your Google account or registered WhatsApp number to track daily 1-hour Gurukul sadhana, Tratak focus stopwatch recordings, Vedic math accuracy, and downloadable term report cards.
-        </p>
-
-        <!-- 3 Pillars Grid -->
-        <div class="grid grid-cols-3 gap-3 pt-2 max-w-md mx-auto lg:mx-0 text-left">
-          <div class="p-3.5 bg-white rounded-2xl border border-brand-border shadow-sm">
-            <div class="text-xl">🕯️</div>
-            <div class="text-xs font-bold text-brand-ink mt-1">Tratak Log</div>
-            <div class="text-[10px] text-brand-muted">Eye steadiness tracked</div>
+      <!-- Card Box -->
+      <div class="bg-white rounded-3xl border border-brand-border shadow-xl p-6 sm:p-7 space-y-4">
+        
+        <!-- ================= FORM A: SIGN IN (GitHub Style Image 2) ================= -->
+        <form id="formLogin" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+          
+          <!-- Username / Email / Phone input -->
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1.5">Username, phone or email address</label>
+            <input type="text" id="loginIdentifier" required placeholder="e.g. 9766772819 or parent@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
           </div>
-          <div class="p-3.5 bg-white rounded-2xl border border-brand-border shadow-sm">
-            <div class="text-xl">🔢</div>
-            <div class="text-xs font-bold text-brand-ink mt-1">Speed Math</div>
-            <div class="text-[10px] text-brand-muted">Equations per min</div>
+
+          <!-- Password / OTP input with right-aligned link -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-semibold text-brand-ink">Password or PIN</label>
+              <button type="button" onclick="triggerOtpSignIn()" class="text-[11px] text-brand-ochre font-semibold hover:underline">
+                Sign in with OTP?
+              </button>
+            </div>
+            <input type="password" id="loginPassword" placeholder="Enter password or leave blank for OTP" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
           </div>
-          <div class="p-3.5 bg-white rounded-2xl border border-brand-border shadow-sm">
-            <div class="text-xl">📜</div>
-            <div class="text-xs font-bold text-brand-ink mt-1">Report Card</div>
-            <div class="text-[10px] text-brand-muted">Certified PDF export</div>
+
+          <!-- Primary Sign In Button (GitHub green -> Emerald) -->
+          <button type="submit" id="btnMainSignIn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+            <span>Sign in</span>
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+
+          <!-- Divider: or -->
+          <div class="flex items-center gap-3 my-2">
+            <div class="h-px bg-brand-border flex-1"></div>
+            <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or</span>
+            <div class="h-px bg-brand-border flex-1"></div>
           </div>
-        </div>
+
+          <!-- Continue with Google Button (Triggers Image 1 Google Account Chooser!) -->
+          <button type="button" onclick="startGoogleAuth()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span class="group-hover:text-brand-ochre transition">Continue with Google</span>
+          </button>
+
+          <!-- Continue with WhatsApp Mobile OTP Button -->
+          <button type="button" onclick="triggerOtpSignIn()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-emerald-50 hover:border-emerald-300 text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group">
+            <svg class="w-4 h-4 fill-current text-emerald-600 shrink-0" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            <span class="group-hover:text-emerald-700 transition">Continue with WhatsApp OTP</span>
+          </button>
+
+        </form>
+
+        <!-- ================= FORM B: REGISTRATION (ENROLL NEW CHILD) ================= -->
+        <form id="formRegister" onsubmit="executeParentRegistration(event)" class="hidden space-y-3.5">
+          <div class="text-center pb-2">
+            <h3 class="text-sm font-bold text-brand-ink">Enroll Your Child in Gurukul</h3>
+            <p class="text-[11px] text-brand-muted">Instant access to daily ritual tracker & reports</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Parent's Full Name (Mom / Dad)</label>
+            <input type="text" id="regParentName" required placeholder="e.g. Mr. Rajesh Sharma" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Name</label>
+              <input type="text" id="regChildName" required placeholder="e.g. Aarav Sharma" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Age Cohort</label>
+              <select id="regChildAge" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre">
+                <option value="Ages 5-7 • Foundation">Ages 5–7 (Foundation)</option>
+                <option value="Ages 8-11 • Pravesh" selected>Ages 8–11 (Pravesh)</option>
+                <option value="Ages 12-15 • Daksha">Ages 12–15 (Daksha)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">WhatsApp Mobile Number</label>
+            <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream/60 overflow-hidden focus-within:border-brand-ochre">
+              <span class="px-2.5 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
+              <input type="tel" id="regPhone" required maxlength="10" placeholder="97667 72819" class="w-full px-2.5 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Email Address</label>
+            <input type="email" id="regEmail" required placeholder="parent@gmail.com" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+          </div>
+
+          <button type="submit" class="w-full mt-2 py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+            <span>Register Child & Enter Gurukul</span>
+            <span aria-hidden="true">&rarr;</span>
+          </button>
+
+          <div class="text-center pt-1">
+            <button type="button" onclick="toggleAuthMode('login')" class="text-[11px] text-brand-muted hover:text-brand-ink">
+              Already registered? <strong class="text-brand-ochre">Sign in here</strong>
+            </button>
+          </div>
+        </form>
+
       </div>
 
-      <!-- Right Column: Clean Authentication Form -->
-      <div class="lg:col-span-6 w-full max-w-md mx-auto">
-        <div class="bg-white rounded-3xl border border-brand-border shadow-xl overflow-hidden p-6 sm:p-8">
-          
-          <!-- Auth Switcher Tabs -->
-          <div class="flex border-b border-brand-border mb-5">
-            <button type="button" onclick="switchAuthTab('login')" id="tabBtnLogin" class="auth-tab active flex-1 pb-3 text-center text-xs font-bold transition">
-              Parent Sign-In
-            </button>
-            <button type="button" onclick="switchAuthTab('register')" id="tabBtnRegister" class="auth-tab flex-1 pb-3 text-center text-xs font-semibold text-brand-muted transition">
-              Enroll New Child
-            </button>
-          </div>
+      <!-- Subcard / Create Account Box (GitHub Style Image 2) -->
+      <div id="subcardBox" class="bg-white rounded-2xl border border-brand-border p-4 text-center text-xs text-brand-ink shadow-xs">
+        <span>New to VedIQ Academy? </span>
+        <button type="button" onclick="toggleAuthMode('register')" class="text-brand-ochre font-bold hover:underline">
+          Create an account / Enroll Child
+        </button>
+      </div>
 
-          <!-- ================= SECTION A: MULTI-OPTION LOGIN ================= -->
-          <div id="loginSection" class="space-y-4">
-
-            <!-- Detected Account on This Device (GitHub / Google One-Tap Card) -->
-            <div id="deviceAccountCard" class="p-3 bg-brand-cream/80 border border-brand-ochre/30 rounded-2xl flex items-center justify-between gap-3 shadow-xs transition hover:border-brand-ochre">
-              <div class="flex items-center gap-3 overflow-hidden text-left">
-                <div id="deviceAvatar" class="w-10 h-10 rounded-2xl bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
-                  RS
-                </div>
-                <div class="truncate">
-                  <div class="flex items-center gap-1.5">
-                    <span id="deviceName" class="text-xs font-bold text-brand-ink truncate">Mr. Rajesh Sharma</span>
-                    <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold shrink-0">Saved on Device</span>
-                  </div>
-                  <div id="deviceDetails" class="text-[10px] text-brand-muted truncate">Child: Aarav Sharma • +91 97667 72819</div>
-                </div>
-              </div>
-              <button type="button" onclick="triggerDeviceAccountLogin()" class="shrink-0 px-3 py-2 bg-brand-ochre hover:bg-brand-ochreHover text-white text-[11px] font-bold rounded-xl shadow-xs transition flex items-center gap-1">
-                <span>Continue</span>
-                <span aria-hidden="true">&rarr;</span>
-              </button>
-            </div>
-
-            <!-- 1-Click Google Sign-In Button -->
-            <button type="button" onclick="startGoogleAuth()" class="w-full py-3 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-3 shadow-sm group">
-              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-              </svg>
-              <span class="group-hover:text-brand-ochre transition">Continue with Google Account</span>
-            </button>
-
-            <!-- Divider -->
-            <div class="flex items-center gap-3 my-2">
-              <div class="h-px bg-brand-border flex-1"></div>
-              <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or sign in with otp</span>
-              <div class="h-px bg-brand-border flex-1"></div>
-            </div>
-
-            <!-- GitHub / Modern 2FA Method Selector Pills -->
-            <div class="grid grid-cols-3 gap-1.5 p-1 bg-brand-subtle rounded-xl border border-brand-border">
-              <button type="button" onclick="selectLoginMethod('phone')" id="pillMethodPhone" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition">
-                📱 WhatsApp
-              </button>
-              <button type="button" onclick="selectLoginMethod('email')" id="pillMethodEmail" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink transition">
-                ✉️ Email OTP
-              </button>
-              <button type="button" onclick="selectLoginMethod('id')" id="pillMethodId" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink transition">
-                🆔 Student ID
-              </button>
-            </div>
-
-            <!-- Main Input Form for OTP Trigger -->
-            <form id="formLogin" onsubmit="handleLoginSubmit(event)" class="space-y-3 pt-1">
-              <div>
-                <label id="loginMethodLabel" class="block text-xs font-bold text-brand-ink mb-1.5">Registered WhatsApp Number</label>
-                <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream overflow-hidden focus-within:border-brand-ochre transition">
-                  <span id="loginPrefix" class="px-3 py-2.5 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
-                  <input type="text" id="loginIdentifier" required placeholder="97667 72819" class="w-full px-3 py-2.5 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
-                </div>
-                <p id="loginHelperText" class="text-[10px] text-brand-muted mt-1">We'll send an instant 6-digit OTP code to verify your phone.</p>
-              </div>
-
-              <button type="submit" id="btnLoginSubmit" class="w-full py-3.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
-                <span id="btnLoginSubmitText">Send 6-Digit OTP</span>
-                <span aria-hidden="true">&rarr;</span>
-              </button>
-            </form>
-
-          </div>
-
-          <!-- ================= SECTION B: REGISTRATION ================= -->
-          <form id="formRegister" onsubmit="executeParentRegistration(event)" class="hidden space-y-3.5">
-            <div>
-              <label class="block text-xs font-bold text-brand-ink mb-1">Parent's Full Name (Mom / Dad)</label>
-              <input type="text" id="regParentName" required placeholder="e.g. Mr. Rajesh Sharma" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
-            </div>
-
-            <div class="grid grid-cols-2 gap-2.5">
-              <div>
-                <label class="block text-xs font-bold text-brand-ink mb-1">Child's Name</label>
-                <input type="text" id="regChildName" required placeholder="e.g. Aarav Sharma" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-brand-ink mb-1">Child's Grade / Cohort</label>
-                <select id="regChildAge" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre">
-                  <option value="Ages 5-7 • Foundation">Ages 5–7 (Foundation)</option>
-                  <option value="Ages 8-11 • Pravesh" selected>Ages 8–11 (Pravesh)</option>
-                  <option value="Ages 12-15 • Daksha">Ages 12–15 (Daksha)</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-brand-ink mb-1">WhatsApp Mobile Number</label>
-              <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream overflow-hidden focus-within:border-brand-ochre">
-                <span class="px-3 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
-                <input type="tel" id="regPhone" required maxlength="10" placeholder="97667 72819" class="w-full px-3 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-brand-ink mb-1">Email Address (For Official Reports)</label>
-              <input type="email" id="regEmail" required placeholder="parent@gmail.com" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
-            </div>
-
-            <button type="submit" class="w-full mt-2 py-3.5 bg-brand-ink hover:bg-brand-ochre text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
-              <span>Register Child & Enter Gurukul</span>
-              <span aria-hidden="true">&rarr;</span>
-            </button>
-          </form>
-
-          <!-- Direct Admissions Contact Footer -->
-          <div class="mt-5 pt-4 border-t border-brand-border text-center text-[11px] text-brand-muted">
-            Need admission guidance? 
-            <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20registration%20help." target="_blank" class="text-brand-ochre font-bold hover:underline">
-              WhatsApp Mr. Atish Gulhane (+91 83903 32500)
-            </a>
-          </div>
-
+      <!-- Direct Admissions Help Footer -->
+      <div class="text-center text-[11px] text-brand-muted space-y-1">
+        <div>
+          Need admission guidance? 
+          <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20portal%20login%20help." target="_blank" class="text-brand-ochre font-bold hover:underline">
+            WhatsApp Mr. Atish (+91 83903 32500)
+          </a>
+        </div>
+        <div class="text-slate-400">
+          Head Master Mentor: Dr. Ujwal Vyas (+91 97667 72819)
         </div>
       </div>
 
@@ -836,30 +807,86 @@
 
   </div>
 
-  <!-- Google Account Chooser Modal -->
-  <div id="googleAccountPickerModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-brand-border shadow-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-brand-border">
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5" viewBox="0 0 24 24">
+  <!-- ========================================================================= -->
+  <!-- GOOGLE ACCOUNT CHOOSER MODAL (Exact Layout of accounts.google.com as shown in Image 1) -->
+  <!-- ========================================================================= -->
+  <div id="googleAccountPickerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-[#1f1f1f] text-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden animate-fadeIn">
+      
+      <!-- Top Google Bar -->
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+        <div class="flex items-center gap-2.5">
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
-          <span class="text-xs font-bold text-brand-ink">Choose a Google Account</span>
+          <span class="text-sm font-medium text-slate-200">Sign in with Google</span>
         </div>
-        <button onclick="closeGoogleModal()" class="text-brand-muted hover:text-brand-ink text-xs font-bold">✕</button>
-      </div>
-      <p class="text-xs text-brand-muted">Select an account to sign in to <strong class="text-brand-ink">VedIQ Academy</strong>:</p>
-
-      <div id="googleAccountsList" class="space-y-2">
-        <!-- Rendered dynamically from current user / device -->
+        <button type="button" onclick="closeGoogleModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-bold flex items-center justify-center transition">✕</button>
       </div>
 
-      <button onclick="addNewGoogleAccountPrompt()" class="w-full py-2.5 rounded-xl border border-dashed border-brand-border text-xs font-semibold text-brand-muted hover:text-brand-ink hover:border-brand-ochre transition text-center">
-        + Use another Google account
-      </button>
+      <!-- Two-Column Layout (Matching Image 1) -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Side: App Identity & Choose an account heading -->
+        <div class="md:col-span-5 space-y-4">
+          <div class="w-12 h-12 rounded-2xl bg-brand-ink text-brand-gold flex items-center justify-center font-display font-bold text-xl border border-white/10 shadow-lg">
+            <svg class="w-6 h-6 text-brand-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-light text-white font-sans">Choose an account</h2>
+            <p class="text-sm text-slate-400 mt-2">
+              to continue to <strong class="text-amber-400 font-semibold">VedIQ Academy</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Side: Account Selection List -->
+        <div class="md:col-span-7 space-y-3">
+          
+          <div id="googleAccountsList" class="space-y-1 divide-y divide-white/10">
+            <!-- Dynamically populated with detected accounts (e.g. SATVIK BHUTADA, Mr. Rajesh Sharma) -->
+          </div>
+
+          <!-- Use Another Account Row (Matching Image 1) -->
+          <button type="button" onclick="addNewGoogleAccountPrompt()" class="w-full p-3.5 rounded-2xl hover:bg-white/5 transition flex items-center gap-3.5 text-left group">
+            <div class="w-10 h-10 rounded-full border border-white/20 text-slate-300 flex items-center justify-center text-sm shrink-0 group-hover:border-white/40">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            </div>
+            <div>
+              <div class="text-sm font-medium text-white group-hover:text-amber-400 transition">Use another account</div>
+            </div>
+          </button>
+
+          <!-- Disclaimer Text (Matching Image 1) -->
+          <div class="pt-4 text-[11px] text-slate-400 leading-relaxed border-t border-white/10">
+            Before using this app, you can review VedIQ Academy's 
+            <a href="#plans" class="text-blue-400 hover:underline">Privacy Policy</a> and 
+            <a href="#plans" class="text-blue-400 hover:underline">Terms of Service</a>.
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar (Matching Image 1) -->
+      <div class="mt-8 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <div class="flex items-center gap-1 cursor-pointer hover:text-white">
+          <span>English (United States)</span>
+          <span>▾</span>
+        </div>
+        <div class="flex items-center gap-5">
+          <a href="#" class="hover:text-white transition">Help</a>
+          <a href="#" class="hover:text-white transition">Privacy</a>
+          <a href="#" class="hover:text-white transition">Terms</a>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1055,148 +1082,71 @@
 
     let activeStudent = null;
 
-    // Switch between Login and Registration tabs
-    function switchAuthTab(type) {
-      const btnLogin = document.getElementById('tabBtnLogin');
-      const btnRegister = document.getElementById('tabBtnRegister');
-      const loginSection = document.getElementById('loginSection');
+    // Toggle between Sign In mode and Registration mode (GitHub style)
+    function toggleAuthMode(mode) {
+      const formLogin = document.getElementById('formLogin');
       const formRegister = document.getElementById('formRegister');
+      const subcardBox = document.getElementById('subcardBox');
+      const authTitle = document.getElementById('authMainTitle');
 
-      if (type === 'login') {
-        btnLogin.className = "auth-tab active flex-1 pb-3 text-center text-xs font-bold transition";
-        btnRegister.className = "auth-tab flex-1 pb-3 text-center text-xs font-semibold text-brand-muted transition";
-        if (loginSection) loginSection.classList.remove('hidden');
-        if (formRegister) formRegister.classList.add('hidden');
-      } else {
-        btnRegister.className = "auth-tab active flex-1 pb-3 text-center text-xs font-bold transition";
-        btnLogin.className = "auth-tab flex-1 pb-3 text-center text-xs font-semibold text-brand-muted transition";
+      if (mode === 'register') {
+        if (formLogin) formLogin.classList.add('hidden');
         if (formRegister) formRegister.classList.remove('hidden');
-        if (loginSection) loginSection.classList.add('hidden');
-      }
-    }
-
-    // Render Detected Device Account (GitHub / Google One-Tap Card)
-    function renderDeviceAccountCard() {
-      const db = getStudentDatabase();
-      const card = document.getElementById('deviceAccountCard');
-      if (!card) return;
-
-      const savedSession = localStorage.getItem('vediq_current_session');
-      let current = null;
-      if (savedSession) {
-        try { current = JSON.parse(savedSession); } catch(e){}
-      }
-      if (!current && db.length > 0) {
-        current = db[0];
-      }
-
-      if (current) {
-        card.classList.remove('hidden');
-        const initials = (current.parentName || "Parent").split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() || "PA";
-        const avatar = document.getElementById('deviceAvatar');
-        if (avatar) avatar.innerText = initials;
-        const nameEl = document.getElementById('deviceName');
-        if (nameEl) nameEl.innerText = current.parentName;
-        const detailsEl = document.getElementById('deviceDetails');
-        if (detailsEl) detailsEl.innerText = `Child: ${current.childName} • +91 ${current.phone}`;
-        card.dataset.phone = current.phone;
-        card.dataset.email = current.email;
-        card.dataset.child = current.childName;
-        card.dataset.parent = current.parentName;
+        if (subcardBox) subcardBox.classList.add('hidden');
+        if (authTitle) authTitle.innerText = "Enroll in VedIQ Gurukul";
       } else {
-        card.classList.add('hidden');
+        if (formLogin) formLogin.classList.remove('hidden');
+        if (formRegister) formRegister.classList.add('hidden');
+        if (subcardBox) subcardBox.classList.remove('hidden');
+        if (authTitle) authTitle.innerText = "Sign in to VedIQ Academy";
       }
     }
 
-    function triggerDeviceAccountLogin() {
-      const card = document.getElementById('deviceAccountCard');
-      const phone = (card && card.dataset.phone) ? card.dataset.phone : "9766772819";
-      const email = (card && card.dataset.email) ? card.dataset.email : "parent@gmail.com";
-      requestOtpFlow({
-        recipient: phone,
-        displayRecipient: `+91 ${phone} (${email})`,
-        targetIdentifier: phone,
-        type: 'device'
-      });
-    }
-
-    // Switch Login Method (WhatsApp Phone OTP, Email OTP, Student ID)
-    let currentLoginMethod = 'phone';
-    function selectLoginMethod(method) {
-      currentLoginMethod = method;
-      const pillPhone = document.getElementById('pillMethodPhone');
-      const pillEmail = document.getElementById('pillMethodEmail');
-      const pillId = document.getElementById('pillMethodId');
-      const label = document.getElementById('loginMethodLabel');
-      const prefix = document.getElementById('loginPrefix');
-      const input = document.getElementById('loginIdentifier');
-      const helper = document.getElementById('loginHelperText');
-      const btnText = document.getElementById('btnLoginSubmitText');
-
-      [pillPhone, pillEmail, pillId].forEach(p => {
-        if (p) p.className = "py-1.5 px-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink transition";
-      });
-
-      const db = getStudentDatabase();
-      const sample = db.length > 0 ? db[0] : DEFAULT_STUDENT;
-
-      if (method === 'phone') {
-        if (pillPhone) pillPhone.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition";
-        if (label) label.innerText = "Registered WhatsApp Number";
-        if (prefix) { prefix.innerText = "+91"; prefix.classList.remove('hidden'); }
-        if (input) { input.type = "tel"; input.placeholder = "97667 72819"; input.value = sample.phone || ""; }
-        if (helper) helper.innerText = "We'll send an instant 6-digit OTP code to verify your phone.";
-        if (btnText) btnText.innerText = "Send 6-Digit OTP";
-      } else if (method === 'email') {
-        if (pillEmail) pillEmail.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition";
-        if (label) label.innerText = "Parent Email Address";
-        if (prefix) { prefix.innerText = "✉️"; prefix.classList.remove('hidden'); }
-        if (input) { input.type = "email"; input.placeholder = "parent@gmail.com"; input.value = sample.email || ""; }
-        if (helper) helper.innerText = "We'll send a 6-digit verification code to your email inbox.";
-        if (btnText) btnText.innerText = "Send Email OTP";
-      } else if (method === 'id') {
-        if (pillId) pillId.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition";
-        if (label) label.innerText = "Child's Student ID";
-        if (prefix) { prefix.innerText = "ID"; prefix.classList.remove('hidden'); }
-        if (input) { input.type = "text"; input.placeholder = "VED-2026-108"; input.value = sample.studentId || ""; }
-        if (helper) helper.innerText = "Direct access via registered Gurukul student roll number.";
-        if (btnText) btnText.innerText = "Access Child Portal";
-      }
-    }
-
-    // Google Sign-In Flow
+    // Google Sign-In Flow (Exact Layout of Image 1 accounts.google.com)
     function startGoogleAuth() {
       const db = getStudentDatabase();
       const accountsList = document.getElementById('googleAccountsList');
       accountsList.innerHTML = '';
 
-      // Collect known accounts from db or defaults
+      // Exact detected accounts on user device (including SATVIK BHUTADA from screenshot Image 1)
       const accounts = [
-        { name: db[0].parentName, email: db[0].email, child: db[0].childName },
-        { name: "Pankaj Sharma", email: "pankaj.sharma@gmail.com", child: "Aarav Sharma" }
+        {
+          name: "SATVIK BHUTADA",
+          email: "sc2023cp00080@dmiher.edu.in",
+          child: "Aarav Bhutada",
+          avatarBg: "bg-purple-700",
+          initial: "S",
+          status: "Signed out"
+        },
+        {
+          name: db[0].parentName || "Mr. Rajesh Sharma",
+          email: db[0].email || "parent@gmail.com",
+          child: db[0].childName || "Aarav Sharma",
+          avatarBg: "bg-amber-600",
+          initial: (db[0].parentName || "R").charAt(0),
+          status: "Active"
+        }
       ];
 
       accounts.forEach(acc => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = "w-full p-3 rounded-2xl hover:bg-brand-cream border border-brand-border transition flex items-center gap-3 text-left";
+        btn.className = "w-full p-3.5 rounded-2xl hover:bg-white/5 transition flex items-center justify-between gap-3 text-left group";
         btn.onclick = () => {
           closeGoogleModal();
-          requestOtpFlow({
-            recipient: acc.email,
-            displayRecipient: acc.email,
-            targetIdentifier: acc.email,
-            type: 'google'
-          });
+          authenticateViaGoogle(acc.name, acc.email, acc.child);
         };
         btn.innerHTML = `
-          <div class="w-9 h-9 rounded-full bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-sm shrink-0">
-            ${acc.name.charAt(0)}
+          <div class="flex items-center gap-3.5 overflow-hidden">
+            <div class="w-10 h-10 rounded-full ${acc.avatarBg} text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
+              ${acc.initial}
+            </div>
+            <div class="truncate">
+              <div class="text-sm font-medium text-white truncate group-hover:text-amber-400 transition">${acc.name}</div>
+              <div class="text-xs text-slate-400 truncate">${acc.email}</div>
+            </div>
           </div>
-          <div class="truncate">
-            <div class="text-xs font-bold text-brand-ink truncate">${acc.name}</div>
-            <div class="text-[11px] text-brand-muted truncate">${acc.email} • Child: ${acc.child}</div>
-          </div>
+          <span class="text-xs text-slate-400 shrink-0 font-normal">${acc.status}</span>
         `;
         accountsList.appendChild(btn);
       });
@@ -1214,37 +1164,60 @@
       const email = prompt("Enter your Google Account email address:");
       if (!email) return;
       closeGoogleModal();
-      requestOtpFlow({
-        recipient: email,
-        displayRecipient: email,
-        targetIdentifier: email,
-        type: 'google'
-      });
+      authenticateViaGoogle("Parent (" + email.split('@')[0] + ")", email, "Gurukul Student");
     }
 
-    // Handle Login Form Submit
+    function authenticateViaGoogle(parentName, email, childName) {
+      closeGoogleModal();
+      const db = getStudentDatabase();
+      let match = db.find(s => s.email.toLowerCase() === email.toLowerCase());
+
+      if (!match) {
+        match = {
+          parentName: parentName,
+          childName: childName || "Gurukul Student",
+          childGrade: "Ages 8-11 • Pravesh",
+          batch: "Daily 5:00 PM – 6:00 PM IST",
+          phone: "9766772819",
+          email: email,
+          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+          focusScore: "88",
+          streak: "18",
+          habits: [true, true, true, false]
+        };
+        saveStudentToDatabase(match);
+      }
+
+      loadDashboardForStudent(match);
+    }
+
+    // Handle Login Form Submit (GitHub style Image 2)
     function handleLoginSubmit(e) {
       e.preventDefault();
       const identifier = document.getElementById('loginIdentifier').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
       if (!identifier) return;
 
-      if (currentLoginMethod === 'id') {
+      if (password) {
         executeDirectLogin(identifier);
-      } else if (currentLoginMethod === 'email') {
-        requestOtpFlow({
-          recipient: identifier,
-          displayRecipient: identifier,
-          targetIdentifier: identifier,
-          type: 'email'
-        });
       } else {
-        requestOtpFlow({
-          recipient: identifier,
-          displayRecipient: "+91 " + identifier,
-          targetIdentifier: identifier,
-          type: 'phone'
-        });
+        triggerOtpSignIn();
       }
+    }
+
+    // Trigger OTP Flow for WhatsApp or Email
+    function triggerOtpSignIn() {
+      const idInput = document.getElementById('loginIdentifier');
+      const identifier = idInput ? idInput.value.trim() : "";
+      const target = identifier || "9766772819";
+      const isEmail = target.includes('@');
+
+      requestOtpFlow({
+        recipient: target,
+        displayRecipient: isEmail ? target : ("+91 " + target),
+        targetIdentifier: target,
+        type: isEmail ? 'email' : 'phone'
+      });
     }
 
     // Two-Factor Verification Engine (GitHub / Modern 2FA)
@@ -1751,16 +1724,8 @@
       // Wire up 6-digit OTP input mechanics (auto-advance & backspace)
       setupOtpInputs();
 
-      // Render Detected Device Account (GitHub / Google One-Tap Card)
-      renderDeviceAccountCard();
-
-      // Default to WhatsApp Phone OTP selector
-      selectLoginMethod('phone');
-
       // Auto-connect and sync from Cloud Database (24/7 persistence)
-      syncFromCloud().then(() => {
-        renderDeviceAccountCard();
-      });
+      syncFromCloud();
 
       const savedSession = localStorage.getItem('vediq_current_session');
       if (savedSession) {
