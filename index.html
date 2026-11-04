@@ -137,6 +137,44 @@
       font-size: 0 !important;
       color: transparent !important;
     }
+
+    /* Mobile Typography & Touch Optimization: Larger, Crisp & Super Readable on Phones */
+    @media (max-width: 640px) {
+      body {
+        font-size: 15px !important;
+        line-height: 1.65 !important;
+      }
+      p {
+        font-size: 14px !important;
+        line-height: 1.6 !important;
+      }
+      li {
+        font-size: 13.5px !important;
+        line-height: 1.5 !important;
+      }
+      .text-xs {
+        font-size: 13.5px !important;
+        line-height: 1.55 !important;
+      }
+      .text-\[10px\], .text-\[11px\] {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+      }
+      .text-\[9px\], .text-\[8px\] {
+        font-size: 11px !important;
+      }
+      /* Form inputs easy to type on touchscreens without iOS zoom */
+      input, select, textarea {
+        font-size: 15px !important;
+        padding-top: 9px !important;
+        padding-bottom: 9px !important;
+      }
+      /* Buttons larger and easier for thumbs */
+      button, a.btn {
+        font-size: 13.5px !important;
+        letter-spacing: 0.025em !important;
+      }
+    }
   </style>
 </head>
 
