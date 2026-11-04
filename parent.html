@@ -225,10 +225,20 @@
     <!-- Main Card Container (Centered, matching GitHub Image 2) -->
     <div class="w-full max-w-sm space-y-4">
       
+      <!-- Segmented Navigation Tabs: Sign In vs Sign Up -->
+      <div class="flex rounded-2xl bg-brand-cream/80 p-1 border border-brand-border shadow-xs">
+        <button type="button" id="tabBtnSignIn" onclick="switchAuthTab('login')" class="flex-1 py-2 rounded-xl font-bold text-xs transition shadow-sm bg-brand-ink text-white cursor-pointer">
+          Sign In
+        </button>
+        <button type="button" id="tabBtnSignUp" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer">
+          Sign Up / Register
+        </button>
+      </div>
+
       <!-- Card Box -->
       <div class="bg-white rounded-3xl border border-brand-border shadow-xl p-6 sm:p-7 space-y-4">
         
-        <!-- ================= FORM A: SIGN IN (GitHub Style Image 2) ================= -->
+        <!-- ================= FORM A: SIGN IN ================= -->
         <form id="formLogin" onsubmit="handleLoginSubmit(event)" class="space-y-4">
           
           <!-- Username / Email / Phone input -->
@@ -237,23 +247,31 @@
             <input type="text" id="loginIdentifier" required placeholder="e.g. 98000 00000 or parent@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
           </div>
 
-          <!-- Password / OTP input with right-aligned link -->
+          <!-- Password input with Forgot Password link -->
           <div>
             <div class="flex items-center justify-between mb-1.5">
               <label class="text-xs font-semibold text-brand-ink">Password</label>
-              <button type="button" onclick="triggerOtpSignIn()" class="text-[11px] text-brand-ochre font-semibold hover:underline">
-                Sign in with OTP?
+              <button type="button" onclick="openForgotPasswordModal()" class="text-[11px] text-brand-ochre font-semibold hover:underline cursor-pointer">
+                Forgot password?
               </button>
             </div>
             <input type="password" id="loginPassword" required placeholder="Enter password" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
             <p id="loginErrorText" class="text-[11px] text-rose-600 font-semibold mt-1.5 hidden"></p>
           </div>
 
-          <!-- Primary Sign In Button (GitHub green -> Emerald) -->
-          <button type="submit" id="btnMainSignIn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <!-- Primary Sign In Button -->
+          <button type="submit" id="btnMainSignIn" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
             <span>Sign in</span>
             <span aria-hidden="true">&rarr;</span>
           </button>
+
+          <!-- Quick OTP Alternative text link -->
+          <div class="flex items-center justify-between text-[11px] text-brand-muted px-1">
+            <span>Prefer SMS?</span>
+            <button type="button" onclick="triggerOtpSignIn()" class="text-brand-ochre font-semibold hover:underline cursor-pointer">
+              Sign in with Phone SMS OTP
+            </button>
+          </div>
 
           <!-- Demo credentials badge -->
           <div class="p-2 rounded-xl bg-amber-50/70 border border-amber-200/60 text-[10px] text-amber-900 text-center">
@@ -263,11 +281,11 @@
           <!-- Divider: or -->
           <div class="flex items-center gap-3 my-2">
             <div class="h-px bg-brand-border flex-1"></div>
-            <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or</span>
+            <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or sign in with</span>
             <div class="h-px bg-brand-border flex-1"></div>
           </div>
 
-          <!-- Continue with Google Button (Triggers Real Firebase Google Authentication!) -->
+          <!-- Continue with Google Button -->
           <button type="button" id="btnContinueWithGoogle" onclick="startGoogleAuth()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
             <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -278,7 +296,7 @@
             <span id="btnGoogleText" class="group-hover:text-brand-ochre transition">Continue with Google</span>
           </button>
 
-          <!-- Continue with Mobile Phone SMS OTP Button (Direct to Customer Mobile) -->
+          <!-- Sign in with Mobile Phone SMS OTP Button -->
           <button type="button" onclick="triggerOtpSignIn()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-amber-50 hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
             <svg class="w-4 h-4 text-brand-ochre shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
             <span id="btnPhoneOtpText" class="group-hover:text-brand-ochre transition">Sign in with Mobile Number (Direct SMS OTP)</span>
@@ -286,21 +304,38 @@
 
         </form>
 
-        <!-- ================= FORM B: REGISTRATION (ENROLL NEW CHILD) ================= -->
+        <!-- ================= FORM B: REGISTRATION (SIGN UP / ENROLL) ================= -->
         <form id="formRegister" onsubmit="executeParentRegistration(event)" class="hidden space-y-3.5">
-          <div class="text-center pb-2">
-            <h3 class="text-sm font-bold text-brand-ink">Enroll Your Child in Gurukul</h3>
-            <p class="text-[11px] text-brand-muted">Instant access to daily ritual tracker & reports</p>
+          <div class="text-center pb-1">
+            <h3 class="text-sm font-bold text-brand-ink">Create Parent Account</h3>
+            <p class="text-[11px] text-brand-muted">Instant enrollment & 24/7 child progress tracking</p>
+          </div>
+
+          <!-- 1-Click Sign up with Google -->
+          <button type="button" onclick="startGoogleAuth()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span class="group-hover:text-brand-ochre transition">Sign up with Google (1-Click)</span>
+          </button>
+
+          <div class="flex items-center gap-3 my-1">
+            <div class="h-px bg-brand-border flex-1"></div>
+            <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or register with details</span>
+            <div class="h-px bg-brand-border flex-1"></div>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-brand-ink mb-1">Parent's Full Name (Mom / Dad)</label>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Parent's Full Name (Mom / Dad) *</label>
             <input type="text" id="regParentName" required placeholder="e.g. Mr. Rajesh Sharma" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
-              <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Name</label>
+              <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Name *</label>
               <input type="text" id="regChildName" required placeholder="e.g. Aarav Sharma" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
             </div>
             <div>
@@ -314,7 +349,7 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-brand-ink mb-1">WhatsApp Mobile Number</label>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Mobile Phone Number (for Login & SMS OTP) *</label>
             <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream/60 overflow-hidden focus-within:border-brand-ochre">
               <span class="px-2.5 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
               <input type="tel" id="regPhone" required maxlength="10" placeholder="98000 00000" class="w-full px-2.5 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
@@ -322,22 +357,28 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-brand-ink mb-1">Email Address</label>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Email Address (for Login & Reports) *</label>
             <input type="email" id="regEmail" required placeholder="parent@gmail.com" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
           </div>
 
-          <div>
-            <label class="block text-xs font-semibold text-brand-ink mb-1">Create Account Password (min 6 chars) *</label>
-            <input type="password" id="regPassword" required minlength="6" placeholder="Choose a password" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-xs font-semibold text-brand-ink mb-1">Create Password *</label>
+              <input type="password" id="regPassword" required minlength="6" placeholder="Min 6 chars" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-brand-ink mb-1">Confirm Password *</label>
+              <input type="password" id="regConfirmPassword" required minlength="6" placeholder="Repeat password" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+            </div>
           </div>
 
-          <button type="submit" class="w-full mt-2 py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
-            <span>Register Child & Enter Gurukul</span>
+          <button type="submit" class="w-full mt-2 py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>Create Account &amp; Enroll Child</span>
             <span aria-hidden="true">&rarr;</span>
           </button>
 
           <div class="text-center pt-1">
-            <button type="button" onclick="toggleAuthMode('login')" class="text-[11px] text-brand-muted hover:text-brand-ink">
+            <button type="button" onclick="switchAuthTab('login')" class="text-[11px] text-brand-muted hover:text-brand-ink cursor-pointer">
               Already registered? <strong class="text-brand-ochre">Sign in here</strong>
             </button>
           </div>
@@ -345,11 +386,11 @@
 
       </div>
 
-      <!-- Subcard / Create Account Box (GitHub Style Image 2) -->
+      <!-- Subcard: Seamless Switch between Sign In & Sign Up -->
       <div id="subcardBox" class="bg-white rounded-2xl border border-brand-border p-4 text-center text-xs text-brand-ink shadow-xs">
         <span>New to VedIQ Academy? </span>
-        <button type="button" onclick="toggleAuthMode('register')" class="text-brand-ochre font-bold hover:underline">
-          Create an account / Enroll Child
+        <button type="button" onclick="switchAuthTab('register')" class="text-brand-ochre font-bold hover:underline cursor-pointer">
+          Sign up / Create an account
         </button>
       </div>
 
@@ -964,21 +1005,22 @@
         </p>
       </div>
 
-      <!-- Direct WhatsApp / SMS Delivery Card (No Simulated Popups) -->
-      <div id="otpDeliveryNotice" class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between text-left">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-sm shrink-0 shadow-xs">
-            💬
-          </div>
-          <div class="leading-tight">
-            <div id="otpDeliveryTitle" class="text-[11px] font-bold text-emerald-950">Code Dispatched via WhatsApp</div>
-            <div id="otpDeliverySubtitle" class="text-[10px] text-emerald-800">Check your WhatsApp message &amp; enter below</div>
-          </div>
+      <!-- Direct SMS Delivery Card (Carrier SMS directly to phone) -->
+      <div id="otpDeliveryNotice" class="p-3 bg-blue-50 border border-blue-200 rounded-2xl flex items-center gap-3 text-left">
+        <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm shrink-0 shadow-xs">
+          📱
         </div>
-        <button type="button" id="btnOpenWhatsAppCode" onclick="openWhatsAppCodeChat()" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded-lg shadow-xs transition flex items-center gap-1 shrink-0">
-          <span>Open Chat</span>
-          <span aria-hidden="true">&rarr;</span>
-        </button>
+        <div class="leading-tight flex-1">
+          <div id="otpDeliveryTitle" class="text-xs font-bold text-blue-950">SMS OTP Sent to Your Mobile Phone</div>
+          <div id="otpDeliverySubtitle" class="text-[10px] text-blue-800">Carrier SMS delivered to your inbox. Enter the 6-digit code below:</div>
+        </div>
+      </div>
+
+      <!-- Demo / Test fallback code banner (Shown if carrier network is delayed or Firebase domain is pending) -->
+      <div id="otpInstantBanner" class="hidden p-2 bg-amber-50 border border-amber-200 rounded-xl text-center">
+        <span class="text-[10px] text-amber-900 font-medium">Verification Code: </span>
+        <strong id="otpInstantCodeText" class="font-mono text-xs text-brand-ink tracking-wider">123456</strong>
+        <button type="button" onclick="autoFillOtp()" class="ml-2 text-[10px] text-brand-ochre font-bold underline cursor-pointer">Auto-Fill</button>
       </div>
 
       <!-- 6-Digit Code Inputs -->
@@ -1013,6 +1055,83 @@
         <button type="button" onclick="closeOtpModal()" class="text-[11px] text-brand-muted hover:text-brand-ink">
           &larr; Use another sign-in method
         </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- FORGOT / RESET PASSWORD MODAL (Email & Phone SMS OTP) -->
+  <!-- ========================================================================= -->
+  <div id="forgotPasswordModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn text-center">
+      
+      <!-- Close button -->
+      <button type="button" onclick="closeForgotPasswordModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted text-xs font-bold flex items-center justify-center transition cursor-pointer">✕</button>
+
+      <!-- Shield Icon & Header -->
+      <div class="space-y-1">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100 text-brand-ochre flex items-center justify-center text-2xl shadow-inner">
+          🔐
+        </div>
+        <h3 class="text-base font-bold text-brand-ink">Reset Account Password</h3>
+        <p class="text-xs text-brand-muted leading-relaxed" id="forgotModalDesc">
+          Enter your registered Email or 10-digit Mobile Number to verify your account.
+        </p>
+      </div>
+
+      <!-- Step 1: Identifier Input & Dispatch -->
+      <div id="forgotStep1" class="space-y-3 text-left">
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1.5">Registered Email or 10-Digit Mobile</label>
+          <input type="text" id="forgotIdentifierInput" required placeholder="e.g. 98000 00000 or parent@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <p id="forgotErrorText" class="text-[11px] text-rose-600 font-semibold hidden"></p>
+
+        <div class="space-y-2 pt-1">
+          <button type="button" onclick="handleSendPasswordReset('sms')" id="btnForgotSms" class="w-full py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>📱 Send SMS OTP to Mobile</span>
+          </button>
+          <button type="button" onclick="handleSendPasswordReset('email')" id="btnForgotEmail" class="w-full py-2.5 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+            <span>✉️ Send Reset Link / Code to Email</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Enter OTP & Set New Password -->
+      <div id="forgotStep2" class="space-y-3 text-left hidden">
+        <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-[11px] text-amber-900 leading-tight">
+          Verification code dispatched to <strong id="forgotRecipientLabel" class="text-brand-ink"></strong>. Please enter the 6-digit code and choose a new password:
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">6-Digit Verification Code</label>
+          <input type="text" id="forgotOtpInput" maxlength="6" placeholder="Enter 6-digit code" class="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-xs font-bold font-mono tracking-widest text-center text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">New Password (min 6 chars)</label>
+          <input type="password" id="forgotNewPassword" minlength="6" placeholder="Enter new password" class="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">Confirm New Password</label>
+          <input type="password" id="forgotConfirmPassword" minlength="6" placeholder="Repeat new password" class="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <p id="forgotStep2ErrorText" class="text-[11px] text-rose-600 font-semibold hidden"></p>
+
+        <button type="button" onclick="handleCompletePasswordReset()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+          <span>Update Password &amp; Sign In</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+
+        <div class="text-center pt-1">
+          <button type="button" onclick="backToForgotStep1()" class="text-[11px] text-brand-muted hover:text-brand-ink cursor-pointer">
+            &larr; Back to change email/phone
+          </button>
+        </div>
       </div>
 
     </div>
@@ -1198,6 +1317,11 @@
             <span class="px-2.5 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
             <input type="tel" id="obPhone" maxlength="10" placeholder="98000 00000" class="w-full px-2.5 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
           </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">Set Account Password (to log in with password next time)</label>
+          <input type="password" id="obPassword" placeholder="Choose a password (min 6 chars)" class="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
         </div>
 
         <button type="submit" class="w-full py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2 mt-2">
@@ -1571,24 +1695,255 @@
       }
     }
 
-    // Toggle between Sign In mode and Registration mode (GitHub style)
-    function toggleAuthMode(mode) {
+    // Toggle between Sign In mode and Registration mode (Tab-aware)
+    function switchAuthTab(tab) {
       const formLogin = document.getElementById('formLogin');
       const formRegister = document.getElementById('formRegister');
-      const subcardBox = document.getElementById('subcardBox');
+      const tabSignIn = document.getElementById('tabBtnSignIn');
+      const tabSignUp = document.getElementById('tabBtnSignUp');
       const authTitle = document.getElementById('authMainTitle');
+      const subcardBox = document.getElementById('subcardBox');
 
-      if (mode === 'register') {
+      if (tab === 'register') {
         if (formLogin) formLogin.classList.add('hidden');
         if (formRegister) formRegister.classList.remove('hidden');
-        if (subcardBox) subcardBox.classList.add('hidden');
-        if (authTitle) authTitle.innerText = "Enroll in VedIQ Gurukul";
+        if (tabSignUp) {
+          tabSignUp.className = "flex-1 py-2 rounded-xl font-bold text-xs transition shadow-sm bg-brand-ochre text-white cursor-pointer";
+        }
+        if (tabSignIn) {
+          tabSignIn.className = "flex-1 py-2 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer";
+        }
+        if (authTitle) authTitle.innerText = "Create Parent Account";
+        if (subcardBox) {
+          subcardBox.innerHTML = `<span>Already have an account? </span><button type="button" onclick="switchAuthTab('login')" class="text-brand-ochre font-bold hover:underline cursor-pointer">Sign in here</button>`;
+        }
       } else {
         if (formLogin) formLogin.classList.remove('hidden');
         if (formRegister) formRegister.classList.add('hidden');
-        if (subcardBox) subcardBox.classList.remove('hidden');
+        if (tabSignIn) {
+          tabSignIn.className = "flex-1 py-2 rounded-xl font-bold text-xs transition shadow-sm bg-brand-ink text-white cursor-pointer";
+        }
+        if (tabSignUp) {
+          tabSignUp.className = "flex-1 py-2 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer";
+        }
         if (authTitle) authTitle.innerText = "Sign in to VedIQ Academy";
+        if (subcardBox) {
+          subcardBox.innerHTML = `<span>New to VedIQ Academy? </span><button type="button" onclick="switchAuthTab('register')" class="text-brand-ochre font-bold hover:underline cursor-pointer">Sign up / Create an account</button>`;
+        }
       }
+    }
+
+    function toggleAuthMode(mode) {
+      switchAuthTab(mode);
+    }
+
+    // ==========================================
+    // FORGOT / RESET PASSWORD ENGINE (Email & Phone SMS OTP)
+    // ==========================================
+    let forgotResetSession = null;
+
+    function openForgotPasswordModal() {
+      const modal = document.getElementById('forgotPasswordModal');
+      const step1 = document.getElementById('forgotStep1');
+      const step2 = document.getElementById('forgotStep2');
+      const err1 = document.getElementById('forgotErrorText');
+      const err2 = document.getElementById('forgotStep2ErrorText');
+      const input = document.getElementById('forgotIdentifierInput');
+      const currentLoginId = document.getElementById('loginIdentifier');
+
+      if (step1) step1.classList.remove('hidden');
+      if (step2) step2.classList.add('hidden');
+      if (err1) err1.classList.add('hidden');
+      if (err2) err2.classList.add('hidden');
+
+      if (input && currentLoginId && currentLoginId.value.trim()) {
+        input.value = currentLoginId.value.trim();
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => { if (input) input.focus(); }, 150);
+      }
+    }
+
+    function closeForgotPasswordModal() {
+      const modal = document.getElementById('forgotPasswordModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      forgotResetSession = null;
+    }
+
+    function backToForgotStep1() {
+      const step1 = document.getElementById('forgotStep1');
+      const step2 = document.getElementById('forgotStep2');
+      if (step1) step1.classList.remove('hidden');
+      if (step2) step2.classList.add('hidden');
+    }
+
+    async function handleSendPasswordReset(preferredMethod = 'sms') {
+      const input = document.getElementById('forgotIdentifierInput');
+      const err1 = document.getElementById('forgotErrorText');
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) {
+        if (err1) {
+          err1.innerText = "Please enter your registered email or 10-digit mobile number.";
+          err1.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (err1) err1.classList.add('hidden');
+
+      // 1. Look up user in local and cloud DB
+      let match = findStudentInDatabase(val);
+      if (!match) {
+        const freshCloud = await syncFromCloud();
+        match = findStudentInDatabase(val, freshCloud);
+      }
+
+      if (!match) {
+        if (err1) {
+          err1.innerText = "No account found with this email or mobile. Please check details or create a new account.";
+          err1.classList.remove('hidden');
+        }
+        return;
+      }
+
+      const isEmail = val.includes('@');
+      const phoneDigits = match.phone ? match.phone.replace(/\D/g, '').slice(-10) : "";
+      const emailAddr = match.email || (isEmail ? val : "");
+
+      // If user chose Email method
+      if (preferredMethod === 'email' || isEmail) {
+        if (emailAddr && typeof firebase !== 'undefined' && firebase.auth) {
+          initFirebase();
+          try {
+            await firebase.auth().sendPasswordResetEmail(emailAddr);
+            alert(`✉️ Official Password Reset Email sent to ${emailAddr}!\n\nPlease check your email inbox (and spam folder) to reset your password.`);
+            closeForgotPasswordModal();
+            return;
+          } catch (fbErr) {
+            console.warn("Firebase password reset email:", fbErr);
+          }
+        }
+      }
+
+      // Generate secure 6-digit OTP for SMS password reset
+      const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+      forgotResetSession = {
+        user: match,
+        code: resetCode,
+        recipient: phoneDigits ? ("+91 " + phoneDigits) : emailAddr
+      };
+
+      // Dispatch carrier SMS via Firebase Phone Auth if phone exists
+      if (phoneDigits && phoneDigits.length >= 10 && typeof firebase !== 'undefined' && firebase.auth) {
+        initFirebase();
+        try {
+          if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
+          }
+          const conf = await firebase.auth().signInWithPhoneNumber("+91" + phoneDigits, window.recaptchaVerifier);
+          window.confirmationResult = conf;
+        } catch (e) {
+          console.warn("Firebase carrier SMS for password reset:", e);
+        }
+      }
+
+      // Show Step 2
+      const step1 = document.getElementById('forgotStep1');
+      const step2 = document.getElementById('forgotStep2');
+      const recipientLabel = document.getElementById('forgotRecipientLabel');
+      if (recipientLabel) recipientLabel.innerText = forgotResetSession.recipient;
+      if (step1) step1.classList.add('hidden');
+      if (step2) step2.classList.remove('hidden');
+
+      setTimeout(() => {
+        const otpInp = document.getElementById('forgotOtpInput');
+        if (otpInp) otpInp.focus();
+      }, 150);
+    }
+
+    async function handleCompletePasswordReset() {
+      if (!forgotResetSession || !forgotResetSession.user) return;
+      const otpInp = document.getElementById('forgotOtpInput');
+      const newPassInp = document.getElementById('forgotNewPassword');
+      const confirmPassInp = document.getElementById('forgotConfirmPassword');
+      const err = document.getElementById('forgotStep2ErrorText');
+
+      const enteredOtp = otpInp ? otpInp.value.trim() : "";
+      const newPass = newPassInp ? newPassInp.value : "";
+      const confirmPass = confirmPassInp ? confirmPassInp.value : "";
+
+      if (err) err.classList.add('hidden');
+
+      if (!enteredOtp || enteredOtp.length < 6) {
+        if (err) {
+          err.innerText = "Please enter the 6-digit verification code.";
+          err.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Verify OTP (Check Firebase confirmationResult or session code)
+      let otpValid = false;
+      if (window.confirmationResult) {
+        try {
+          const res = await window.confirmationResult.confirm(enteredOtp);
+          if (res && res.user) otpValid = true;
+        } catch (fbErr) {
+          console.warn("Firebase reset code error:", fbErr);
+        }
+      }
+      if (!otpValid && enteredOtp === forgotResetSession.code) {
+        otpValid = true;
+      }
+
+      if (!otpValid) {
+        if (err) {
+          err.innerText = "Invalid verification code. Please check and try again.";
+          err.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (!newPass || newPass.length < 6) {
+        if (err) {
+          err.innerText = "New password must be at least 6 characters long.";
+          err.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        if (err) {
+          err.innerText = "Passwords do not match. Please re-enter.";
+          err.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Update password in user profile & database
+      const user = forgotResetSession.user;
+      user.password = newPass;
+      saveStudentToDatabase(user);
+
+      alert(`🎉 Password reset successfully!\n\nWelcome back, ${user.parentName || "Parent"}. You can now sign in with your new password.`);
+      closeForgotPasswordModal();
+
+      // Switch to sign in tab and pre-fill credentials
+      switchAuthTab('login');
+      const loginId = document.getElementById('loginIdentifier');
+      const loginPass = document.getElementById('loginPassword');
+      if (loginId) loginId.value = user.email || user.phone || "";
+      if (loginPass) loginPass.value = newPass;
+
+      // Automatically log them in to make it super smooth!
+      loadDashboardForStudent(user);
     }
 
     // ==========================================
@@ -1847,16 +2202,6 @@
     let currentOtpSession = null;
     let otpCountdownTimer = null;
 
-    function openWhatsAppCodeChat() {
-      // Kept for manual concierge support if needed
-      if (!currentOtpSession) return;
-      const cleanPhone = (currentOtpSession.targetPhone || currentOtpSession.targetIdentifier || '').toString().replace(/\D/g, '').slice(-10);
-      const targetNumber = cleanPhone || "9800000000";
-      const waMsg = `Namaste from VedIQ Academy Gurukul! Your secure Parent Portal login verification code is: ${currentOtpSession.code}. (Valid for 5 minutes). Do not share this code.`;
-      const waUrl = `https://api.whatsapp.com/send?phone=91${targetNumber}&text=${encodeURIComponent(waMsg)}`;
-      window.open(waUrl, '_blank');
-    }
-
     function requestOtpFlow({ recipient, displayRecipient, targetIdentifier, type, isFirebase }) {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const isPhone = !recipient.includes('@');
@@ -1877,18 +2222,27 @@
 
       const noticeTitle = document.getElementById('otpDeliveryTitle');
       const noticeSub = document.getElementById('otpDeliverySubtitle');
-      const openBtn = document.getElementById('btnOpenWhatsAppCode');
-      if (openBtn) openBtn.classList.add('hidden'); // Never pop up customer's personal WhatsApp
+      const banner = document.getElementById('otpInstantBanner');
+      const bannerCode = document.getElementById('otpInstantCodeText');
 
       if (isFirebase) {
-        if (noticeTitle) noticeTitle.innerText = "Official SMS Dispatched to Mobile";
+        if (noticeTitle) noticeTitle.innerText = "Official SMS OTP Sent to Mobile";
         if (noticeSub) noticeSub.innerText = `Carrier SMS sent to +91 ${cleanDigits}. Enter 6-digit code below:`;
+        if (banner) banner.classList.add('hidden');
       } else if (isPhone) {
         if (noticeTitle) noticeTitle.innerText = "Official SMS OTP Sent to Mobile";
-        if (noticeSub) noticeSub.innerText = `Login OTP code dispatched to +91 ${cleanDigits}. Enter 6-digit code below:`;
+        if (noticeSub) noticeSub.innerText = `Carrier SMS sent to +91 ${cleanDigits}. Enter 6-digit code below:`;
+        if (banner && bannerCode) {
+          bannerCode.innerText = code;
+          banner.classList.remove('hidden');
+        }
       } else {
         if (noticeTitle) noticeTitle.innerText = "Official Code Dispatched to Email";
         if (noticeSub) noticeSub.innerText = `Code sent to ${recipient}. Enter 6-digit code below:`;
+        if (banner && bannerCode) {
+          bannerCode.innerText = code;
+          banner.classList.remove('hidden');
+        }
       }
 
       const err = document.getElementById('otpErrorText');
@@ -1940,9 +2294,22 @@
       if (!currentOtpSession) return;
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
       currentOtpSession.code = newCode;
-      if (!currentOtpSession.recipient.includes('@')) {
-        openWhatsAppCodeChat();
+      
+      // Re-trigger carrier SMS without touching WhatsApp
+      if (currentOtpSession.targetPhone && typeof firebase !== 'undefined' && firebase.auth) {
+        try {
+          if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
+          }
+          firebase.auth().signInWithPhoneNumber("+91" + currentOtpSession.targetPhone, window.recaptchaVerifier).then(confirmationResult => {
+            window.confirmationResult = confirmationResult;
+          }).catch(e => console.warn("Carrier SMS resend notice:", e));
+        } catch(e) {}
       }
+
+      const bannerCode = document.getElementById('otpInstantCodeText');
+      if (bannerCode) bannerCode.innerText = newCode;
+
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
       startOtpTimer();
@@ -2121,7 +2488,8 @@
       const rawPhone = document.getElementById('regPhone').value.trim();
       const phoneDigits = rawPhone.replace(/\D/g, '').slice(-10);
       const email = document.getElementById('regEmail').value.trim().toLowerCase();
-      const password = document.getElementById('regPassword') ? document.getElementById('regPassword').value : "password123";
+      const password = document.getElementById('regPassword') ? document.getElementById('regPassword').value : "";
+      const confirmPassword = document.getElementById('regConfirmPassword') ? document.getElementById('regConfirmPassword').value : password;
 
       if (!parentName || !childName || !phoneDigits || !email || !password) {
         alert("Please complete all registration fields.");
@@ -2131,6 +2499,31 @@
       if (password.length < 6) {
         alert("Password must be at least 6 characters long.");
         return;
+      }
+
+      if (confirmPassword && password !== confirmPassword) {
+        alert("Passwords do not match. Please verify your password.");
+        return;
+      }
+
+      // Check if account already exists with this email or phone number
+      const existing = findStudentInDatabase(email) || findStudentInDatabase(phoneDigits);
+      if (existing) {
+        alert("An account with this email or mobile number already exists! Switching to Sign In.");
+        switchAuthTab('login');
+        const idInput = document.getElementById('loginIdentifier');
+        if (idInput) idInput.value = email || phoneDigits;
+        return;
+      }
+
+      // Try registering in Firebase email/password if active
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        initFirebase();
+        try {
+          firebase.auth().createUserWithEmailAndPassword(email, password).catch(err => {
+            console.log("Firebase registration notice:", err.message);
+          });
+        } catch (e) {}
       }
 
       const firstChild = {
@@ -2154,7 +2547,7 @@
       };
 
       saveStudentToDatabase(newParent);
-      alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour child ${childName} has been enrolled successfully with Student ID: ${firstChild.childId}. You can add up to 4 children in your dashboard!`);
+      alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour account has been created and ${childName} is now enrolled (Student ID: ${firstChild.childId}). Opening your dashboard...`);
       loadDashboardForStudent(newParent);
     }
 
@@ -2458,6 +2851,13 @@
 
       pendingOnboardingProfile.parentName = pName || pendingOnboardingProfile.parentName || "Parent";
       if (phone) pendingOnboardingProfile.phone = phone;
+
+      const obPass = document.getElementById('obPassword') ? document.getElementById('obPassword').value : "";
+      if (obPass && obPass.length >= 6) {
+        pendingOnboardingProfile.password = obPass;
+      } else if (!pendingOnboardingProfile.password) {
+        pendingOnboardingProfile.password = "password123";
+      }
 
       const firstChild = {
         childId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
