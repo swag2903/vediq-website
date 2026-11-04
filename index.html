@@ -202,6 +202,14 @@
 
       <!-- Desktop CTAs -->
       <div class="hidden sm:flex items-center gap-3">
+        <!-- Language Select Dropdown -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-brand-border bg-brand-surface text-xs font-semibold text-brand-ink shadow-sm">
+          <span>🌐</span>
+          <select id="langSelectDesktop" onchange="translatePage(this.value)" class="bg-transparent text-xs font-bold text-brand-ink focus:outline-none cursor-pointer">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+          </select>
+        </div>
         <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20I%20am%20interested%20in%20the%20VedIQ%20Academy%20program." target="_blank" class="px-3.5 py-2 rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-ink border border-brand-border hover:bg-brand-subtle transition flex items-center gap-1.5" title="WhatsApp Dr. Ujwal Vyas">
           <svg class="w-4 h-4 fill-current text-emerald-600" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
           <span>WhatsApp Dr. Ujwal Vyas</span>
@@ -220,6 +228,14 @@
 
     <!-- Mobile Drawer -->
     <div id="mobileDrawer" class="hidden lg:hidden border-b border-brand-border bg-brand-surface px-6 py-6 space-y-4 text-sm font-semibold text-brand-ink">
+      <!-- Mobile Language Switcher -->
+      <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+        <span class="text-xs text-brand-muted font-bold">Language / भाषा:</span>
+        <select id="langSelectMobile" onchange="translatePage(this.value)" class="px-2 py-1 rounded-lg border border-brand-border bg-brand-cream text-xs font-bold text-brand-ink">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+        </select>
+      </div>
       <a href="#system" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">1-Hour Daily System</a>
       <a href="#curriculum" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">10-Year Roadmap</a>
       <a href="#scripts" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Word-to-Word Scripts</a>
@@ -971,8 +987,8 @@
   </footer>
 
   <!-- PAYMENT GATEWAY MODAL (UPI, Cards, Netbanking, QR Code) -->
-  <div id="paymentModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-brand-surface rounded-2xl max-w-lg w-full p-6 sm:p-8 relative border border-brand-border shadow-2xl animate-in fade-in duration-200">
+  <div id="paymentModal" style="display:none;" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-2xl max-w-lg w-full p-6 sm:p-8 relative border border-brand-border shadow-2xl animate-in fade-in duration-200 max-h-[90vh] overflow-y-auto">
       <button onclick="closePaymentModal()" class="absolute top-5 right-5 text-brand-muted hover:text-brand-ink text-sm p-1 font-bold">✕</button>
 
       <!-- Header & Selected Plan Info -->
@@ -1006,15 +1022,13 @@
         </button>
       </div>
 
-      <!-- Tab 1: UPI & QR Code -->
+      <!-- Tab 1: UPI & Real Scannable QR Code -->
       <div id="payContentUpi" class="space-y-4">
         <div class="p-4 rounded-xl bg-brand-cream border border-brand-border flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-          <!-- Stylized QR Display -->
+          <!-- Real Live Dynamic Scannable QR Code -->
           <div class="w-28 h-28 bg-white p-2 rounded-xl border border-brand-border flex flex-col items-center justify-center shrink-0 shadow-sm">
-            <svg class="w-20 h-20 text-brand-ink" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-5 0h2v2h-2v-2zm2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2zm6 2h2v2h-2v-2zm-2 2h2v2h-2v-2z"/>
-            </svg>
-            <span class="text-[8px] font-bold text-brand-muted uppercase">Scan to Pay</span>
+            <img id="upiQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR" alt="UPI Scan QR" class="w-24 h-24 object-contain rounded" />
+            <span class="text-[8px] font-bold text-brand-muted uppercase mt-0.5">Scan to Pay</span>
           </div>
           <div class="space-y-2">
             <span class="text-[11px] font-bold text-brand-ink">Official Gurukul UPI ID:</span>
@@ -1024,19 +1038,19 @@
                 <span id="copyUpiBtnText">Copy</span>
               </button>
             </div>
-            <p class="text-[10px] text-brand-muted">Supported apps: Google Pay, PhonePe, Paytm, BHIM, Cred.</p>
+            <p class="text-[10px] text-brand-muted">Scan with Google Pay, PhonePe, Paytm, BHIM or Cred on your phone.</p>
           </div>
         </div>
 
         <!-- 1-Tap Mobile UPI Intent Buttons -->
         <div class="grid grid-cols-3 gap-2 text-center text-xs">
-          <a id="gpayLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
+          <a id="gpayLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
             <span>Google Pay</span>
           </a>
-          <a id="phonepeLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
+          <a id="phonepeLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
             <span>PhonePe</span>
           </a>
-          <a id="paytmLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
+          <a id="paytmLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
             <span>Paytm</span>
           </a>
         </div>
@@ -1091,7 +1105,8 @@
 
     </div>
   </div>
-  <div id="demoModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+  <!-- DEMO BOOKING MODAL -->
+  <div id="demoModal" style="display:none;" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm items-center justify-center p-4">
     <div class="bg-brand-surface rounded-2xl max-w-md w-full p-6 sm:p-8 relative border border-brand-border shadow-2xl">
       <button onclick="closeDemoModal()" class="absolute top-5 right-5 text-brand-muted hover:text-brand-ink text-sm p-1">✕</button>
 
@@ -1409,11 +1424,20 @@
 
     // Modal
     function openDemoModal(title = 'Book Free 3-Day Demo') {
-      document.getElementById('modalHeading').innerText = title;
-      document.getElementById('demoModal').classList.remove('hidden');
+      const heading = document.getElementById('modalHeading');
+      if (heading) heading.innerText = title;
+      const modal = document.getElementById('demoModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+      }
     }
     function closeDemoModal() {
-      document.getElementById('demoModal').classList.add('hidden');
+      const modal = document.getElementById('demoModal');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+      }
     }
     function submitDemoForm(e) {
       e.preventDefault();
@@ -1532,8 +1556,58 @@
     }
     setInterval(purgeNetlifyDrawer, 200);
 
+    // Dual Language Translation Engine (English & Hindi)
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+
+    function translatePage(lang) {
+      if (lang === 'hi') {
+        document.cookie = "googtrans=/en/hi; path=/";
+        document.cookie = "googtrans=/en/hi; path=/; domain=" + window.location.hostname;
+      } else {
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+      }
+
+      updateLangUI(lang);
+
+      const combo = document.querySelector('.goog-te-combo');
+      if (combo) {
+        combo.value = lang;
+        combo.dispatchEvent(new Event('change'));
+      } else {
+        window.location.reload();
+      }
+    }
+
+    function updateLangUI(lang) {
+      const btnEn = document.getElementById('btnLangEn');
+      const btnHi = document.getElementById('btnLangHi');
+      const selDesk = document.getElementById('langSelectDesktop');
+      const selMob = document.getElementById('langSelectMobile');
+
+      if (lang === 'hi') {
+        if (btnHi) btnHi.className = "px-2.5 py-1 bg-brand-ochre text-white font-bold transition";
+        if (btnEn) btnEn.className = "px-2.5 py-1 text-brand-muted hover:text-brand-ink transition";
+        if (selDesk) selDesk.value = 'hi';
+        if (selMob) selMob.value = 'hi';
+      } else {
+        if (btnEn) btnEn.className = "px-2.5 py-1 bg-brand-ink text-white font-bold transition";
+        if (btnHi) btnHi.className = "px-2.5 py-1 text-brand-muted hover:text-brand-ink transition";
+        if (selDesk) selDesk.value = 'en';
+        if (selMob) selMob.value = 'en';
+      }
+    }
+
     // Init
     window.addEventListener('DOMContentLoaded', () => {
+      const isHindi = document.cookie.includes('googtrans=/en/hi');
+      updateLangUI(isHindi ? 'hi' : 'en');
       purgeNetlifyDrawer();
       activateSegment(0);
       switchStage('foundation');
@@ -1541,6 +1615,10 @@
       updateROI();
     });
   </script>
+
+  <!-- Google Translate Backend Container & Script -->
+  <div id="google_translate_element" style="display:none !important;"></div>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
