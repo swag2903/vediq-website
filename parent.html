@@ -160,41 +160,41 @@
         </div>
       </a>
 
-      <!-- Right Header Actions -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Right Header Actions (Responsive on Mobile) -->
+      <div class="flex items-center gap-1.5 sm:gap-3">
         <!-- Firebase Auth Status / Settings Pill -->
-        <button type="button" onclick="openFirebaseConfigModal()" id="firebaseStatusPill" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-[10px] font-bold shadow-xs transition cursor-pointer" title="Firebase OAuth & Phone OTP Status / Settings">
+        <button type="button" onclick="openFirebaseConfigModal()" id="firebaseStatusPill" class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-[10px] font-bold shadow-xs transition cursor-pointer" title="Firebase OAuth & Phone OTP Status / Settings">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" id="firebaseStatusDot"></span>
-          <span id="firebaseStatusLabel">🔥 Firebase Auth</span>
+          <span id="firebaseStatusLabel" class="hidden xs:inline">🔥 Auth</span>
         </button>
 
         <!-- Live Cloud Sync Status Pill -->
-        <div id="cloudSyncStatus" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold shadow-xs transition" title="Data saved to 24/7 Cloud Database">
+        <div id="cloudSyncStatus" class="inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold shadow-xs transition" title="Data saved to 24/7 Cloud Database">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" id="cloudSyncDot"></span>
-          <span id="cloudSyncLabel">Cloud Live ☁️</span>
+          <span id="cloudSyncLabel" class="hidden xs:inline">Cloud Live ☁️</span>
         </div>
 
         <!-- Language Toggle Switch (No Dropdown Menu) -->
         <div class="inline-flex items-center rounded-lg border border-brand-border bg-white text-[10px] font-bold overflow-hidden shadow-xs">
-          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-2 py-1 bg-brand-ink text-white transition">EN</button>
-          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-2 py-1 text-brand-muted hover:text-brand-ink transition">हिन्दी</button>
+          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-1.5 sm:px-2 py-1 bg-brand-ink text-white transition">EN</button>
+          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-1.5 sm:px-2 py-1 text-brand-muted hover:text-brand-ink transition">हिन्दी</button>
         </div>
 
-        <a href="index.html" class="px-2.5 py-1.5 rounded-lg border border-brand-border hover:bg-brand-subtle text-brand-muted hover:text-brand-ink text-xs font-semibold transition flex items-center gap-1">
+        <a href="index.html" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border border-brand-border hover:bg-brand-subtle text-brand-muted hover:text-brand-ink text-[11px] sm:text-xs font-semibold transition flex items-center gap-1">
           <span aria-hidden="true">&larr;</span>
-          <span class="hidden sm:inline">Back to</span> Website
+          <span class="hidden sm:inline">Back to</span> Site
         </a>
 
         <!-- Authenticated Profile Capsule -->
-        <div id="navUserPill" class="hidden flex items-center gap-3 pl-3 border-l border-brand-border">
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-xs" id="navAvatarText">AS</div>
-            <div class="hidden sm:block text-left leading-tight">
+        <div id="navUserPill" class="hidden flex items-center gap-2 sm:gap-3 pl-2 sm:pl-3 border-l border-brand-border">
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-xs" id="navAvatarText">AS</div>
+            <div class="hidden md:block text-left leading-tight">
               <div id="navParentName" class="text-xs font-bold text-brand-ink">Parent</div>
               <div id="navChildPreview" class="text-[10px] text-brand-muted">Student Active</div>
             </div>
           </div>
-          <button onclick="logoutParent()" class="text-xs text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 transition border border-rose-200">
+          <button onclick="logoutParent()" class="text-[11px] sm:text-xs text-rose-600 hover:text-rose-700 font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded hover:bg-rose-50 transition border border-rose-200">
             Logout
           </button>
         </div>
@@ -292,7 +292,7 @@
             <input type="text" id="regParentName" required placeholder="e.g. Mr. Rajesh Sharma" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
           </div>
 
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Name</label>
               <input type="text" id="regChildName" required placeholder="e.g. Aarav Sharma" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
@@ -371,7 +371,7 @@
           <span>👶</span> <span>Children:</span>
         </span>
         <!-- Dynamic Child Tabs Container (Switch between up to 4 kids) -->
-        <div id="childSelectorTabs" class="flex items-center gap-2 flex-wrap">
+        <div id="childSelectorTabs" class="flex items-center gap-2 overflow-x-auto max-w-full pb-1 scrollbar-none flex-nowrap sm:flex-wrap">
           <!-- Populated by renderChildSelector() -->
         </div>
       </div>
@@ -414,12 +414,12 @@
       </div>
 
       <!-- Live Cognitive Score & Habit Streak -->
-      <div class="flex items-center gap-3 z-10 w-full md:w-auto justify-between md:justify-end">
-        <div class="p-3 bg-white/5 rounded-2xl border border-white/10 text-center min-w-[110px]">
+      <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 sm:gap-3 z-10 w-full md:w-auto">
+        <div class="p-3 bg-white/5 rounded-2xl border border-white/10 text-center min-w-[100px]">
           <div class="text-[10px] text-slate-400 uppercase font-semibold">Focus Quotient</div>
           <div id="dashFocusScore" class="text-lg sm:text-xl font-bold text-amber-300">88 <span class="text-xs text-slate-400 font-normal">/100</span></div>
         </div>
-        <div class="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 text-center min-w-[110px]">
+        <div class="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 text-center min-w-[100px]">
           <div class="text-[10px] text-emerald-400 uppercase font-semibold">Gurukul Streak</div>
           <div id="dashStreakCount" class="text-lg sm:text-xl font-bold text-emerald-300">🔥 18 Days</div>
         </div>
@@ -468,13 +468,13 @@
         </div>
       </aside>
 
-      <!-- Mobile Top Tabs Switcher -->
-      <div class="lg:hidden col-span-1 flex overflow-x-auto gap-2 pb-1 text-xs font-bold scrollbar-none">
-        <button onclick="switchDashTab('today')" id="mob-today" class="sidebar-btn active shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-brand-ochre text-white">Daily Ritual</button>
-        <button onclick="switchDashTab('analytics')" id="mob-analytics" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Analytics</button>
-        <button onclick="switchDashTab('reports')" id="mob-reports" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Reports</button>
-        <button onclick="switchDashTab('mentors')" id="mob-mentors" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Live Class</button>
-        <button onclick="switchDashTab('fees')" id="mob-fees" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Tuition</button>
+      <!-- Mobile Top Sticky Tabs Switcher (Smooth Thumb Touch Navigation) -->
+      <div class="lg:hidden col-span-1 sticky top-14 sm:top-16 z-30 bg-brand-cream/95 backdrop-blur-md py-2 border-b border-brand-border/60 -mx-4 px-4 flex overflow-x-auto gap-2 text-xs font-bold scrollbar-none shadow-xs">
+        <button onclick="switchDashTab('today')" id="mob-today" class="sidebar-btn active shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-brand-ochre text-white shadow-xs">Daily Ritual</button>
+        <button onclick="switchDashTab('analytics')" id="mob-analytics" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs">Analytics</button>
+        <button onclick="switchDashTab('reports')" id="mob-reports" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs">Reports</button>
+        <button onclick="switchDashTab('mentors')" id="mob-mentors" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs">Live Class</button>
+        <button onclick="switchDashTab('fees')" id="mob-fees" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs">Tuition</button>
       </div>
 
       <!-- Right Column: Interactive Content Panes -->
@@ -763,13 +763,13 @@
           </div>
 
           <!-- Mentors Concierge Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
               <div class="text-xs font-bold text-brand-ink">Dr. Ujwal Vyas</div>
               <div class="text-[10px] text-brand-muted">Head & Master Mentor</div>
-              <div class="text-xs font-semibold text-brand-ink">+91 97667 72819</div>
-              <a href="https://wa.me/919766772819" target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
-                💬 WhatsApp Mentor
+              <div class="text-xs font-semibold text-brand-ink">Gurukul Academic Desk</div>
+              <a href="https://wa.me/918390332500?text=Namaste%20Dr.%20Ujwal%20Vyas!%20Parent%20here." target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
+                💬 WhatsApp Mentor Desk
               </a>
             </div>
 
@@ -777,17 +777,17 @@
               <div class="text-xs font-bold text-brand-ink">Mr. Atish Gulhane</div>
               <div class="text-[10px] text-brand-muted">Admissions & Operations Lead</div>
               <div class="text-xs font-semibold text-brand-ink">+91 83903 32500</div>
-              <a href="https://wa.me/918390332500" target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
+              <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20support." target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
                 💬 WhatsApp Admissions
               </a>
             </div>
 
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
-              <div class="text-xs font-bold text-brand-ink">Mr. Swagatam Shukla</div>
-              <div class="text-[10px] text-brand-muted">Academic Tech & App Support</div>
-              <div class="text-xs font-semibold text-brand-ink">+91 95948 06822</div>
-              <a href="https://wa.me/919594806822" target="_blank" class="block w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-center font-bold text-xs rounded-lg transition mt-2">
-                💬 WhatsApp Tech
+              <div class="text-xs font-bold text-brand-ink">Academic Support Desk</div>
+              <div class="text-[10px] text-brand-muted">App, Portal & Technical Help</div>
+              <div class="text-xs font-semibold text-brand-ink">+91 83903 32500</div>
+              <a href="https://wa.me/918390332500?text=Namaste%20Tech%20Support!%20Parent%20portal%20help." target="_blank" class="block w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-center font-bold text-xs rounded-lg transition mt-2">
+                💬 WhatsApp Support
               </a>
             </div>
           </div>
@@ -1034,7 +1034,7 @@
           <input type="text" id="editChildName" required placeholder="e.g. Aarav Sharma or Ananya Patel" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre" />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label class="block text-xs font-semibold text-brand-ink mb-1">Age Cohort</label>
             <select id="editChildGrade" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
@@ -1102,7 +1102,7 @@
           <input type="text" id="newChildName" required placeholder="e.g. Diya Sharma or Kabir Patel" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre" />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Age Cohort</label>
             <select id="newChildGrade" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
@@ -1161,7 +1161,7 @@
             <input type="text" id="obChild1Name" required placeholder="e.g. Aarav Sharma" class="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre" />
           </div>
 
-          <div class="grid grid-cols-2 gap-2.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
               <label class="block text-xs font-semibold text-brand-ink mb-1">Age Cohort</label>
               <select id="obChild1Grade" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
@@ -2322,10 +2322,10 @@
         btn.type = 'button';
         btn.onclick = () => switchActiveChild(idx);
         if (isActive) {
-          btn.className = "px-3.5 py-1.5 rounded-xl bg-brand-ochre text-white text-xs font-bold shadow-xs border border-brand-ochre transition flex items-center gap-1.5 cursor-pointer";
+          btn.className = "px-3.5 py-1.5 rounded-xl bg-brand-ochre text-white text-xs font-bold shadow-xs border border-brand-ochre transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0";
           btn.innerHTML = `<span>🌟</span> <span>${c.childName}</span> <span class="text-[10px] bg-white/25 px-1.5 py-0.2 rounded-full font-semibold">${(c.childGrade || '').split('•')[0].trim()}</span>`;
         } else {
-          btn.className = "px-3.5 py-1.5 rounded-xl bg-brand-subtle hover:bg-brand-cream text-brand-ink text-xs font-semibold border border-brand-border transition flex items-center gap-1.5 cursor-pointer";
+          btn.className = "px-3.5 py-1.5 rounded-xl bg-brand-subtle hover:bg-brand-cream text-brand-ink text-xs font-semibold border border-brand-border transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0";
           btn.innerHTML = `<span>👶</span> <span>${c.childName}</span> <span class="text-[10px] text-brand-muted font-normal">(${(c.childGrade || '').split('•')[0].trim()})</span>`;
         }
         container.appendChild(btn);
