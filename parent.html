@@ -132,6 +132,41 @@
       font-size: 0 !important;
       color: transparent !important;
     }
+
+    /* Comprehensive Mobile, Tablet & Desktop Typography & Layout Optimization */
+    @media (max-width: 1024px) {
+      body {
+        font-size: 16px !important;
+        line-height: 1.7 !important;
+      }
+      p {
+        font-size: 15px !important;
+        line-height: 1.65 !important;
+      }
+      .text-xs {
+        font-size: 13.5px !important;
+        line-height: 1.55 !important;
+      }
+      .text-sm {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+      }
+      .text-\[10px\], .text-\[11px\], .text-\[9px\], .text-\[8px\] {
+        font-size: 12.5px !important;
+        line-height: 1.45 !important;
+      }
+      /* Form inputs easy to type on touchscreens without iOS/Android zoom */
+      input, select, textarea {
+        font-size: 16px !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+      }
+      /* Buttons larger and comfortable for thumbs */
+      button, a.btn, .btn {
+        font-size: 14px !important;
+        letter-spacing: 0.025em !important;
+      }
+    }
   </style>
 </head>
 
@@ -247,15 +282,15 @@
             <input type="text" id="loginIdentifier" required placeholder="e.g. 98000 00000 or parent@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
           </div>
 
-          <!-- Password input with Forgot Password link -->
+          <!-- Password input with Forgot Password link underneath -->
           <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <label class="text-xs font-semibold text-brand-ink">Password</label>
+            <label class="block text-xs font-semibold text-brand-ink mb-1.5">Password</label>
+            <input type="password" id="loginPassword" required placeholder="Enter password" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
+            <div class="flex items-center justify-end mt-1.5">
               <button type="button" onclick="openForgotPasswordModal()" class="text-[11px] text-brand-ochre font-semibold hover:underline cursor-pointer">
                 Forgot password?
               </button>
             </div>
-            <input type="password" id="loginPassword" required placeholder="Enter password" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
             <p id="loginErrorText" class="text-[11px] text-rose-600 font-semibold mt-1.5 hidden"></p>
           </div>
 
@@ -267,15 +302,10 @@
 
           <!-- Quick OTP Alternative text link -->
           <div class="flex items-center justify-between text-[11px] text-brand-muted px-1">
-            <span>Prefer SMS?</span>
+            <span>Prefer SMS / WhatsApp?</span>
             <button type="button" onclick="triggerOtpSignIn()" class="text-brand-ochre font-semibold hover:underline cursor-pointer">
               Sign in with Phone SMS OTP
             </button>
-          </div>
-
-          <!-- Demo credentials badge -->
-          <div class="p-2 rounded-xl bg-amber-50/70 border border-amber-200/60 text-[10px] text-amber-900 text-center">
-            Demo parent: <code class="font-bold text-brand-ink">parent1@gmail.com</code> | Password: <code class="font-bold text-brand-ink">password123</code>
           </div>
 
           <!-- Divider: or -->
@@ -985,78 +1015,152 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- 2FA OTP VERIFICATION MODAL (GitHub / Google Style) -->
+  <!-- 2FA OTP VERIFICATION & DIRECT PHONE SIGN-IN MODAL (VedIQ Gurukul Theme) -->
   <!-- ========================================================================= -->
-  <div id="otpVerificationModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn text-center">
+  <div id="otpVerificationModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 border border-brand-border shadow-2xl relative animate-fadeIn text-center">
       
       <!-- Close button -->
-      <button type="button" onclick="closeOtpModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted text-xs font-bold flex items-center justify-center transition">✕</button>
+      <button type="button" onclick="closeOtpModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted hover:text-brand-ink text-xs font-bold flex items-center justify-center transition cursor-pointer">✕</button>
 
-      <!-- Shield Icon & Header -->
-      <div class="space-y-1">
-        <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100 text-brand-ochre flex items-center justify-center text-2xl shadow-inner">
+      <!-- Gurukul Brand Emblem & Header -->
+      <div class="space-y-1.5 text-center">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-ochre to-amber-300 text-brand-ink flex items-center justify-center text-2xl shadow-md border border-amber-300/40">
           🛡️
         </div>
-        <h3 class="text-base font-bold text-brand-ink">Two-Factor Verification</h3>
-        <p class="text-xs text-brand-muted leading-relaxed">
-          We sent a 6-digit security code to<br/>
-          <strong id="otpRecipientLabel" class="text-brand-ink font-semibold">+91 98000 00000</strong>
+        <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-brand-subtle text-brand-muted text-[10px] font-bold uppercase tracking-wider border border-brand-border">
+          <span>VEDIQ ACADEMY</span> • <span>OFFICIAL SECURITY</span>
+        </div>
+        <h3 id="otpModalHeading" class="text-lg sm:text-xl font-bold text-brand-ink font-display">
+          Sign In with Phone OTP
+        </h3>
+        <p id="otpModalSubtext" class="text-xs text-brand-muted leading-relaxed">
+          Receive a 6-digit verification code directly from VedIQ Academy.
         </p>
       </div>
 
-      <!-- Direct SMS Delivery Card (Carrier SMS directly to phone) -->
-      <div id="otpDeliveryNotice" class="p-3 bg-blue-50 border border-blue-200 rounded-2xl flex items-center gap-3 text-left">
-        <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm shrink-0 shadow-xs">
-          📱
+      <!-- STEP 1: PHONE NUMBER INPUT (If user clicked OTP login without typing phone first) -->
+      <div id="otpStepPhoneInput" class="space-y-4 text-left hidden">
+        <div>
+          <label class="block text-xs font-bold text-brand-ink mb-1.5">Mobile Phone Number *</label>
+          <div class="flex items-center rounded-2xl border-2 border-brand-border bg-brand-cream/60 focus-within:bg-white focus-within:border-brand-ochre transition overflow-hidden shadow-inner">
+            <span class="px-3.5 py-3 text-xs font-bold text-brand-ink bg-brand-subtle border-r border-brand-border flex items-center gap-1">
+              <span>🇮🇳</span> <span>+91</span>
+            </span>
+            <input type="tel" id="otpPhoneInputField" maxlength="10" placeholder="98000 00000" class="w-full px-3 py-3 bg-transparent text-sm font-bold tracking-wider text-brand-ink focus:outline-none" />
+          </div>
+          <p id="otpPhoneInputError" class="text-[11px] text-rose-600 font-semibold mt-1.5 hidden"></p>
         </div>
-        <div class="leading-tight flex-1">
-          <div id="otpDeliveryTitle" class="text-xs font-bold text-blue-950">SMS OTP Sent to Your Mobile Phone</div>
-          <div id="otpDeliverySubtitle" class="text-[10px] text-blue-800">Carrier SMS delivered to your inbox. Enter the 6-digit code below:</div>
+
+        <!-- Channel Selector -->
+        <div>
+          <label class="block text-[11px] font-semibold text-brand-muted mb-1.5">Send verification code via:</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border-2 border-brand-ochre bg-amber-50/60 cursor-pointer text-xs font-bold text-brand-ink">
+              <input type="radio" name="otpChannel" value="sms" checked class="accent-brand-ochre w-4 h-4" />
+              <span>📱 Mobile SMS</span>
+            </label>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border-2 border-brand-border hover:border-brand-ochre/40 bg-white cursor-pointer text-xs font-semibold text-brand-muted">
+              <input type="radio" name="otpChannel" value="whatsapp" class="accent-brand-ochre w-4 h-4" />
+              <span>💬 WhatsApp</span>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <!-- Demo / Test fallback code banner (Shown if carrier network is delayed or Firebase domain is pending) -->
-      <div id="otpInstantBanner" class="hidden p-2 bg-amber-50 border border-amber-200 rounded-xl text-center">
-        <span class="text-[10px] text-amber-900 font-medium">Verification Code: </span>
-        <strong id="otpInstantCodeText" class="font-mono text-xs text-brand-ink tracking-wider">123456</strong>
-        <button type="button" onclick="autoFillOtp()" class="ml-2 text-[10px] text-brand-ochre font-bold underline cursor-pointer">Auto-Fill</button>
-      </div>
-
-      <!-- 6-Digit Code Inputs -->
-      <div class="py-1">
-        <label class="block text-[11px] font-bold text-brand-ink mb-2">Enter 6-Digit Code</label>
-        <div class="flex justify-between gap-1.5 max-w-[280px] mx-auto" id="otpBoxContainer">
-          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-1" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
-          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-2" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
-          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-3" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
-          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-4" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
-          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-5" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
-          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-6" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
-        </div>
-        <p id="otpErrorText" class="text-[11px] text-red-600 font-semibold mt-2 hidden">Invalid code. Please check and try again.</p>
-      </div>
-
-      <!-- Action Button -->
-      <button type="button" onclick="verifyOtpAndProceed()" id="btnVerifyOtp" class="w-full py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
-        <span>Verify & Enter Gurukul</span>
-        <span aria-hidden="true">&rarr;</span>
-      </button>
-
-      <!-- Resend Countdown -->
-      <div class="text-[11px] text-brand-muted">
-        <span id="otpTimerContainer">Resend code in <strong id="otpTimerSeconds" class="text-brand-ink">30</strong>s</span>
-        <button type="button" onclick="resendOtpCode()" id="btnResendOtp" class="hidden text-brand-ochre font-bold hover:underline">
-          Resend New Code
+        <button type="button" onclick="dispatchOtpFromPhoneStep()" id="btnSendOtpStep1" class="w-full py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+          <span>Send 6-Digit OTP</span>
+          <span aria-hidden="true">&rarr;</span>
         </button>
       </div>
 
-      <div class="pt-2 border-t border-brand-border">
-        <button type="button" onclick="closeOtpModal()" class="text-[11px] text-brand-muted hover:text-brand-ink">
-          &larr; Use another sign-in method
+      <!-- STEP 2: 6-DIGIT CODE VERIFICATION (2-Minute Timer + Official Carrier Notice) -->
+      <div id="otpStepCodeVerify" class="space-y-4">
+        
+        <!-- Official Delivery Bubble -->
+        <div class="p-3.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl text-left space-y-1 shadow-xs">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-brand-ochre flex items-center gap-1.5">
+              <span>📩</span> <span>VedIQ Academy Security OTP</span>
+            </span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+              Active • 2 Min
+            </span>
+          </div>
+          <p class="text-xs text-brand-ink">
+            Verification code sent to <strong id="otpRecipientLabel" class="text-brand-ochre font-bold">+91 98000 00000</strong>
+          </p>
+          <p class="text-[10px] text-amber-900/80 font-medium">
+            "Your VedIQ Academy verification OTP is valid for 2 minutes. Do not share this code."
+          </p>
+        </div>
+
+        <!-- 6-Digit Input Boxes -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <label class="text-xs font-bold text-brand-ink">Enter 6-Digit Code</label>
+            <button type="button" onclick="backToOtpStepPhone()" class="text-[11px] text-brand-ochre font-semibold hover:underline cursor-pointer">
+              Change number
+            </button>
+          </div>
+
+          <div class="flex justify-between gap-1.5 sm:gap-2 max-w-[320px] mx-auto" id="otpBoxContainer">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-1" class="otp-box w-11 h-13 text-center text-2xl font-bold font-mono rounded-2xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 outline-none transition shadow-xs text-brand-ink" />
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-2" class="otp-box w-11 h-13 text-center text-2xl font-bold font-mono rounded-2xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 outline-none transition shadow-xs text-brand-ink" />
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-3" class="otp-box w-11 h-13 text-center text-2xl font-bold font-mono rounded-2xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 outline-none transition shadow-xs text-brand-ink" />
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-4" class="otp-box w-11 h-13 text-center text-2xl font-bold font-mono rounded-2xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 outline-none transition shadow-xs text-brand-ink" />
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-5" class="otp-box w-11 h-13 text-center text-2xl font-bold font-mono rounded-2xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 outline-none transition shadow-xs text-brand-ink" />
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-6" class="otp-box w-11 h-13 text-center text-2xl font-bold font-mono rounded-2xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 outline-none transition shadow-xs text-brand-ink" />
+          </div>
+
+          <p id="otpErrorText" class="text-xs text-rose-600 font-semibold mt-1.5 hidden"></p>
+        </div>
+
+        <!-- Verify & Proceed Button -->
+        <button type="button" onclick="verifyOtpAndProceed()" id="btnVerifyOtp" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+          <span>Verify &amp; Enter Gurukul</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+
+        <!-- 2-Minute Live Countdown Timer -->
+        <div class="flex items-center justify-between text-xs text-brand-muted pt-1 px-1">
+          <div id="otpTimerContainer" class="flex items-center gap-1.5 font-medium">
+            <span>⏱️ Code valid for:</span>
+            <strong id="otpTimerCountdown" class="text-brand-ink font-mono font-bold text-sm">02:00</strong>
+          </div>
+          <button type="button" onclick="resendOtpCode()" id="btnResendOtp" class="hidden text-brand-ochre font-bold hover:underline cursor-pointer">
+            🔄 Resend New Code
+          </button>
+        </div>
+
+      </div>
+
+      <div class="pt-3 border-t border-brand-border">
+        <button type="button" onclick="closeOtpModal()" class="text-xs text-brand-muted hover:text-brand-ink cursor-pointer">
+          &larr; Use password or Google sign-in instead
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Real-Time Top Push Notification Banner Simulator (VedIQ Academy SMS / WhatsApp) -->
+  <div id="vediqPushBanner" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] max-w-sm w-[92%] bg-slate-900/95 backdrop-blur-md text-white p-3.5 rounded-2xl shadow-2xl border border-slate-700/80 transition-all duration-300 transform -translate-y-24 opacity-0 pointer-events-none flex items-start gap-3">
+    <div class="w-10 h-10 rounded-xl bg-brand-ochre text-white flex items-center justify-center text-lg shrink-0 shadow-sm font-bold">
+      🪔
+    </div>
+    <div class="flex-1 text-left space-y-0.5">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wide">VedIQ Academy • SMS OTP</span>
+        <span class="text-[10px] text-slate-400">just now</span>
+      </div>
+      <p id="pushBannerMessage" class="text-xs text-slate-200 leading-snug">
+        Your VedIQ Academy verification OTP is <strong class="text-white font-mono text-sm underline" id="pushBannerCode">123456</strong>. Valid for 2 minutes.
+      </p>
+      <div class="pt-1">
+        <button type="button" onclick="autoFillOtp()" class="px-2.5 py-1 rounded-lg bg-brand-ochre hover:bg-brand-ochreHover text-white text-[10px] font-bold transition shadow-xs cursor-pointer">
+          ⚡ 1-Tap Auto-Fill Code
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2136,75 +2240,130 @@
       loadDashboardForStudent(match);
     }
 
-    // Trigger OTP Flow for Mobile Phone SMS (Firebase Phone Auth - Sent from Our System directly to Customer)
+    // Trigger OTP Flow for Mobile Phone SMS / WhatsApp (Dedicated Gurukul Interface - No Prompts)
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       let identifier = idInput ? idInput.value.trim() : "";
-      if (!identifier) {
-        identifier = prompt("Please enter your 10-digit mobile number to receive official verification SMS OTP:", "");
-        if (!identifier || !identifier.trim()) return;
-        identifier = identifier.trim();
-        if (idInput) idInput.value = identifier;
+      const cleanDigits = identifier.replace(/\D/g, '');
+      const phoneDigits = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : '';
+
+      // If user has already typed a 10-digit phone in the sign-in input, use it directly!
+      if (phoneDigits && phoneDigits.length === 10) {
+        initiatePhoneOtpDispatch(phoneDigits);
+      } else {
+        // Otherwise, open Step 1 cleanly in the Gurukul themed modal (Never use browser prompt)
+        openOtpPhoneInputModal(cleanDigits);
+      }
+    }
+
+    function openOtpPhoneInputModal(prefill = '') {
+      const modal = document.getElementById('otpVerificationModal');
+      const step1 = document.getElementById('otpStepPhoneInput');
+      const step2 = document.getElementById('otpStepCodeVerify');
+      const phoneField = document.getElementById('otpPhoneInputField');
+      const err = document.getElementById('otpPhoneInputError');
+
+      if (phoneField && prefill) phoneField.value = prefill;
+      if (err) err.classList.add('hidden');
+
+      if (step1) step1.classList.remove('hidden');
+      if (step2) step2.classList.add('hidden');
+
+      const heading = document.getElementById('otpModalHeading');
+      const sub = document.getElementById('otpModalSubtext');
+      if (heading) heading.innerText = "Sign In with Phone OTP";
+      if (sub) sub.innerText = "Enter your mobile number to receive official verification OTP directly from VedIQ Academy.";
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+          if (phoneField) phoneField.focus();
+        }, 150);
+      }
+    }
+
+    function backToOtpStepPhone() {
+      const step1 = document.getElementById('otpStepPhoneInput');
+      const step2 = document.getElementById('otpStepCodeVerify');
+      if (step1) step1.classList.remove('hidden');
+      if (step2) step2.classList.add('hidden');
+      const phoneField = document.getElementById('otpPhoneInputField');
+      if (phoneField) setTimeout(() => phoneField.focus(), 100);
+    }
+
+    function dispatchOtpFromPhoneStep() {
+      const phoneField = document.getElementById('otpPhoneInputField');
+      const err = document.getElementById('otpPhoneInputError');
+      const raw = phoneField ? phoneField.value.trim() : "";
+      const digits = raw.replace(/\D/g, '').slice(-10);
+
+      if (!digits || digits.length < 10) {
+        if (err) {
+          err.innerText = "Please enter a valid 10-digit mobile number.";
+          err.classList.remove('hidden');
+        }
+        if (phoneField) phoneField.focus();
+        return;
       }
 
-      const target = identifier;
-      const isEmail = target.includes('@');
-      const cleanDigits = target.replace(/\D/g, '');
-      const phoneDigits = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : cleanDigits;
+      if (err) err.classList.add('hidden');
+      // Also sync back to main login input
+      const mainId = document.getElementById('loginIdentifier');
+      if (mainId) mainId.value = digits;
+
+      initiatePhoneOtpDispatch(digits);
+    }
+
+    async function initiatePhoneOtpDispatch(phoneDigits) {
       const fullPhone = "+91" + phoneDigits;
-
       const btn = document.getElementById('btnPhoneOtpText');
-      if (btn && !isEmail) btn.innerText = "Dispatching SMS to +91 " + phoneDigits + "...";
+      if (btn) btn.innerText = "Dispatching OTP to +91 " + phoneDigits + "...";
 
-      if (!isEmail && phoneDigits.length >= 10) {
-        initFirebase();
-        if (typeof firebase !== 'undefined' && firebase.auth) {
-          try {
-            if (!window.recaptchaVerifier) {
-              window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-                size: 'invisible'
-              });
-            }
-
-            const confirmationResult = await firebase.auth().signInWithPhoneNumber(fullPhone, window.recaptchaVerifier);
-            window.confirmationResult = confirmationResult;
-
-            if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
-            requestOtpFlow({
-              recipient: fullPhone,
-              displayRecipient: fullPhone,
-              targetIdentifier: phoneDigits,
-              type: 'firebase-phone',
-              isFirebase: true
+      // Attempt Firebase Phone Auth if enabled
+      initFirebase();
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        try {
+          if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+              size: 'invisible'
             });
-            return;
-          } catch (err) {
-            console.warn("Firebase Phone Auth SMS attempt:", err);
-            if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
-            if (err.code === 'auth/operation-not-allowed' || err.code === 'auth/admin-restricted-operation') {
-              alert("Notice: In Firebase Console -> Authentication -> Sign-in method, please enable the 'Phone' provider to deliver live carrier SMS.\n\nOpening secure login verification for +91 " + phoneDigits);
-            }
           }
+
+          const confirmationResult = await firebase.auth().signInWithPhoneNumber(fullPhone, window.recaptchaVerifier);
+          window.confirmationResult = confirmationResult;
+
+          if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
+          requestOtpFlow({
+            recipient: fullPhone,
+            displayRecipient: fullPhone,
+            targetIdentifier: phoneDigits,
+            type: 'firebase-phone',
+            isFirebase: true
+          });
+          return;
+        } catch (err) {
+          console.warn("Firebase Phone Auth attempt:", err);
+          if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
         }
       }
 
       if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
       requestOtpFlow({
-        recipient: target,
-        displayRecipient: isEmail ? target : ("+91 " + phoneDigits),
-        targetIdentifier: isEmail ? target : phoneDigits,
-        type: isEmail ? 'email' : 'phone',
+        recipient: fullPhone,
+        displayRecipient: fullPhone,
+        targetIdentifier: phoneDigits,
+        type: 'phone',
         isFirebase: false
       });
     }
 
-    // Two-Factor Verification Engine (Official Carrier Delivery + Modern 2FA)
+    // Two-Factor Verification Engine (Official Carrier Delivery + 2-Minute Expiry)
     let currentOtpSession = null;
     let otpCountdownTimer = null;
 
     function requestOtpFlow({ recipient, displayRecipient, targetIdentifier, type, isFirebase }) {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      const isPhone = !recipient.includes('@');
       const cleanDigits = targetIdentifier ? targetIdentifier.toString().replace(/\D/g, '').slice(-10) : '';
 
       currentOtpSession = {
@@ -2214,36 +2373,23 @@
         targetPhone: cleanDigits,
         type: type || 'otp',
         isFirebase: !!isFirebase,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        expiresAt: Date.now() + (120 * 1000) // 2 Minutes strictly
       };
+
+      // Show Step 2 (Code Verification) and hide Step 1
+      const step1 = document.getElementById('otpStepPhoneInput');
+      const step2 = document.getElementById('otpStepCodeVerify');
+      if (step1) step1.classList.add('hidden');
+      if (step2) step2.classList.remove('hidden');
+
+      const heading = document.getElementById('otpModalHeading');
+      const sub = document.getElementById('otpModalSubtext');
+      if (heading) heading.innerText = "Verify 6-Digit Code";
+      if (sub) sub.innerText = "Enter the 6-digit code sent to your phone to access your child's dashboard.";
 
       const labelEl = document.getElementById('otpRecipientLabel');
       if (labelEl) labelEl.innerText = displayRecipient || recipient;
-
-      const noticeTitle = document.getElementById('otpDeliveryTitle');
-      const noticeSub = document.getElementById('otpDeliverySubtitle');
-      const banner = document.getElementById('otpInstantBanner');
-      const bannerCode = document.getElementById('otpInstantCodeText');
-
-      if (isFirebase) {
-        if (noticeTitle) noticeTitle.innerText = "Official SMS OTP Sent to Mobile";
-        if (noticeSub) noticeSub.innerText = `Carrier SMS sent to +91 ${cleanDigits}. Enter 6-digit code below:`;
-        if (banner) banner.classList.add('hidden');
-      } else if (isPhone) {
-        if (noticeTitle) noticeTitle.innerText = "Official SMS OTP Sent to Mobile";
-        if (noticeSub) noticeSub.innerText = `Carrier SMS sent to +91 ${cleanDigits}. Enter 6-digit code below:`;
-        if (banner && bannerCode) {
-          bannerCode.innerText = code;
-          banner.classList.remove('hidden');
-        }
-      } else {
-        if (noticeTitle) noticeTitle.innerText = "Official Code Dispatched to Email";
-        if (noticeSub) noticeSub.innerText = `Code sent to ${recipient}. Enter 6-digit code below:`;
-        if (banner && bannerCode) {
-          bannerCode.innerText = code;
-          banner.classList.remove('hidden');
-        }
-      }
 
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
@@ -2252,39 +2398,93 @@
         const box = document.getElementById('otp-' + i);
         if (box) {
           box.value = '';
-          box.classList.remove('border-red-500');
+          box.classList.remove('border-rose-500');
         }
       }
 
       const modal = document.getElementById('otpVerificationModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
 
       setTimeout(() => {
         const first = document.getElementById('otp-1');
         if (first) first.focus();
       }, 150);
 
-      startOtpTimer();
+      // Start 2-Minute (120s) Live Countdown
+      startOtpTimer(120);
+
+      // Display official VedIQ Academy Top Push Notification Banner
+      showVediqPushNotification(code, cleanDigits);
     }
 
-    function startOtpTimer() {
+    // Top Push Notification Banner Simulator (VedIQ Academy Brand Message)
+    function showVediqPushNotification(code, phone) {
+      const banner = document.getElementById('vediqPushBanner');
+      const codeEl = document.getElementById('pushBannerCode');
+      const msgEl = document.getElementById('pushBannerMessage');
+      if (!banner) return;
+
+      if (codeEl) codeEl.innerText = code;
+      if (msgEl) {
+        msgEl.innerHTML = `VedIQ Academy: Your verification OTP is <strong class="text-amber-300 font-mono text-sm underline">${code}</strong>. Valid for 2 minutes. Do not share this code.`;
+      }
+
+      banner.classList.remove('-translate-y-24', 'opacity-0', 'pointer-events-none');
+      banner.classList.add('translate-y-0', 'opacity-100');
+
+      // Play soft notification sound tone
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          const actx = new AudioContext();
+          const osc = actx.createOscillator();
+          const gain = actx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, actx.currentTime); // D5
+          osc.frequency.setValueAtTime(880, actx.currentTime + 0.1); // A5
+          gain.gain.setValueAtTime(0.08, actx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.35);
+          osc.connect(gain);
+          gain.connect(actx.destination);
+          osc.start();
+          osc.stop(actx.currentTime + 0.35);
+        }
+      } catch (e) {}
+
+      // Keep banner visible for 12 seconds
+      setTimeout(() => {
+        banner.classList.add('-translate-y-24', 'opacity-0', 'pointer-events-none');
+        banner.classList.remove('translate-y-0', 'opacity-100');
+      }, 12000);
+    }
+
+    function startOtpTimer(durationSeconds = 120) {
       if (otpCountdownTimer) clearInterval(otpCountdownTimer);
-      let timeLeft = 30;
+      let timeLeft = durationSeconds;
       const timerContainer = document.getElementById('otpTimerContainer');
-      const timerSeconds = document.getElementById('otpTimerSeconds');
+      const timerCountdown = document.getElementById('otpTimerCountdown');
       const btnResend = document.getElementById('btnResendOtp');
 
       if (timerContainer) timerContainer.classList.remove('hidden');
       if (btnResend) btnResend.classList.add('hidden');
-      if (timerSeconds) timerSeconds.innerText = timeLeft;
+
+      function formatTime(s) {
+        const mins = Math.floor(s / 60);
+        const secs = s % 60;
+        return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      }
+
+      if (timerCountdown) timerCountdown.innerText = formatTime(timeLeft);
 
       otpCountdownTimer = setInterval(() => {
         timeLeft--;
-        if (timerSeconds) timerSeconds.innerText = timeLeft;
+        if (timerCountdown) timerCountdown.innerText = formatTime(timeLeft);
         if (timeLeft <= 0) {
           clearInterval(otpCountdownTimer);
-          if (timerContainer) timerContainer.classList.add('hidden');
+          if (timerCountdown) timerCountdown.innerText = "00:00 (Expired)";
           if (btnResend) btnResend.classList.remove('hidden');
         }
       }, 1000);
@@ -2294,8 +2494,10 @@
       if (!currentOtpSession) return;
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
       currentOtpSession.code = newCode;
+      currentOtpSession.createdAt = Date.now();
+      currentOtpSession.expiresAt = Date.now() + (120 * 1000); // Reset 2 minutes
       
-      // Re-trigger carrier SMS without touching WhatsApp
+      // Re-trigger carrier SMS
       if (currentOtpSession.targetPhone && typeof firebase !== 'undefined' && firebase.auth) {
         try {
           if (!window.recaptchaVerifier) {
@@ -2307,12 +2509,19 @@
         } catch(e) {}
       }
 
-      const bannerCode = document.getElementById('otpInstantCodeText');
-      if (bannerCode) bannerCode.innerText = newCode;
-
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
-      startOtpTimer();
+
+      for (let i = 1; i <= 6; i++) {
+        const box = document.getElementById('otp-' + i);
+        if (box) {
+          box.value = '';
+          box.classList.remove('border-rose-500');
+        }
+      }
+
+      startOtpTimer(120);
+      showVediqPushNotification(newCode, currentOtpSession.targetPhone);
     }
 
     function closeOtpModal() {
@@ -2333,7 +2542,7 @@
       });
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
-      verifyOtpAndProceed();
+      setTimeout(verifyOtpAndProceed, 200);
     }
 
     function setupOtpInputs() {
@@ -2394,6 +2603,15 @@
       if (entered.length < 6) {
         if (err) {
           err.innerText = "Please enter all 6 digits of the verification code.";
+          err.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // Check 2-minute expiration (Valid for 2 min only)
+      if (currentOtpSession.expiresAt && Date.now() > currentOtpSession.expiresAt) {
+        if (err) {
+          err.innerText = "This OTP has expired (valid for 2 minutes only). Please tap 'Resend New Code' below.";
           err.classList.remove('hidden');
         }
         return;

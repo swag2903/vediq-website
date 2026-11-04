@@ -138,40 +138,41 @@
       color: transparent !important;
     }
 
-    /* Mobile Typography & Touch Optimization: Larger, Crisp & Super Readable on Phones */
-    @media (max-width: 640px) {
+    /* Comprehensive Mobile, Tablet & Desktop Typography & Layout Optimization */
+    @media (max-width: 1024px) {
       body {
+        font-size: 16px !important;
+        line-height: 1.7 !important;
+      }
+      p {
         font-size: 15px !important;
         line-height: 1.65 !important;
       }
-      p {
-        font-size: 14px !important;
-        line-height: 1.6 !important;
-      }
       li {
-        font-size: 13.5px !important;
-        line-height: 1.5 !important;
+        font-size: 14.5px !important;
+        line-height: 1.6 !important;
       }
       .text-xs {
         font-size: 13.5px !important;
         line-height: 1.55 !important;
       }
-      .text-\[10px\], .text-\[11px\] {
-        font-size: 12px !important;
-        line-height: 1.4 !important;
-      }
-      .text-\[9px\], .text-\[8px\] {
-        font-size: 11px !important;
-      }
-      /* Form inputs easy to type on touchscreens without iOS zoom */
-      input, select, textarea {
+      .text-sm {
         font-size: 15px !important;
-        padding-top: 9px !important;
-        padding-bottom: 9px !important;
+        line-height: 1.6 !important;
       }
-      /* Buttons larger and easier for thumbs */
-      button, a.btn {
-        font-size: 13.5px !important;
+      .text-\[10px\], .text-\[11px\], .text-\[9px\], .text-\[8px\] {
+        font-size: 12.5px !important;
+        line-height: 1.45 !important;
+      }
+      /* Form inputs easy to type on touchscreens without iOS/Android zoom */
+      input, select, textarea {
+        font-size: 16px !important;
+        padding-top: 11px !important;
+        padding-bottom: 11px !important;
+      }
+      /* Buttons larger and comfortable for thumbs */
+      button, a.btn, .btn {
+        font-size: 14px !important;
         letter-spacing: 0.025em !important;
       }
     }
@@ -180,31 +181,28 @@
 
 <body class="bg-brand-cream text-brand-ink font-sans selection:bg-brand-ochre selection:text-white leading-relaxed">
 
-  <!-- TOP ANNOUNCEMENT BAR (Customer Friendly & High-Converting) -->
-  <aside class="border-b border-brand-border bg-brand-surface text-brand-muted text-[11px] sm:text-xs font-medium py-2.5 px-4 transition">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2 flex-wrap">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[10px] uppercase tracking-wide border border-emerald-200 shadow-sm">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+  <!-- TOP ANNOUNCEMENT BAR (Customer Friendly, Responsive on Mobile/Tablet/PC) -->
+  <aside class="border-b border-brand-border bg-brand-surface text-brand-muted py-2.5 px-3 sm:px-4 transition">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-center sm:text-left">
+      <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold text-xs uppercase tracking-wide border border-emerald-200 shadow-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
           New Batch Admissions Open
         </span>
-        <span class="text-brand-ink font-semibold">Free 3-Day Live Gurukul Demo for Children (Ages 5–15)</span>
-        <span class="hidden md:inline text-brand-faint">•</span>
-        <span class="hidden md:inline text-brand-muted">Only 8 students per batch for personal care</span>
+        <span class="text-brand-ink font-semibold text-xs sm:text-sm">Free 3-Day Live Gurukul Demo (Ages 5–15)</span>
       </div>
-      <div class="flex items-center gap-2.5 shrink-0">
-        <!-- English / Hindi Language Toggle Switch (No Dropdown Menu) -->
-        <div class="inline-flex items-center rounded-lg border border-brand-border bg-white text-[10px] font-bold overflow-hidden shadow-xs">
-          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-2.5 py-1 bg-brand-ink text-white transition">English</button>
-          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-2.5 py-1 text-brand-muted hover:text-brand-ink transition">हिन्दी (Hindi)</button>
+      <div class="flex items-center justify-center gap-2.5 shrink-0 flex-wrap">
+        <!-- English / Hindi Language Toggle Switch -->
+        <div class="inline-flex items-center rounded-lg border border-brand-border bg-white text-xs font-bold overflow-hidden shadow-xs">
+          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-3 py-1 bg-brand-ink text-white transition text-xs">EN</button>
+          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-3 py-1 text-brand-muted hover:text-brand-ink transition text-xs">हिन्दी</button>
         </div>
         <!-- Quick Parent Portal Access Pill -->
-        <a href="parent.html" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[10px] border border-amber-300 transition">
+        <a href="parent.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs border border-amber-300 transition shadow-xs">
           <span>👨‍👩‍👧 Parent Portal</span>
         </a>
-        <button onclick="openDemoModal()" class="px-3.5 py-1 rounded-lg bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs transition shadow-sm flex items-center gap-1">
-          <span>Book Free Slot</span>
-          <span aria-hidden="true">&rarr;</span>
+        <button onclick="openDemoModal()" class="px-3.5 py-1.5 rounded-lg bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs transition shadow-sm flex items-center gap-1">
+          <span>Book Free Slot &rarr;</span>
         </button>
       </div>
     </div>
@@ -296,100 +294,100 @@
       </div>
 
       <!-- Hero Headline with Cormorant Garamond Serif Accent -->
-      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-light text-brand-ink tracking-tight max-w-4xl mx-auto leading-[1.08]">
+      <h1 class="text-3xl sm:text-5xl lg:text-7xl font-light text-brand-ink tracking-tight max-w-4xl mx-auto leading-[1.12]">
         Ancient wisdom for the <br />
         <span class="font-serif italic font-semibold text-brand-ochre">modern scientific mind.</span>
       </h1>
 
       <!-- Refined Subtitle -->
-      <p class="mt-7 text-base sm:text-lg text-brand-muted max-w-2xl mx-auto font-normal leading-relaxed">
+      <p class="mt-5 text-base sm:text-lg lg:text-xl text-brand-muted max-w-2xl mx-auto font-normal leading-relaxed px-2">
         Modern education teaches knowledge; <strong class="text-brand-ink font-semibold">VedIQ Academy trains the mind</strong>. A daily 1-hour Gurukul ritual fusing ancient Tratak concentration, Vedic mathematics, and neuroscience to build unbreakable focus and noble character.
       </p>
 
       <!-- Primary Action Buttons -->
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <button onclick="openDemoModal()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs tracking-wider uppercase text-white bg-brand-ink hover:bg-brand-ochre hover:shadow-ochre transition duration-200">
-          Book Free 3-Day Demo Class
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-md mx-auto">
+        <button onclick="openDemoModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-sm tracking-wider uppercase text-white bg-brand-ink hover:bg-brand-ochre hover:shadow-ochre transition duration-200 shadow-md">
+          Book Free 3-Day Demo Class &rarr;
         </button>
-        <a href="#system" class="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-xs tracking-wider uppercase text-brand-ink bg-brand-surface border border-brand-border hover:bg-brand-subtle transition">
+        <a href="#system" class="w-full sm:w-auto px-7 py-4 rounded-2xl font-bold text-sm tracking-wider uppercase text-brand-ink bg-brand-surface border border-brand-border hover:bg-brand-subtle transition shadow-xs">
           View 60-Minute Ritual
         </a>
       </div>
 
-      <!-- Trust & Credibility Metrics -->
-      <div class="mt-16 pt-10 border-t border-brand-border/80 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto text-left">
-        <div>
-          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">60 Min</span>
-          <p class="text-[11px] text-brand-muted mt-0.5">Daily calibrated routine</p>
+      <!-- Trust & Credibility Metrics (Optimized across Phone/Tablet/PC) -->
+      <div class="mt-12 pt-8 border-t border-brand-border/80 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-3xl mx-auto text-center sm:text-left">
+        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
+          <span class="text-3xl sm:text-4xl font-display font-bold text-brand-ink">60 Min</span>
+          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Daily calibrated routine</p>
         </div>
-        <div>
-          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">+30%</span>
-          <p class="text-[11px] text-brand-muted mt-0.5">Focus boost in 7 days</p>
+        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
+          <span class="text-3xl sm:text-4xl font-display font-bold text-brand-ochre">+30%</span>
+          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Focus boost in 7 days</p>
         </div>
-        <div>
-          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">1:8</span>
-          <p class="text-[11px] text-brand-muted mt-0.5">Micro-batch mentorship</p>
+        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
+          <span class="text-3xl sm:text-4xl font-display font-bold text-brand-ink">1:8</span>
+          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Micro-batch mentorship</p>
         </div>
-        <div>
-          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">365</span>
-          <p class="text-[11px] text-brand-muted mt-0.5">Standardized daily lessons</p>
+        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
+          <span class="text-3xl sm:text-4xl font-display font-bold text-emerald-700">365</span>
+          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Standardized daily lessons</p>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- THE THREE PILLARS (Minimalist Editorial Grid) -->
+  <!-- THE THREE PILLARS (Minimalist Editorial Grid - Stacks on Mobile & Tablet for Maximum Legibility) -->
   <section class="py-20 bg-brand-surface border-b border-brand-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="max-w-2xl mb-14">
-        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Core Philosophy</span>
-        <h2 class="mt-2 text-2xl sm:text-3xl font-light text-brand-ink tracking-tight">
+      <div class="max-w-2xl mb-12 text-center sm:text-left">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-ochre">Core Philosophy</span>
+        <h2 class="mt-2 text-2xl sm:text-4xl font-light text-brand-ink tracking-tight font-display">
           Three faculties essential for the next generation
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         
         <!-- Pillar 1 -->
-        <div class="p-8 rounded-2xl bg-brand-cream border border-brand-border space-y-4 hover:border-brand-ochre/40 transition">
-          <div class="w-8 h-8 rounded-lg bg-brand-ink text-brand-gold flex items-center justify-center text-xs font-display font-bold">
+        <div class="p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40 transition">
+          <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
             01
           </div>
-          <h3 class="text-lg font-bold text-brand-ink">Concentration (Dharana)</h3>
-          <p class="text-xs text-brand-muted leading-relaxed">
+          <h3 class="text-xl font-bold text-brand-ink">Concentration (Dharana)</h3>
+          <p class="text-sm sm:text-base text-brand-muted leading-relaxed">
             Reversing the neural damage of short-form algorithmic video addiction. Daily Tratak gaze stillness resets dopamine receptors and cultivates 45+ minutes of continuous deep cognitive focus.
           </p>
-          <div class="pt-2 text-[11px] text-brand-ochre font-semibold">
+          <div class="pt-2 text-xs sm:text-sm text-brand-ochre font-bold bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/60">
             Result: Deep study without restlessness
           </div>
         </div>
 
         <!-- Pillar 2 -->
-        <div class="p-8 rounded-2xl bg-brand-cream border border-brand-border space-y-4 hover:border-brand-ochre/40 transition">
-          <div class="w-8 h-8 rounded-lg bg-brand-ink text-brand-gold flex items-center justify-center text-xs font-display font-bold">
+        <div class="p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40 transition">
+          <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
             02
           </div>
-          <h3 class="text-lg font-bold text-brand-ink">Vedic Mathematical Logic</h3>
-          <p class="text-xs text-brand-muted leading-relaxed">
+          <h3 class="text-xl font-bold text-brand-ink">Vedic Mathematical Logic</h3>
+          <p class="text-sm sm:text-base text-brand-muted leading-relaxed">
             Transforming numbers from an anxiety trigger into joyful visual pattern puzzles. 16 ancient Sutras teach children to calculate multi-digit multiplication and roots entirely in their mind.
           </p>
-          <div class="pt-2 text-[11px] text-brand-ochre font-semibold">
+          <div class="pt-2 text-xs sm:text-sm text-brand-ochre font-bold bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/60">
             Result: 10x speed & zero exam fear
           </div>
         </div>
 
         <!-- Pillar 3 -->
-        <div class="p-8 rounded-2xl bg-brand-cream border border-brand-border space-y-4 hover:border-brand-ochre/40 transition">
-          <div class="w-8 h-8 rounded-lg bg-brand-ink text-brand-gold flex items-center justify-center text-xs font-display font-bold">
+        <div class="p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40 transition">
+          <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
             03
           </div>
-          <h3 class="text-lg font-bold text-brand-ink">Character & Sanskar</h3>
-          <p class="text-xs text-brand-muted leading-relaxed">
+          <h3 class="text-xl font-bold text-brand-ink">Character & Sanskar</h3>
+          <p class="text-sm sm:text-base text-brand-muted leading-relaxed">
             Intelligence without ethical roots creates chaos. Daily lessons from the Ramayana, Upanishads, and Panchatatva instill profound respect for parents, humility, courage, and lifelong discipline.
           </p>
-          <div class="pt-2 text-[11px] text-brand-ochre font-semibold">
+          <div class="pt-2 text-xs sm:text-sm text-brand-ochre font-bold bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/60">
             Result: Grounded, respectful future leaders
           </div>
         </div>
@@ -399,46 +397,46 @@
     </div>
   </section>
 
-  <!-- DAILY 1-HOUR PROTOCOL (Harmonious Interactive Scrubber) -->
-  <section id="system" class="py-24 bg-brand-cream border-b border-brand-border">
+  <!-- DAILY 1-HOUR PROTOCOL (Smooth Thumb Scrubber on Phones / Grid on PC) -->
+  <section id="system" class="py-20 sm:py-24 bg-brand-cream border-b border-brand-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-4">
         <div>
-          <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Precision Engineering</span>
-          <h2 class="mt-2 text-3xl sm:text-4xl font-light text-brand-ink tracking-tight">
+          <span class="text-xs font-bold uppercase tracking-widest text-brand-ochre">Precision Engineering</span>
+          <h2 class="mt-2 text-2xl sm:text-4xl font-light text-brand-ink tracking-tight font-display">
             The Daily 60-Minute Architecture
           </h2>
-          <p class="text-xs text-brand-muted mt-2 max-w-xl">
+          <p class="text-sm text-brand-muted mt-2 max-w-xl leading-relaxed">
             Standardized word-for-word across 10 years. Five calibrated micro-segments designed to prime, focus, educate, drill, and anchor.
           </p>
         </div>
         <div class="text-xs text-brand-muted">
-          Click any segment to view the exact classroom protocol:
+          Swipe &amp; tap any segment to view classroom protocol:
         </div>
       </div>
 
-      <!-- Scrubber Segment Selector -->
-      <div class="grid grid-cols-5 gap-2 p-1.5 rounded-2xl bg-brand-surface border border-brand-border mb-8" id="segmentScrubber">
-        <button onclick="activateSegment(0)" class="segment-btn py-3 px-2 rounded-xl text-center transition bg-brand-ink text-white" id="segBtn0">
-          <span class="block text-[10px] font-mono text-brand-gold uppercase">10 Min</span>
-          <span class="block text-xs font-bold mt-0.5 truncate">01. Prana</span>
+      <!-- Scrubber Segment Selector (Smooth Carousel on Phones, Grid on PC) -->
+      <div class="flex overflow-x-auto gap-2.5 p-2 rounded-2xl bg-brand-surface border border-brand-border mb-8 scrollbar-none md:grid md:grid-cols-5" id="segmentScrubber">
+        <button onclick="activateSegment(0)" class="segment-btn min-w-[125px] md:min-w-0 py-3.5 px-3 rounded-xl text-center transition bg-brand-ink text-white shrink-0 shadow-xs" id="segBtn0">
+          <span class="block text-xs font-mono text-brand-gold uppercase">10 Min</span>
+          <span class="block text-xs sm:text-sm font-bold mt-0.5 truncate">01. Prana</span>
         </button>
-        <button onclick="activateSegment(1)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn1">
-          <span class="block text-[10px] font-mono uppercase">10 Min</span>
-          <span class="block text-xs font-bold mt-0.5 truncate">02. Tratak</span>
+        <button onclick="activateSegment(1)" class="segment-btn min-w-[125px] md:min-w-0 py-3.5 px-3 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle shrink-0" id="segBtn1">
+          <span class="block text-xs font-mono uppercase">10 Min</span>
+          <span class="block text-xs sm:text-sm font-bold mt-0.5 truncate">02. Tratak</span>
         </button>
-        <button onclick="activateSegment(2)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn2">
-          <span class="block text-[10px] font-mono uppercase">15 Min</span>
-          <span class="block text-xs font-bold mt-0.5 truncate">03. Science</span>
+        <button onclick="activateSegment(2)" class="segment-btn min-w-[125px] md:min-w-0 py-3.5 px-3 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle shrink-0" id="segBtn2">
+          <span class="block text-xs font-mono uppercase">15 Min</span>
+          <span class="block text-xs sm:text-sm font-bold mt-0.5 truncate">03. Science</span>
         </button>
-        <button onclick="activateSegment(3)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn3">
-          <span class="block text-[10px] font-mono uppercase">15 Min</span>
-          <span class="block text-xs font-bold mt-0.5 truncate">04. Vedic Math</span>
+        <button onclick="activateSegment(3)" class="segment-btn min-w-[125px] md:min-w-0 py-3.5 px-3 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle shrink-0" id="segBtn3">
+          <span class="block text-xs font-mono uppercase">15 Min</span>
+          <span class="block text-xs sm:text-sm font-bold mt-0.5 truncate">04. Vedic Math</span>
         </button>
-        <button onclick="activateSegment(4)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn4">
-          <span class="block text-[10px] font-mono uppercase">10 Min</span>
-          <span class="block text-xs font-bold mt-0.5 truncate">05. Sanskar</span>
+        <button onclick="activateSegment(4)" class="segment-btn min-w-[125px] md:min-w-0 py-3.5 px-3 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle shrink-0" id="segBtn4">
+          <span class="block text-xs font-mono uppercase">10 Min</span>
+          <span class="block text-xs sm:text-sm font-bold mt-0.5 truncate">05. Sanskar</span>
         </button>
       </div>
 
