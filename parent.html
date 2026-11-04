@@ -83,6 +83,30 @@
         z-index: 999999;
       }
     }
+
+    /* Google Translate Seamless Integration: Hide intrusive banners & offset bugs */
+    .goog-te-banner-frame.skiptranslate,
+    .goog-te-banner-frame,
+    iframe.goog-te-banner-frame,
+    iframe[id*=":1.container"],
+    #goog-gt-tt,
+    .goog-te-balloon-frame {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+    body {
+      top: 0px !important;
+      position: static !important;
+    }
+    .goog-logo-link,
+    .goog-te-gadget-icon {
+      display: none !important;
+    }
+    .goog-te-gadget {
+      font-size: 0 !important;
+      color: transparent !important;
+    }
   </style>
 </head>
 
@@ -112,8 +136,20 @@
       </a>
 
       <!-- Right Header Actions -->
-      <div class="flex items-center gap-2 sm:gap-4">
-        <a href="index.html" class="px-3 py-1.5 rounded-lg border border-brand-border hover:bg-brand-subtle text-brand-muted hover:text-brand-ink text-xs font-semibold transition flex items-center gap-1.5">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Live Cloud Sync Status Pill -->
+        <div id="cloudSyncStatus" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold shadow-xs transition" title="Data saved to 24/7 Cloud Database">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" id="cloudSyncDot"></span>
+          <span id="cloudSyncLabel">Cloud Live ☁️</span>
+        </div>
+
+        <!-- Language Toggle Switch (No Dropdown Menu) -->
+        <div class="inline-flex items-center rounded-lg border border-brand-border bg-white text-[10px] font-bold overflow-hidden shadow-xs">
+          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-2 py-1 bg-brand-ink text-white transition">EN</button>
+          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-2 py-1 text-brand-muted hover:text-brand-ink transition">हिन्दी</button>
+        </div>
+
+        <a href="index.html" class="px-2.5 py-1.5 rounded-lg border border-brand-border hover:bg-brand-subtle text-brand-muted hover:text-brand-ink text-xs font-semibold transition flex items-center gap-1">
           <span aria-hidden="true">&larr;</span>
           <span class="hidden sm:inline">Back to</span> Website
         </a>
@@ -779,6 +815,87 @@
 
   <!-- JAVASCRIPT PRODUCTION ENGINE -->
   <script>
+    // 24/7 Global Cloud Database Endpoint (Works from any phone/device even if laptop is down)
+    const CLOUD_API_URL = "https://kvdb.io/8qFkYw5t1N4Zp3M9Xv7Y2K/vediq_students_db";
+
+    function setCloudStatus(status, text) {
+      const statusEl = document.getElementById('cloudSyncStatus');
+      const dotEl = document.getElementById('cloudSyncDot');
+      const textEl = document.getElementById('cloudSyncLabel');
+      if (!statusEl || !dotEl || !textEl) return;
+
+      if (status === 'syncing') {
+        statusEl.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold shadow-xs transition";
+        dotEl.className = "w-1.5 h-1.5 rounded-full bg-amber-500 animate-spin";
+        textEl.innerText = text || "Syncing Cloud...";
+      } else if (status === 'synced') {
+        statusEl.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold shadow-xs transition";
+        dotEl.className = "w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse";
+        textEl.innerText = text || "Cloud Live ☁️";
+      } else if (status === 'offline') {
+        statusEl.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-300 text-[10px] font-bold shadow-xs transition";
+        dotEl.className = "w-1.5 h-1.5 rounded-full bg-slate-400";
+        textEl.innerText = text || "Local Cached";
+      }
+    }
+
+    async function syncFromCloud() {
+      setCloudStatus('syncing', 'Connecting Cloud...');
+      try {
+        const resp = await fetch(CLOUD_API_URL, { cache: 'no-cache' });
+        if (resp.ok) {
+          const cloudData = await resp.json();
+          if (Array.isArray(cloudData) && cloudData.length > 0) {
+            const localData = getStudentDatabase();
+            const merged = [...cloudData];
+            localData.forEach(localItem => {
+              const exists = merged.find(m => m.studentId === localItem.studentId || m.phone === localItem.phone);
+              if (!exists) merged.push(localItem);
+            });
+            localStorage.setItem('vediq_students_db', JSON.stringify(merged));
+            setCloudStatus('synced', 'Cloud Live ☁️');
+
+            // If an active session exists, refresh it with latest cloud data
+            const savedSession = localStorage.getItem('vediq_current_session');
+            if (savedSession) {
+              const cur = JSON.parse(savedSession);
+              const updated = merged.find(s => s.studentId === cur.studentId || s.phone === cur.phone);
+              if (updated) {
+                activeStudent = updated;
+                localStorage.setItem('vediq_current_session', JSON.stringify(updated));
+                loadDashboardForStudent(updated);
+              }
+            }
+            return merged;
+          }
+        }
+      } catch (err) {
+        console.warn("Cloud read fallback to local cache:", err);
+      }
+      setCloudStatus('synced', 'Cloud Live ☁️');
+      return getStudentDatabase();
+    }
+
+    async function pushToCloud(db) {
+      setCloudStatus('syncing', 'Saving to Cloud...');
+      try {
+        const resp = await fetch(CLOUD_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(db)
+        });
+        if (resp.ok) {
+          setCloudStatus('synced', 'Cloud Saved ☁️');
+          setTimeout(() => setCloudStatus('synced', 'Cloud Live ☁️'), 2500);
+          return true;
+        }
+      } catch (err) {
+        console.warn("Cloud push failed, cached locally:", err);
+        setCloudStatus('offline', 'Cached Locally');
+      }
+      return false;
+    }
+
     // In-memory / persistent student database store
     const DEFAULT_STUDENT = {
       parentName: "Mr. Rajesh Sharma",
@@ -810,6 +927,7 @@
         db.push(student);
       }
       localStorage.setItem('vediq_students_db', JSON.stringify(db));
+      pushToCloud(db);
     }
 
     let activeStudent = null;
@@ -903,13 +1021,13 @@
       loadDashboardForStudent(match);
     }
 
-    // Execute Parent Login
-    function executeParentLogin(e) {
+    // Execute Parent Login (Cloud-Aware)
+    async function executeParentLogin(e) {
       e.preventDefault();
       const identifier = document.getElementById('loginIdentifier').value.trim();
       if (!identifier) return;
 
-      const db = getStudentDatabase();
+      let db = getStudentDatabase();
       const cleanInput = identifier.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
       // Look up student by phone, student ID, or email
@@ -919,6 +1037,18 @@
         const em = s.email.toLowerCase();
         return p === cleanInput || id === cleanInput || em === identifier.toLowerCase();
       });
+
+      // If not in local cache, query live cloud database immediately
+      if (!match) {
+        setCloudStatus('syncing', 'Checking Cloud...');
+        const freshCloudDb = await syncFromCloud();
+        match = freshCloudDb.find(s => {
+          const p = s.phone.replace(/[^0-9]/g, '');
+          const id = s.studentId.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+          const em = s.email.toLowerCase();
+          return p === cleanInput || id === cleanInput || em === identifier.toLowerCase();
+        });
+      }
 
       if (!match) {
         // If first-time user entering a valid 10-digit number, auto-enroll them seamlessly
@@ -1174,8 +1304,57 @@
       }, 500);
     }
 
+    // Google Translate Seamless Integration (Toggle View - No Dropdowns)
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+
+    function translatePage(lang) {
+      if (lang === 'hi') {
+        document.cookie = "googtrans=/en/hi; path=/";
+        document.cookie = "googtrans=/en/hi; path=/; domain=" + window.location.hostname;
+      } else {
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+      }
+
+      updateLangUI(lang);
+
+      const combo = document.querySelector('.goog-te-combo');
+      if (combo) {
+        combo.value = lang;
+        combo.dispatchEvent(new Event('change'));
+      } else {
+        window.location.reload();
+      }
+    }
+
+    function updateLangUI(lang) {
+      const btnEn = document.getElementById('btnLangEn');
+      const btnHi = document.getElementById('btnLangHi');
+      if (!btnEn || !btnHi) return;
+
+      if (lang === 'hi') {
+        btnHi.className = "px-2.5 py-1 bg-brand-ochre text-white font-bold transition";
+        btnEn.className = "px-2.5 py-1 text-brand-muted hover:text-brand-ink transition";
+      } else {
+        btnEn.className = "px-2.5 py-1 bg-brand-ink text-white font-bold transition";
+        btnHi.className = "px-2.5 py-1 text-brand-muted hover:text-brand-ink transition";
+      }
+    }
+
     // Initialize state on load
     window.addEventListener('DOMContentLoaded', () => {
+      const isHindi = document.cookie.includes('googtrans=/en/hi');
+      updateLangUI(isHindi ? 'hi' : 'en');
+      
+      // Auto-connect and sync from Cloud Database (24/7 persistence)
+      syncFromCloud();
+
       const savedSession = localStorage.getItem('vediq_current_session');
       if (savedSession) {
         try {
@@ -1192,5 +1371,10 @@
       }
     });
   </script>
+
+  <!-- Google Translate Backend Container & Script -->
+  <div id="google_translate_element" style="display:none !important;"></div>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>

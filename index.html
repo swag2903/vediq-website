@@ -114,6 +114,30 @@
       left: -9999px !important;
     }
 
+    /* Google Translate Seamless Integration: Hide intrusive banners & offset bugs */
+    .goog-te-banner-frame.skiptranslate,
+    .goog-te-banner-frame,
+    iframe.goog-te-banner-frame,
+    iframe[id*=":1.container"],
+    #goog-gt-tt,
+    .goog-te-balloon-frame {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+    body {
+      top: 0px !important;
+      position: static !important;
+    }
+    .goog-logo-link,
+    .goog-te-gadget-icon {
+      display: none !important;
+    }
+    .goog-te-gadget {
+      font-size: 0 !important;
+      color: transparent !important;
+    }
+
     /* Mobile Typography & Touch Optimization: Larger, Crisp & Super Readable on Phones */
     @media (max-width: 640px) {
       body {
@@ -169,6 +193,11 @@
         <span class="hidden md:inline text-brand-muted">Only 8 students per batch for personal care</span>
       </div>
       <div class="flex items-center gap-2.5 shrink-0">
+        <!-- English / Hindi Language Toggle Switch (No Dropdown Menu) -->
+        <div class="inline-flex items-center rounded-lg border border-brand-border bg-white text-[10px] font-bold overflow-hidden shadow-xs">
+          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-2.5 py-1 bg-brand-ink text-white transition">English</button>
+          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-2.5 py-1 text-brand-muted hover:text-brand-ink transition">हिन्दी (Hindi)</button>
+        </div>
         <!-- Quick Parent Portal Access Pill -->
         <a href="parent.html" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[10px] border border-amber-300 transition">
           <span>👨‍👩‍👧 Parent Portal</span>
@@ -236,6 +265,15 @@
 
     <!-- Mobile Drawer -->
     <div id="mobileDrawer" class="hidden lg:hidden border-b border-brand-border bg-brand-surface px-6 py-6 space-y-4 text-sm font-semibold text-brand-ink">
+      <!-- Mobile Language Toggle Switch (No Dropdown Menu) -->
+      <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+        <span class="text-xs text-brand-muted font-bold">Language / भाषा:</span>
+        <div class="inline-flex items-center rounded-lg border border-brand-border bg-white text-xs font-bold overflow-hidden shadow-xs">
+          <button type="button" onclick="translatePage('en')" id="btnLangEnMobile" class="px-3 py-1 bg-brand-ink text-white transition">English</button>
+          <button type="button" onclick="translatePage('hi')" id="btnLangHiMobile" class="px-3 py-1 text-brand-muted hover:text-brand-ink transition">हिन्दी</button>
+        </div>
+      </div>
+
       <!-- Prominent Parent Login Card for Mobile -->
       <a href="parent.html" onclick="toggleMobileNav()" class="flex items-center justify-between p-3 rounded-xl bg-brand-ochre text-white font-bold text-xs shadow-md">
         <span class="flex items-center gap-2">
@@ -1601,12 +1639,58 @@
     }
     setInterval(purgeNetlifyDrawer, 200);
 
-    // Clear any previous translation cookies to ensure 100% clean English display
-    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+    // Dual Language Translation Engine (Toggle View — No Dropdown Menu)
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi',
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+
+    function translatePage(lang) {
+      if (lang === 'hi') {
+        document.cookie = "googtrans=/en/hi; path=/";
+        document.cookie = "googtrans=/en/hi; path=/; domain=" + window.location.hostname;
+      } else {
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname;
+      }
+
+      updateLangUI(lang);
+
+      const combo = document.querySelector('.goog-te-combo');
+      if (combo) {
+        combo.value = lang;
+        combo.dispatchEvent(new Event('change'));
+      } else {
+        window.location.reload();
+      }
+    }
+
+    function updateLangUI(lang) {
+      const btnEn = document.getElementById('btnLangEn');
+      const btnHi = document.getElementById('btnLangHi');
+      const btnEnMob = document.getElementById('btnLangEnMobile');
+      const btnHiMob = document.getElementById('btnLangHiMobile');
+
+      if (lang === 'hi') {
+        if (btnHi) btnHi.className = "px-2.5 py-1 bg-brand-ochre text-white font-bold transition";
+        if (btnEn) btnEn.className = "px-2.5 py-1 text-brand-muted hover:text-brand-ink transition";
+        if (btnHiMob) btnHiMob.className = "px-3 py-1 bg-brand-ochre text-white font-bold transition";
+        if (btnEnMob) btnEnMob.className = "px-3 py-1 text-brand-muted hover:text-brand-ink transition";
+      } else {
+        if (btnEn) btnEn.className = "px-2.5 py-1 bg-brand-ink text-white font-bold transition";
+        if (btnHi) btnHi.className = "px-2.5 py-1 text-brand-muted hover:text-brand-ink transition";
+        if (btnEnMob) btnEnMob.className = "px-3 py-1 bg-brand-ink text-white font-bold transition";
+        if (btnHiMob) btnHiMob.className = "px-3 py-1 text-brand-muted hover:text-brand-ink transition";
+      }
+    }
 
     // Init
     window.addEventListener('DOMContentLoaded', () => {
+      const isHindi = document.cookie.includes('googtrans=/en/hi');
+      updateLangUI(isHindi ? 'hi' : 'en');
       purgeNetlifyDrawer();
       activateSegment(0);
       switchStage('foundation');
@@ -1614,5 +1698,10 @@
       updateROI();
     });
   </script>
+
+  <!-- Google Translate Backend Container & Script -->
+  <div id="google_translate_element" style="display:none !important;"></div>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
