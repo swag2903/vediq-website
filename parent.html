@@ -126,6 +126,14 @@
       animation: auraGlow 3.5s ease-in-out infinite;
     }
 
+    /* Completely hide backend dev badges across iPhone, Mobile & Laptop */
+    #firebaseStatusPill, #cloudSyncStatus {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
     /* Refined scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: #E8E2D8; border-radius: 6px; }
@@ -262,14 +270,14 @@
 
       <!-- Right Header Actions (Optimized for Mobile, Tablet & PC) -->
       <div class="flex items-center gap-1.5 sm:gap-3">
-        <!-- Firebase Auth Status / Settings Pill (Hidden on mobile to keep header clean) -->
-        <button type="button" onclick="openFirebaseConfigModal()" id="firebaseStatusPill" class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-[10px] font-bold shadow-xs transition cursor-pointer" title="Firebase OAuth & Phone OTP Status / Settings">
+        <!-- Firebase Auth Status / Settings Pill (Hidden across all devices) -->
+        <button type="button" onclick="openFirebaseConfigModal()" id="firebaseStatusPill" style="display: none !important;" class="hidden" title="Firebase OAuth & Phone OTP Status / Settings">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" id="firebaseStatusDot"></span>
           <span id="firebaseStatusLabel">🔥 Auth</span>
         </button>
 
-        <!-- Live Cloud Sync Status Pill (Hidden on mobile to give space to Logout) -->
-        <div id="cloudSyncStatus" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold shadow-xs transition" title="Data saved to 24/7 Cloud Database">
+        <!-- Live Cloud Sync Status Pill (Hidden across all devices) -->
+        <div id="cloudSyncStatus" style="display: none !important;" class="hidden" title="Data saved to 24/7 Cloud Database">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" id="cloudSyncDot"></span>
           <span id="cloudSyncLabel">Cloud Live ☁️</span>
         </div>
@@ -930,17 +938,19 @@
           <!-- Mentors Concierge Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-brand-ochre text-white">Founder</span>
               <div class="text-xs font-bold text-brand-ink">Dr. Ujwal Vyas</div>
-              <div class="text-[10px] text-brand-muted">Head & Master Mentor</div>
+              <div class="text-[10px] text-brand-muted">Founder & Head Master Mentor</div>
               <div class="text-xs font-semibold text-brand-ink">Gurukul Academic Desk</div>
-              <a href="https://wa.me/918390332500?text=Namaste%20Dr.%20Ujwal%20Vyas!%20Parent%20here." target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
-                💬 WhatsApp Mentor Desk
+              <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20Parent%20here." target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
+                💬 WhatsApp Founder Desk
               </a>
             </div>
 
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
+              <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 font-bold">Co-Founder</span>
               <div class="text-xs font-bold text-brand-ink">Mr. Atish Gulhane</div>
-              <div class="text-[10px] text-brand-muted">Admissions & Operations Lead</div>
+              <div class="text-[10px] text-brand-muted">Co-Founder • Admissions & Operations</div>
               <div class="text-xs font-semibold text-brand-ink">+91 83903 32500</div>
               <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20support." target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
                 💬 WhatsApp Admissions
@@ -948,11 +958,12 @@
             </div>
 
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
-              <div class="text-xs font-bold text-brand-ink">Academic Support Desk</div>
-              <div class="text-[10px] text-brand-muted">App, Portal & Technical Help</div>
-              <div class="text-xs font-semibold text-brand-ink">+91 83903 32500</div>
-              <a href="https://wa.me/918390332500?text=Namaste%20Tech%20Support!%20Parent%20portal%20help." target="_blank" class="block w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-center font-bold text-xs rounded-lg transition mt-2">
-                💬 WhatsApp Support
+              <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 font-bold">Co-Founder</span>
+              <div class="text-xs font-bold text-brand-ink">Mr. Swagatam Shukla (Swag)</div>
+              <div class="text-[10px] text-brand-muted">Co-Founder • Academic & Tech Lead</div>
+              <div class="text-xs font-semibold text-brand-ink">+91 95948 06822</div>
+              <a href="https://wa.me/919594806822?text=Namaste%20Mr.%20Swagatam!%20Parent%20portal%20help." target="_blank" class="block w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-center font-bold text-xs rounded-lg transition mt-2">
+                💬 WhatsApp Tech Lead
               </a>
             </div>
           </div>
