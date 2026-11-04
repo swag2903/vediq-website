@@ -362,8 +362,27 @@
   <!-- ========================================================================= -->
   <!-- 2. PRODUCTION PARENT DASHBOARD VIEW -->
   <!-- ========================================================================= -->
-  <div id="view-dashboard" class="hidden flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <div id="view-dashboard" class="hidden flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-5">
     
+    <!-- Multi-Child Family Bar (Up to 4 Children per Account) -->
+    <div class="bg-white rounded-2xl border border-brand-border p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
+        <span class="text-xs font-bold text-brand-muted uppercase tracking-wider flex items-center gap-1.5 mr-1 shrink-0">
+          <span>👶</span> <span>Children:</span>
+        </span>
+        <!-- Dynamic Child Tabs Container (Switch between up to 4 kids) -->
+        <div id="childSelectorTabs" class="flex items-center gap-2 flex-wrap">
+          <!-- Populated by renderChildSelector() -->
+        </div>
+      </div>
+
+      <!-- Add Child Button (Up to 4 kids) -->
+      <button type="button" id="btnAddChildBtn" onclick="openAddChildModal()" class="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-brand-ochre border border-amber-200 text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 shadow-xs cursor-pointer">
+        <span>➕</span>
+        <span id="btnAddChildText">Add Child (Up to 4)</span>
+      </button>
+    </div>
+
     <!-- Top Student Header Bar -->
     <div class="bg-brand-ink text-white rounded-3xl p-5 sm:p-7 border border-brand-borderDark shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
       <div class="absolute -right-8 -bottom-8 w-48 h-48 bg-brand-gold/5 rounded-full pointer-events-none"></div>
@@ -934,19 +953,21 @@
         </p>
       </div>
 
-      <!-- Live Code Notification Simulator Banner -->
-      <div onclick="autoFillOtp()" class="cursor-pointer p-2.5 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 rounded-2xl transition group flex items-center gap-2.5 text-left">
-        <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
-          💬
-        </div>
-        <div class="flex-1 overflow-hidden">
-          <div class="text-[9px] uppercase font-bold text-emerald-800 tracking-wider">Simulated Message • Tap to Fill</div>
-          <div class="text-xs font-mono font-bold text-emerald-950 flex items-center gap-2">
-            <span>Code:</span>
-            <span id="activeOtpDisplay" class="bg-white px-2 py-0.5 rounded-md border border-emerald-300 tracking-widest text-emerald-900 font-extrabold">482910</span>
+      <!-- Direct WhatsApp / SMS Delivery Card (No Simulated Popups) -->
+      <div id="otpDeliveryNotice" class="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between text-left">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-sm shrink-0 shadow-xs">
+            💬
+          </div>
+          <div class="leading-tight">
+            <div id="otpDeliveryTitle" class="text-[11px] font-bold text-emerald-950">Code Dispatched via WhatsApp</div>
+            <div id="otpDeliverySubtitle" class="text-[10px] text-emerald-800">Check your WhatsApp message &amp; enter below</div>
           </div>
         </div>
-        <span class="text-xs font-bold text-emerald-700 group-hover:translate-x-0.5 transition">&rarr;</span>
+        <button type="button" id="btnOpenWhatsAppCode" onclick="openWhatsAppCodeChat()" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded-lg shadow-xs transition flex items-center gap-1 shrink-0">
+          <span>Open Chat</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
       </div>
 
       <!-- 6-Digit Code Inputs -->
@@ -1054,7 +1075,128 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT PRODUCTION ENGINE -->
+  <!-- ========================================================================= -->
+  <!-- ADD ANOTHER CHILD MODAL (Up to 4 Children per Parent Profile) -->
+  <!-- ========================================================================= -->
+  <div id="addChildModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn">
+      
+      <!-- Close button -->
+      <button type="button" onclick="closeAddChildModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted text-xs font-bold flex items-center justify-center transition">✕</button>
+
+      <!-- Header -->
+      <div class="space-y-1 text-center">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-2xl shadow-inner">
+          👶
+        </div>
+        <h3 id="addChildModalTitle" class="text-base sm:text-lg font-bold text-brand-ink">Enroll Another Child</h3>
+        <p class="text-xs text-brand-muted leading-relaxed">
+          Add up to 4 children in your family account with separate Gurukul progress tracking.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form onsubmit="saveNewChild(event)" class="space-y-3 pt-2">
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Full Name *</label>
+          <input type="text" id="newChildName" required placeholder="e.g. Diya Sharma or Kabir Patel" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Age Cohort</label>
+            <select id="newChildGrade" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
+              <option value="Ages 5-7 • Foundation">Ages 5–7 (Foundation)</option>
+              <option value="Ages 8-11 • Pravesh" selected>Ages 8–11 (Pravesh)</option>
+              <option value="Ages 12-15 • Daksha">Ages 12–15 (Daksha)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Daily Live Batch</label>
+            <select id="newChildBatch" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
+              <option value="Daily 4:00 PM – 5:00 PM IST">4:00 PM – 5:00 PM</option>
+              <option value="Daily 5:00 PM – 6:00 PM IST" selected>5:00 PM – 6:00 PM</option>
+              <option value="Daily 6:00 PM – 7:00 PM IST">6:00 PM – 7:00 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2 mt-2">
+          <span>Enroll Child &amp; Switch Dashboard</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- FIRST-TIME PARENT ONBOARDING SETUP (Enroll Child Details) -->
+  <!-- ========================================================================= -->
+  <div id="firstTimeOnboardingModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn">
+      
+      <!-- Icon & Welcome Header -->
+      <div class="text-center space-y-1.5">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-ochre to-amber-300 text-brand-ink flex items-center justify-center text-3xl shadow-md">
+          🪔
+        </div>
+        <h3 class="text-xl sm:text-2xl font-bold text-brand-ink font-display">Welcome to VedIQ Gurukul!</h3>
+        <p class="text-xs text-brand-muted leading-relaxed">
+          Please enter your child's details to personalize their daily ritual tracker, Tratak analytics, and reports. You can add up to 4 children!
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form onsubmit="saveFirstTimeChildSetup(event)" class="space-y-3 pt-2">
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">Parent's Full Name (Mom / Dad)</label>
+          <input type="text" id="obParentName" required placeholder="e.g. Mr. Rajesh Sharma" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-2xl space-y-2.5">
+          <div class="text-[11px] font-bold text-brand-ochre uppercase tracking-wider">Child #1 Details</div>
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Full Name *</label>
+            <input type="text" id="obChild1Name" required placeholder="e.g. Aarav Sharma" class="w-full px-3.5 py-2 rounded-xl border border-brand-border bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-xs font-semibold text-brand-ink mb-1">Age Cohort</label>
+              <select id="obChild1Grade" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
+                <option value="Ages 5-7 • Foundation">Ages 5–7 (Foundation)</option>
+                <option value="Ages 8-11 • Pravesh" selected>Ages 8–11 (Pravesh)</option>
+                <option value="Ages 12-15 • Daksha">Ages 12–15 (Daksha)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-brand-ink mb-1">Batch Time</label>
+              <select id="obChild1Batch" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
+                <option value="Daily 4:00 PM – 5:00 PM IST">4:00 PM – 5:00 PM</option>
+                <option value="Daily 5:00 PM – 6:00 PM IST" selected>5:00 PM – 6:00 PM</option>
+                <option value="Daily 6:00 PM – 7:00 PM IST">6:00 PM – 7:00 PM</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">WhatsApp Mobile Number</label>
+          <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream/60 overflow-hidden focus-within:border-brand-ochre">
+            <span class="px-2.5 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
+            <input type="tel" id="obPhone" maxlength="10" placeholder="98000 00000" class="w-full px-2.5 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2 mt-2">
+          <span>Complete Setup &amp; Enter Gurukul Dashboard</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
   <script>
     // 24/7 Global Cloud Database Endpoint (Works from any phone/device even if laptop is down)
     const CLOUD_API_URL = "https://kvdb.io/8qFkYw5t1N4Zp3M9Xv7Y2K/vediq_students_db";
@@ -1137,46 +1279,110 @@
       return false;
     }
 
-    // In-memory / persistent student database store with distinct demo accounts
+    // In-memory / persistent student database store with multi-child family accounts
     const INITIAL_STUDENTS = [
       {
+        parentId: "PAR-101",
         parentName: "Mr. Rajesh Sharma",
-        childName: "Aarav Sharma",
-        childGrade: "Ages 8-11 • Pravesh",
-        batch: "Daily 5:00 PM – 6:00 PM IST",
         phone: "9800000001",
         email: "parent1@gmail.com",
-        studentId: "VED-2026-101",
-        focusScore: "88",
-        streak: "18",
-        habits: [true, true, true, false]
+        activeChildIndex: 0,
+        children: [
+          {
+            childId: "VED-2026-101",
+            childName: "Aarav Sharma",
+            childGrade: "Ages 8-11 • Pravesh",
+            batch: "Daily 5:00 PM – 6:00 PM IST",
+            focusScore: "88",
+            streak: "18",
+            habits: [true, true, true, false]
+          },
+          {
+            childId: "VED-2026-102",
+            childName: "Diya Sharma",
+            childGrade: "Ages 5-7 • Foundation",
+            batch: "Daily 4:00 PM – 5:00 PM IST",
+            focusScore: "92",
+            streak: "12",
+            habits: [true, true, false, false]
+          }
+        ]
       },
       {
+        parentId: "PAR-102",
         parentName: "Mrs. Sunita Patel",
-        childName: "Ananya Patel",
-        childGrade: "Ages 5-7 • Foundation",
-        batch: "Daily 4:00 PM – 5:00 PM IST",
         phone: "9800000002",
         email: "parent2@gmail.com",
-        studentId: "VED-2026-102",
-        focusScore: "94",
-        streak: "24",
-        habits: [true, true, true, true]
+        activeChildIndex: 0,
+        children: [
+          {
+            childId: "VED-2026-201",
+            childName: "Ananya Patel",
+            childGrade: "Ages 5-7 • Foundation",
+            batch: "Daily 4:00 PM – 5:00 PM IST",
+            focusScore: "94",
+            streak: "24",
+            habits: [true, true, true, true]
+          },
+          {
+            childId: "VED-2026-202",
+            childName: "Rohan Patel",
+            childGrade: "Ages 12-15 • Daksha",
+            batch: "Daily 6:00 PM – 7:00 PM IST",
+            focusScore: "96",
+            streak: "30",
+            habits: [true, true, true, false]
+          }
+        ]
       }
     ];
+
+    // Helper: Normalize profile to ensure children array & active index are valid
+    function normalizeParentProfile(profile) {
+      if (!profile) return null;
+      if (Array.isArray(profile.children) && profile.children.length > 0) {
+        if (typeof profile.activeChildIndex !== 'number' || profile.activeChildIndex < 0 || profile.activeChildIndex >= profile.children.length) {
+          profile.activeChildIndex = 0;
+        }
+        return profile;
+      }
+
+      // Legacy single-child migration
+      const legacyChild = {
+        childId: profile.studentId || ("VED-2026-" + Math.floor(100 + Math.random() * 900)),
+        childName: profile.childName || "Your Child",
+        childGrade: profile.childGrade || "Ages 8-11 • Pravesh",
+        batch: profile.batch || "Daily 5:00 PM – 6:00 PM IST",
+        focusScore: profile.focusScore || "90",
+        streak: profile.streak || "1",
+        habits: profile.habits || [false, false, false, false]
+      };
+      profile.children = [legacyChild];
+      profile.activeChildIndex = 0;
+      return profile;
+    }
+
+    function getActiveChild(profile) {
+      if (!profile) return null;
+      normalizeParentProfile(profile);
+      const idx = profile.activeChildIndex || 0;
+      return profile.children[idx] || profile.children[0] || null;
+    }
 
     function getStudentDatabase() {
       const stored = localStorage.getItem('vediq_students_db');
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed.map(p => normalizeParentProfile(p));
+          }
         } catch (e) {}
       }
-      return INITIAL_STUDENTS;
+      return INITIAL_STUDENTS.map(p => normalizeParentProfile(p));
     }
 
-    // Comprehensive identifier matcher (Email, Phone last 10 digits, Student ID, or Firebase UID)
+    // Comprehensive identifier matcher (Email, Phone last 10 digits, Child Student ID, or Firebase UID)
     function findStudentInDatabase(identifier, customDb = null) {
       if (!identifier) return null;
       const db = customDb || getStudentDatabase();
@@ -1195,9 +1401,14 @@
           const sLast10 = sDigits.length >= 10 ? sDigits.slice(-10) : sDigits;
           if (sLast10 && sLast10 === last10) return true;
         }
-        // 3. Student ID comparison
+        // 3. Any child's Student ID comparison
+        if (Array.isArray(s.children)) {
+          const childMatch = s.children.find(c => c.childId && c.childId.toLowerCase().replace(/[^a-z0-9]/g, '') === rawInput.replace(/[^a-z0-9]/g, ''));
+          if (childMatch) return true;
+        }
+        // 4. Legacy Student ID comparison
         if (s.studentId && s.studentId.toLowerCase().replace(/[^a-z0-9]/g, '') === rawInput.replace(/[^a-z0-9]/g, '')) return true;
-        // 4. Firebase UID comparison
+        // 5. Firebase UID comparison
         if (s.firebaseUid && s.firebaseUid === rawInput) return true;
         return false;
       }) || null;
@@ -1205,9 +1416,10 @@
 
     function saveStudentToDatabase(student) {
       if (!student) return;
+      normalizeParentProfile(student);
       const db = getStudentDatabase();
       const existingIdx = db.findIndex(s => {
-        if (student.studentId && s.studentId === student.studentId) return true;
+        if (student.parentId && s.parentId && s.parentId === student.parentId) return true;
         if (student.email && s.email && s.email.toLowerCase().trim() === student.email.toLowerCase().trim()) return true;
         if (student.firebaseUid && s.firebaseUid && s.firebaseUid === student.firebaseUid) return true;
         if (student.phone && s.phone) {
@@ -1449,36 +1661,35 @@
       }
 
       if (!match) {
-        // Brand new parent logging in with Google
+        // Brand new parent logging in with Google: trigger first-time child onboarding!
         const inferredParent = displayName || (email ? ("Parent (" + email.split('@')[0] + ")") : "Gurukul Parent");
         match = {
+          parentId: "PAR-" + Math.floor(1000 + Math.random() * 9000),
           parentName: inferredParent,
-          childName: "", // will prompt parent
-          childGrade: "Ages 8-11 • Pravesh",
-          batch: "Daily 5:00 PM – 6:00 PM IST",
           phone: phoneDigits || "9800000000",
           email: email || "parent@gmail.com",
-          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-          focusScore: "90",
-          streak: "1",
-          habits: [false, false, false, false],
           photoUrl: photo,
-          firebaseUid: user.uid
+          firebaseUid: user.uid,
+          activeChildIndex: 0,
+          children: []
         };
-        saveStudentToDatabase(match);
+        openFirstTimeOnboardingModal(match);
+        return;
       } else {
         if (photo) match.photoUrl = photo;
         if (user.uid) match.firebaseUid = user.uid;
-        if (displayName && (!match.parentName || match.parentName === "Parent")) match.parentName = displayName;
+        if (displayName && (!match.parentName || match.parentName === "Parent" || match.parentName === "Gurukul Parent")) {
+          match.parentName = displayName;
+        }
+        normalizeParentProfile(match);
         saveStudentToDatabase(match);
+        if (!match.children || match.children.length === 0 || !match.children[0].childName || match.children[0].childName === "Your Child") {
+          openFirstTimeOnboardingModal(match);
+          return;
+        }
       }
 
       loadDashboardForStudent(match);
-
-      // Prompt to configure child name if not yet set
-      if (!match.childName || match.childName === "Gurukul Student") {
-        setTimeout(() => openChildProfileModal(true), 400);
-      }
     }
 
     // Handle Login Form Submit (GitHub style Image 2 + Firebase Email/Password Auth)
@@ -1561,23 +1772,58 @@
       });
     }
 
-    // Two-Factor Verification Engine (GitHub / Modern 2FA + Firebase Confirmation)
+    // Two-Factor Verification Engine (WhatsApp Delivery + Modern 2FA)
     let currentOtpSession = null;
     let otpCountdownTimer = null;
 
+    function openWhatsAppCodeChat() {
+      if (!currentOtpSession) return;
+      const cleanPhone = (currentOtpSession.targetPhone || currentOtpSession.targetIdentifier || '').toString().replace(/\D/g, '').slice(-10);
+      const targetNumber = cleanPhone || "9800000000";
+      const waMsg = `Namaste from VedIQ Academy Gurukul! Your secure Parent Portal login verification code is: ${currentOtpSession.code}. (Valid for 5 minutes). Do not share this code.`;
+      const waUrl = `https://api.whatsapp.com/send?phone=91${targetNumber}&text=${encodeURIComponent(waMsg)}`;
+      window.open(waUrl, '_blank');
+    }
+
     function requestOtpFlow({ recipient, displayRecipient, targetIdentifier, type, isFirebase }) {
       const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const isPhone = !recipient.includes('@');
+      const cleanDigits = targetIdentifier ? targetIdentifier.toString().replace(/\D/g, '').slice(-10) : '';
+
       currentOtpSession = {
         code: code,
         recipient: recipient,
         targetIdentifier: targetIdentifier || recipient,
+        targetPhone: cleanDigits,
         type: type || 'otp',
         isFirebase: !!isFirebase,
         createdAt: Date.now()
       };
 
-      document.getElementById('otpRecipientLabel').innerText = displayRecipient || recipient;
-      document.getElementById('activeOtpDisplay').innerText = code;
+      const labelEl = document.getElementById('otpRecipientLabel');
+      if (labelEl) labelEl.innerText = displayRecipient || recipient;
+
+      const noticeTitle = document.getElementById('otpDeliveryTitle');
+      const noticeSub = document.getElementById('otpDeliverySubtitle');
+      const openBtn = document.getElementById('btnOpenWhatsAppCode');
+
+      if (isPhone) {
+        if (noticeTitle) noticeTitle.innerText = "Code Dispatched via WhatsApp";
+        if (noticeSub) noticeSub.innerText = `Sent to +91 ${cleanDigits || recipient}. Enter code below:`;
+        if (openBtn) openBtn.classList.remove('hidden');
+
+        // Automatically launch WhatsApp with code
+        try {
+          openWhatsAppCodeChat();
+        } catch (e) {
+          console.warn("WhatsApp auto-open note:", e);
+        }
+      } else {
+        if (noticeTitle) noticeTitle.innerText = "Code Dispatched to Email";
+        if (noticeSub) noticeSub.innerText = `Sent to ${recipient}. Enter code below:`;
+        if (openBtn) openBtn.classList.add('hidden');
+      }
+
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
 
@@ -1627,7 +1873,9 @@
       if (!currentOtpSession) return;
       const newCode = Math.floor(100000 + Math.random() * 900000).toString();
       currentOtpSession.code = newCode;
-      document.getElementById('activeOtpDisplay').innerText = newCode;
+      if (!currentOtpSession.recipient.includes('@')) {
+        openWhatsAppCodeChat();
+      }
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
       startOtpTimer();
@@ -1770,33 +2018,31 @@
         match = findStudentInDatabase(identifier, freshCloudDb);
       }
 
-      // 3. Auto-provision if brand new identifier
+      // 3. If brand new user, trigger First-Time Child Onboarding Modal!
       if (!match) {
         const isEmail = identifier.includes('@');
         const digits = identifier.replace(/\D/g, '');
         const phone = digits.length >= 10 ? digits.slice(-10) : (digits || "9800000000");
 
         match = {
+          parentId: "PAR-" + Math.floor(1000 + Math.random() * 9000),
           parentName: isEmail ? ("Parent (" + identifier.split('@')[0] + ")") : "Gurukul Parent",
-          childName: "", // will prompt
-          childGrade: "Ages 8-11 • Pravesh",
-          batch: "Daily 5:00 PM – 6:00 PM IST",
           phone: phone,
           email: isEmail ? identifier.trim().toLowerCase() : "parent@vediqacademy.com",
-          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-          focusScore: "90",
-          streak: "1",
-          habits: [false, false, false, false]
+          activeChildIndex: 0,
+          children: []
         };
-        saveStudentToDatabase(match);
+        openFirstTimeOnboardingModal(match);
+        return;
+      }
+
+      normalizeParentProfile(match);
+      if (!match.children || match.children.length === 0 || !match.children[0].childName || match.children[0].childName === "Your Child") {
+        openFirstTimeOnboardingModal(match);
+        return;
       }
 
       loadDashboardForStudent(match);
-
-      // Prompt to configure child name if not yet set
-      if (!match.childName || match.childName === "Gurukul Student") {
-        setTimeout(() => openChildProfileModal(true), 400);
-      }
     }
 
     // Execute Parent Registration
@@ -1814,53 +2060,66 @@
         return;
       }
 
-      const newStudent = {
-        parentName: parentName,
+      const firstChild = {
+        childId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
         childName: childName,
         childGrade: childGrade,
         batch: "Daily 5:00 PM – 6:00 PM IST",
-        phone: phoneDigits,
-        email: email,
-        studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-        focusScore: "85",
+        focusScore: "90",
         streak: "1",
         habits: [false, false, false, false]
       };
 
-      saveStudentToDatabase(newStudent);
-      alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour child ${childName} has been enrolled successfully with Student ID: ${newStudent.studentId}.`);
-      loadDashboardForStudent(newStudent);
+      const newParent = {
+        parentId: "PAR-" + Math.floor(1000 + Math.random() * 9000),
+        parentName: parentName,
+        phone: phoneDigits,
+        email: email,
+        activeChildIndex: 0,
+        children: [firstChild]
+      };
+
+      saveStudentToDatabase(newParent);
+      alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour child ${childName} has been enrolled successfully with Student ID: ${firstChild.childId}. You can add up to 4 children in your dashboard!`);
+      loadDashboardForStudent(newParent);
     }
 
-    // Load Dashboard with Active Student
-    function loadDashboardForStudent(student) {
-      activeStudent = student;
-      localStorage.setItem('vediq_current_session', JSON.stringify(student));
+    // Load Dashboard with Active Student (Supports Multi-Child Switcher)
+    function loadDashboardForStudent(parentProfile) {
+      if (!parentProfile) return;
+      normalizeParentProfile(parentProfile);
+      activeStudent = parentProfile;
+      localStorage.setItem('vediq_current_session', JSON.stringify(parentProfile));
 
-      // Display Child Name or Setup Prompt
-      const cName = (student.childName && student.childName !== "Gurukul Student") ? student.childName : "Your Child";
+      const activeChild = getActiveChild(parentProfile);
+      if (!activeChild) return;
+
+      const cName = activeChild.childName || "Your Child";
       document.getElementById('dashChildName').innerText = cName;
-      document.getElementById('dashChildGrade').innerText = student.childGrade || "Ages 8-11 • Pravesh";
-      document.getElementById('dashStudentId').innerText = "ID: " + (student.studentId || "VED-2026-101");
-      document.getElementById('dashBatchText').innerText = "Batch: " + (student.batch || "Daily 5:00 PM – 6:00 PM IST");
+      document.getElementById('dashChildGrade').innerText = activeChild.childGrade || "Ages 8-11 • Pravesh";
+      document.getElementById('dashStudentId').innerText = "ID: " + (activeChild.childId || "VED-2026-101");
+      document.getElementById('dashBatchText').innerText = "Batch: " + (activeChild.batch || "Daily 5:00 PM – 6:00 PM IST");
       document.getElementById('reportStudentName').innerText = cName;
-      document.getElementById('dashFocusScore').innerHTML = `${student.focusScore || "90"} <span class="text-xs text-slate-400 font-normal">/100</span>`;
-      document.getElementById('dashStreakCount').innerText = `🔥 ${student.streak || "1"} Days`;
+      document.getElementById('dashFocusScore').innerHTML = `${activeChild.focusScore || "90"} <span class="text-xs text-slate-400 font-normal">/100</span>`;
+      document.getElementById('dashStreakCount').innerText = `🔥 ${activeChild.streak || "1"} Days`;
 
       const initials = cName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "ST";
       document.getElementById('dashAvatarText').innerText = initials;
       document.getElementById('navAvatarText').innerText = initials;
-      document.getElementById('navParentName').innerText = student.parentName || "Parent";
+      document.getElementById('navParentName').innerText = parentProfile.parentName || "Parent";
       document.getElementById('navChildPreview').innerText = cName;
 
-      // Restore habit states
-      if (student.habits) {
-        student.habits.forEach((checked, i) => {
+      // Restore habit states for this active child
+      if (activeChild.habits) {
+        activeChild.habits.forEach((checked, i) => {
           const el = document.getElementById('habitCheck' + i);
           if (el) el.checked = checked;
         });
         updateHabitCount();
       }
+
+      // Render Dynamic Multi-Child Family Selector Bar
+      renderChildSelector();
 
       // Show Dashboard View
       document.getElementById('view-auth').classList.add('hidden');
@@ -1896,15 +2155,17 @@
       }
 
       if (activeStudent) {
+        normalizeParentProfile(activeStudent);
+        const activeChild = getActiveChild(activeStudent);
         const nameInput = document.getElementById('editChildName');
         const gradeInput = document.getElementById('editChildGrade');
         const batchInput = document.getElementById('editChildBatch');
         const parentInput = document.getElementById('editParentName');
         const phoneInput = document.getElementById('editPhone');
 
-        if (nameInput) nameInput.value = (activeStudent.childName && activeStudent.childName !== "Gurukul Student") ? activeStudent.childName : "";
-        if (gradeInput && activeStudent.childGrade) gradeInput.value = activeStudent.childGrade;
-        if (batchInput && activeStudent.batch) batchInput.value = activeStudent.batch;
+        if (nameInput && activeChild) nameInput.value = (activeChild.childName && activeChild.childName !== "Your Child") ? activeChild.childName : "";
+        if (gradeInput && activeChild && activeChild.childGrade) gradeInput.value = activeChild.childGrade;
+        if (batchInput && activeChild && activeChild.batch) batchInput.value = activeChild.batch;
         if (parentInput) parentInput.value = activeStudent.parentName || "";
         if (phoneInput && activeStudent.phone) {
           const cleanP = activeStudent.phone.replace(/\D/g, '').slice(-10);
@@ -1945,9 +2206,13 @@
       }
 
       if (activeStudent) {
-        activeStudent.childName = childName;
-        activeStudent.childGrade = childGrade;
-        activeStudent.batch = batch;
+        normalizeParentProfile(activeStudent);
+        const activeChild = getActiveChild(activeStudent);
+        if (activeChild) {
+          activeChild.childName = childName;
+          activeChild.childGrade = childGrade;
+          activeChild.batch = batch;
+        }
         if (parentName) activeStudent.parentName = parentName;
         if (phone) activeStudent.phone = phone;
 
@@ -1956,6 +2221,190 @@
       }
 
       closeChildProfileModal();
+    }
+
+    // ==========================================
+    // MULTI-CHILD MANAGEMENT ENGINE (UP TO 4 CHILDREN)
+    // ==========================================
+    function openAddChildModal() {
+      if (!activeStudent) return;
+      normalizeParentProfile(activeStudent);
+      if (activeStudent.children.length >= 4) {
+        alert("Maximum 4 children can be enrolled in one family account.");
+        return;
+      }
+      const modal = document.getElementById('addChildModal');
+      const title = document.getElementById('addChildModalTitle');
+      if (title) title.innerText = `Enroll Child (${activeStudent.children.length + 1} of 4)`;
+      const nameInput = document.getElementById('newChildName');
+      if (nameInput) nameInput.value = '';
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => { if (nameInput) nameInput.focus(); }, 150);
+      }
+    }
+
+    function closeAddChildModal() {
+      const modal = document.getElementById('addChildModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function saveNewChild(e) {
+      e.preventDefault();
+      if (!activeStudent) return;
+      normalizeParentProfile(activeStudent);
+
+      if (activeStudent.children.length >= 4) {
+        alert("Maximum limit of 4 children reached for this account.");
+        closeAddChildModal();
+        return;
+      }
+
+      const childName = document.getElementById('newChildName').value.trim();
+      const childGrade = document.getElementById('newChildGrade').value;
+      const batch = document.getElementById('newChildBatch').value;
+
+      if (!childName) {
+        alert("Please enter child's name.");
+        return;
+      }
+
+      const newChild = {
+        childId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+        childName: childName,
+        childGrade: childGrade,
+        batch: batch,
+        focusScore: "90",
+        streak: "1",
+        habits: [false, false, false, false]
+      };
+
+      activeStudent.children.push(newChild);
+      activeStudent.activeChildIndex = activeStudent.children.length - 1; // Auto-switch to newly enrolled child
+
+      saveStudentToDatabase(activeStudent);
+      closeAddChildModal();
+      loadDashboardForStudent(activeStudent);
+      alert(`🎉 ${childName} has been enrolled successfully! (Child ${activeStudent.children.length} of 4)`);
+    }
+
+    function switchActiveChild(index) {
+      if (!activeStudent || !activeStudent.children || !activeStudent.children[index]) return;
+      activeStudent.activeChildIndex = index;
+      localStorage.setItem('vediq_current_session', JSON.stringify(activeStudent));
+      saveStudentToDatabase(activeStudent);
+      loadDashboardForStudent(activeStudent);
+    }
+
+    function renderChildSelector() {
+      const container = document.getElementById('childSelectorTabs');
+      const addBtn = document.getElementById('btnAddChildBtn');
+      const addText = document.getElementById('btnAddChildText');
+      if (!container || !activeStudent) return;
+
+      normalizeParentProfile(activeStudent);
+      const children = activeStudent.children || [];
+      const activeIdx = activeStudent.activeChildIndex || 0;
+
+      container.innerHTML = '';
+      children.forEach((c, idx) => {
+        const isActive = idx === activeIdx;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => switchActiveChild(idx);
+        if (isActive) {
+          btn.className = "px-3.5 py-1.5 rounded-xl bg-brand-ochre text-white text-xs font-bold shadow-xs border border-brand-ochre transition flex items-center gap-1.5 cursor-pointer";
+          btn.innerHTML = `<span>🌟</span> <span>${c.childName}</span> <span class="text-[10px] bg-white/25 px-1.5 py-0.2 rounded-full font-semibold">${(c.childGrade || '').split('•')[0].trim()}</span>`;
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-xl bg-brand-subtle hover:bg-brand-cream text-brand-ink text-xs font-semibold border border-brand-border transition flex items-center gap-1.5 cursor-pointer";
+          btn.innerHTML = `<span>👶</span> <span>${c.childName}</span> <span class="text-[10px] text-brand-muted font-normal">(${(c.childGrade || '').split('•')[0].trim()})</span>`;
+        }
+        container.appendChild(btn);
+      });
+
+      if (addBtn && addText) {
+        if (children.length >= 4) {
+          addBtn.disabled = true;
+          addBtn.className = "w-full sm:w-auto px-3.5 py-2 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 cursor-not-allowed";
+          addText.innerText = "Max 4 Children Enrolled (4/4)";
+        } else {
+          addBtn.disabled = false;
+          addBtn.className = "w-full sm:w-auto px-3.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-brand-ochre border border-amber-200 text-xs font-bold transition flex items-center justify-center gap-1.5 shrink-0 shadow-xs cursor-pointer";
+          addText.innerText = `Add Child (${children.length}/4)`;
+        }
+      }
+    }
+
+    // ==========================================
+    // FIRST-TIME PARENT ONBOARDING ENGINE
+    // ==========================================
+    let pendingOnboardingProfile = null;
+
+    function openFirstTimeOnboardingModal(profile) {
+      pendingOnboardingProfile = profile;
+      const modal = document.getElementById('firstTimeOnboardingModal');
+      const pInput = document.getElementById('obParentName');
+      const phoneInput = document.getElementById('obPhone');
+
+      if (pInput && profile.parentName && profile.parentName !== "Parent" && profile.parentName !== "Gurukul Parent") {
+        pInput.value = profile.parentName;
+      }
+      if (phoneInput && profile.phone) {
+        phoneInput.value = profile.phone.replace(/\D/g, '').slice(-10);
+      }
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+          const cInput = document.getElementById('obChild1Name');
+          if (cInput) cInput.focus();
+        }, 150);
+      }
+    }
+
+    function saveFirstTimeChildSetup(e) {
+      e.preventDefault();
+      if (!pendingOnboardingProfile) return;
+
+      const pName = document.getElementById('obParentName').value.trim();
+      const c1Name = document.getElementById('obChild1Name').value.trim();
+      const c1Grade = document.getElementById('obChild1Grade').value;
+      const c1Batch = document.getElementById('obChild1Batch').value;
+      const rawPhone = document.getElementById('obPhone').value.trim();
+      const phone = rawPhone.replace(/\D/g, '').slice(-10);
+
+      if (!c1Name) {
+        alert("Please enter child's name.");
+        return;
+      }
+
+      pendingOnboardingProfile.parentName = pName || pendingOnboardingProfile.parentName || "Parent";
+      if (phone) pendingOnboardingProfile.phone = phone;
+
+      const firstChild = {
+        childId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+        childName: c1Name,
+        childGrade: c1Grade,
+        batch: c1Batch,
+        focusScore: "90",
+        streak: "1",
+        habits: [false, false, false, false]
+      };
+
+      pendingOnboardingProfile.children = [firstChild];
+      pendingOnboardingProfile.activeChildIndex = 0;
+
+      saveStudentToDatabase(pendingOnboardingProfile);
+      const modal = document.getElementById('firstTimeOnboardingModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      loadDashboardForStudent(pendingOnboardingProfile);
     }
 
     // Tab Navigation
@@ -2003,11 +2452,14 @@
       document.getElementById('ritualProgressBadge').innerText = `${count} of 4 Completed (${pct}%)`;
 
       if (activeStudent) {
-        activeStudent.habits = [0, 1, 2, 3].map(i => {
-          const el = document.getElementById('habitCheck' + i);
-          return el ? el.checked : false;
-        });
-        saveStudentToDatabase(activeStudent);
+        const activeChild = getActiveChild(activeStudent);
+        if (activeChild) {
+          activeChild.habits = [0, 1, 2, 3].map(i => {
+            const el = document.getElementById('habitCheck' + i);
+            return el ? el.checked : false;
+          });
+          saveStudentToDatabase(activeStudent);
+        }
       }
     }
 
