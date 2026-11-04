@@ -253,8 +253,8 @@
             <div class="h-px bg-brand-border flex-1"></div>
           </div>
 
-          <!-- Continue with Google Button (Triggers Image 1 Google Account Chooser!) -->
-          <button type="button" id="btnContinueWithGoogle" onclick="openGoogleChooserModal()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
+          <!-- Continue with Google Button (Triggers Real Firebase Google Authentication!) -->
+          <button type="button" id="btnContinueWithGoogle" onclick="startGoogleAuth()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
             <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -818,99 +818,7 @@
 
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- GOOGLE ACCOUNT CHOOSER MODAL (Exact Layout of accounts.google.com as shown in Image 1) -->
-  <!-- ========================================================================= -->
-  <div id="googleAccountPickerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-[#1f1f1f] text-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden animate-fadeIn">
-      
-      <!-- Top Google Bar -->
-      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-        <div class="flex items-center gap-2.5">
-          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span class="text-sm font-medium text-slate-200">Sign in with Google</span>
-        </div>
-        <button type="button" onclick="closeGoogleModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 text-xs font-bold flex items-center justify-center transition">✕</button>
-      </div>
 
-      <!-- Two-Column Layout (Matching Image 1) -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        
-        <!-- Left Side: App Identity & Choose an account heading -->
-        <div class="md:col-span-5 space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-brand-ink text-brand-gold flex items-center justify-center font-display font-bold text-xl border border-white/10 shadow-lg">
-            <svg class="w-6 h-6 text-brand-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="4"/>
-              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-            </svg>
-          </div>
-          <div>
-            <h2 class="text-2xl sm:text-3xl font-light text-white font-sans">Choose an account</h2>
-            <p class="text-sm text-slate-400 mt-2">
-              to continue to <strong class="text-amber-400 font-semibold">VedIQ Academy</strong>
-            </p>
-          </div>
-        </div>
-
-        <!-- Right Side: Account Selection List -->
-        <div class="md:col-span-7 space-y-3">
-          
-          <div id="googleAccountsList" class="space-y-1 divide-y divide-white/10">
-            <!-- Dynamically populated with detected accounts (e.g. SATVIK BHUTADA, Mr. Rajesh Sharma) -->
-          </div>
-
-          <!-- Use Another Account Row (Matching Image 1) -->
-          <button type="button" onclick="addNewGoogleAccountPrompt()" class="w-full p-3.5 rounded-2xl hover:bg-white/5 transition flex items-center gap-3.5 text-left group">
-            <div class="w-10 h-10 rounded-full border border-white/20 text-slate-300 flex items-center justify-center text-sm shrink-0 group-hover:border-white/40">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            </div>
-            <div>
-              <div class="text-sm font-medium text-white group-hover:text-amber-400 transition">Use another account</div>
-            </div>
-          </button>
-
-          <!-- Launch Native Browser Google Popup (OAuth) -->
-          <button type="button" onclick="triggerNativeGooglePopup()" class="w-full p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition flex items-center justify-center gap-2 text-xs font-bold text-slate-200 hover:text-white cursor-pointer">
-            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <span>🌐 Open Browser Google Popup (Live OAuth)</span>
-          </button>
-
-          <!-- Disclaimer Text (Matching Image 1) -->
-          <div class="pt-4 text-[11px] text-slate-400 leading-relaxed border-t border-white/10">
-            Before using this app, you can review VedIQ Academy's 
-            <a href="#plans" class="text-blue-400 hover:underline">Privacy Policy</a> and 
-            <a href="#plans" class="text-blue-400 hover:underline">Terms of Service</a>.
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- Bottom Bar (Matching Image 1) -->
-      <div class="mt-8 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-        <div class="flex items-center gap-1 cursor-pointer hover:text-white">
-          <span>English (United States)</span>
-          <span>▾</span>
-        </div>
-        <div class="flex items-center gap-5">
-          <a href="#" class="hover:text-white transition">Help</a>
-          <a href="#" class="hover:text-white transition">Privacy</a>
-          <a href="#" class="hover:text-white transition">Terms</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
   <!-- Invisible container for Firebase Phone Auth reCAPTCHA -->
   <div id="recaptcha-container"></div>
@@ -1318,118 +1226,87 @@
       }
     }
 
-    // Google Sign-In Flow: Instantly Opens Google Account Chooser Modal (0ms delay)
-    function startGoogleAuth() {
-      openGoogleChooserModal();
-    }
-
-    // Trigger Real Native Browser Google OAuth Popup via Firebase
-    async function triggerNativeGooglePopup() {
+    // ==========================================
+    // REAL PRODUCTION FIREBASE GOOGLE AUTHENTICATION
+    // ==========================================
+    async function startGoogleAuth() {
       initFirebase();
-      if (typeof firebase !== 'undefined' && firebase.auth) {
+      if (typeof firebase === 'undefined' || !firebase.auth) {
+        alert("Initializing Google Firebase Auth... Please wait a second and click again.");
+        return;
+      }
+
+      const btnText = document.getElementById('btnGoogleText');
+      if (btnText) btnText.innerText = "Connecting to Google...";
+
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('profile');
+      provider.setCustomParameters({ prompt: 'select_account' });
+
+      try {
+        // 1. Try Native Google OAuth Popup
+        const result = await firebase.auth().signInWithPopup(provider);
+        if (result && result.user) {
+          handleSuccessfulGoogleLogin(result.user);
+          return;
+        }
+      } catch (popupError) {
+        console.warn("Popup blocked or failed, switching to Google Redirect:", popupError);
+        
+        // If user intentionally closed popup, revert text
+        if (popupError.code === 'auth/popup-closed-by-user') {
+          if (btnText) btnText.innerText = "Continue with Google";
+          return;
+        }
+
+        // 2. If popup was blocked by browser, redirect current tab directly to Google login!
         try {
-          const provider = new firebase.auth.GoogleAuthProvider();
-          provider.setCustomParameters({ prompt: 'select_account' });
-          const result = await firebase.auth().signInWithPopup(provider);
-          if (result && result.user) {
-            closeGoogleModal();
-            authenticateViaGoogle(result.user.displayName || "Google Parent", result.user.email, "Gurukul Student", result.user.photoURL);
-          }
-        } catch (e) {
-          console.warn("Firebase Google popup note:", e);
-          if (e.code !== 'auth/popup-closed-by-user') {
-            alert("Google OAuth Notice: " + (e.message || "Please select an account from the list above."));
-          }
+          if (btnText) btnText.innerText = "Redirecting to Google...";
+          await firebase.auth().signInWithRedirect(provider);
+        } catch (redirectError) {
+          console.error("Firebase Google Redirect Error:", redirectError);
+          alert("Google Sign-In Error: " + (redirectError.message || popupError.message));
+          if (btnText) btnText.innerText = "Continue with Google";
         }
       }
     }
 
-    function openGoogleChooserModal(notice) {
-      const db = getStudentDatabase();
-      const accountsList = document.getElementById('googleAccountsList');
-      if (accountsList) accountsList.innerHTML = '';
+    // Process authenticated Firebase Google user and enter Gurukul Dashboard
+    function handleSuccessfulGoogleLogin(user) {
+      if (!user) return;
+      const email = user.email || "parent@gmail.com";
+      const name = user.displayName || ("Parent (" + email.split('@')[0] + ")");
+      const photo = user.photoURL || null;
+      const phone = user.phoneNumber ? user.phoneNumber.replace(/\D/g, '') : "9766772819";
 
-      // Exact detected accounts on user device (including SATVIK BHUTADA from screenshot Image 1)
-      const accounts = [
-        {
-          name: "SATVIK BHUTADA",
-          email: "sc2023cp00080@dmiher.edu.in",
-          child: "Aarav Bhutada",
-          avatarBg: "bg-purple-700",
-          initial: "S",
-          status: "Signed out"
-        },
-        {
-          name: db[0].parentName || "Mr. Rajesh Sharma",
-          email: db[0].email || "parent@gmail.com",
-          child: db[0].childName || "Aarav Sharma",
-          avatarBg: "bg-amber-600",
-          initial: (db[0].parentName || "R").charAt(0),
-          status: "Active"
-        }
-      ];
-
-      accounts.forEach(acc => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = "w-full p-3.5 rounded-2xl hover:bg-white/5 transition flex items-center justify-between gap-3 text-left group";
-        btn.onclick = () => {
-          closeGoogleModal();
-          authenticateViaGoogle(acc.name, acc.email, acc.child);
-        };
-        btn.innerHTML = `
-          <div class="flex items-center gap-3.5 overflow-hidden">
-            <div class="w-10 h-10 rounded-full ${acc.avatarBg} text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
-              ${acc.initial}
-            </div>
-            <div class="truncate">
-              <div class="text-sm font-medium text-white truncate group-hover:text-amber-400 transition">${acc.name}</div>
-              <div class="text-xs text-slate-400 truncate">${acc.email}</div>
-            </div>
-          </div>
-          <span class="text-xs text-slate-400 shrink-0 font-normal">${acc.status}</span>
-        `;
-        if (accountsList) accountsList.appendChild(btn);
-      });
-
-      const modal = document.getElementById('googleAccountPickerModal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        modal.style.display = 'flex';
-        modal.style.setProperty('display', 'flex', 'important');
-        modal.style.visibility = 'visible';
-        modal.style.opacity = '1';
-        modal.style.zIndex = '99999';
-      }
-    }
-
-    function closeGoogleModal() {
-      const modal = document.getElementById('googleAccountPickerModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        modal.style.display = 'none';
-        modal.style.setProperty('display', 'none', 'important');
-      }
-    }
-
-    function addNewGoogleAccountPrompt() {
-      const email = prompt("Enter your Google Account email address:");
-      if (!email) return;
-      closeGoogleModal();
-      authenticateViaGoogle("Parent (" + email.split('@')[0] + ")", email, "Gurukul Student");
-    }
-
-    function authenticateViaGoogle(parentName, email, childName, photo) {
-      closeGoogleModal();
       const db = getStudentDatabase();
       let match = db.find(s => s.email.toLowerCase() === email.toLowerCase());
 
       if (!match) {
         match = {
-          parentName: parentName,
-          childName: childName || "Gurukul Student",
+          parentName: name,
+          childName: "Gurukul Student",
+          childGrade: "Ages 8-11 • Pravesh",
+          batch: "Daily 5:00 PM – 6:00 PM IST",
+          phone: phone,
+          email: email,
+          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+          focusScore: "92",
+          streak: "1",
+          habits: [true, true, true, false],
+          photoUrl: photo,
+          firebaseUid: user.uid
+        };
+        saveStudentToDatabase(match);
+      } else {
+        if (photo) match.photoUrl = photo;
+        match.firebaseUid = user.uid;
+        saveStudentToDatabase(match);
+      }
+
+      loadDashboardForStudent(match);
+    }
           childGrade: "Ages 8-11 • Pravesh",
           batch: "Daily 5:00 PM – 6:00 PM IST",
           phone: "9766772819",
@@ -2064,11 +1941,27 @@
 
     // Initialize state on load
     window.addEventListener('DOMContentLoaded', () => {
+      // Clear any outdated dummy config from local storage
+      localStorage.removeItem('vediq_firebase_config');
+
       const isHindi = document.cookie.includes('googtrans=/en/hi');
       updateLangUI(isHindi ? 'hi' : 'en');
       
       // Initialize Firebase Auth Engine (Google OAuth & Phone OTP)
       initFirebase();
+
+      // Check if user is returning from Google OAuth Redirect
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().getRedirectResult().then(result => {
+          if (result && result.user) {
+            handleSuccessfulGoogleLogin(result.user);
+          }
+        }).catch(err => {
+          if (err.code && err.code !== 'auth/credential-already-in-use') {
+            console.warn("Redirect auth check:", err);
+          }
+        });
+      }
 
       // Wire up 6-digit OTP input mechanics (auto-advance & backspace)
       setupOtpInputs();
