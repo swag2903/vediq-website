@@ -66,6 +66,18 @@
       font-weight: 700;
     }
     
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .otp-box:focus {
+      border-color: #C86D24 !important;
+      box-shadow: 0 0 0 3px rgba(200, 109, 36, 0.2);
+    }
+    
     /* Printable Certificate Styles */
     @media print {
       body * { visibility: hidden; }
@@ -219,51 +231,89 @@
         <div class="bg-white rounded-3xl border border-brand-border shadow-xl overflow-hidden p-6 sm:p-8">
           
           <!-- Auth Switcher Tabs -->
-          <div class="flex border-b border-brand-border mb-6">
+          <div class="flex border-b border-brand-border mb-5">
             <button type="button" onclick="switchAuthTab('login')" id="tabBtnLogin" class="auth-tab active flex-1 pb-3 text-center text-xs font-bold transition">
-              Parent Login
+              Parent Sign-In
             </button>
             <button type="button" onclick="switchAuthTab('register')" id="tabBtnRegister" class="auth-tab flex-1 pb-3 text-center text-xs font-semibold text-brand-muted transition">
               Enroll New Child
             </button>
           </div>
 
-          <!-- 1-Click Google Sign-In Button -->
-          <button type="button" onclick="startGoogleAuth()" class="w-full py-3 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-3 shadow-sm group">
-            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <span class="group-hover:text-brand-ochre transition">Continue with Google Account</span>
-          </button>
+          <!-- ================= SECTION A: MULTI-OPTION LOGIN ================= -->
+          <div id="loginSection" class="space-y-4">
 
-          <!-- Divider -->
-          <div class="flex items-center gap-3 my-4">
-            <div class="h-px bg-brand-border flex-1"></div>
-            <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or with phone / student id</span>
-            <div class="h-px bg-brand-border flex-1"></div>
-          </div>
-
-          <!-- ================= FORM A: LOGIN ================= -->
-          <form id="formLogin" onsubmit="executeParentLogin(event)" class="space-y-4">
-            <div>
-              <label class="block text-xs font-bold text-brand-ink mb-1.5">Registered WhatsApp Number or Student ID</label>
-              <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream overflow-hidden focus-within:border-brand-ochre transition">
-                <span class="px-3 py-2.5 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">📱 +91 / ID</span>
-                <input type="text" id="loginIdentifier" required placeholder="e.g. 9766772819 or VED-2026-108" class="w-full px-3 py-2.5 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+            <!-- Detected Account on This Device (GitHub / Google One-Tap Card) -->
+            <div id="deviceAccountCard" class="p-3 bg-brand-cream/80 border border-brand-ochre/30 rounded-2xl flex items-center justify-between gap-3 shadow-xs transition hover:border-brand-ochre">
+              <div class="flex items-center gap-3 overflow-hidden text-left">
+                <div id="deviceAvatar" class="w-10 h-10 rounded-2xl bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-sm shrink-0 shadow-sm">
+                  RS
+                </div>
+                <div class="truncate">
+                  <div class="flex items-center gap-1.5">
+                    <span id="deviceName" class="text-xs font-bold text-brand-ink truncate">Mr. Rajesh Sharma</span>
+                    <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold shrink-0">Saved on Device</span>
+                  </div>
+                  <div id="deviceDetails" class="text-[10px] text-brand-muted truncate">Child: Aarav Sharma • +91 97667 72819</div>
+                </div>
               </div>
-              <p class="text-[10px] text-brand-muted mt-1">Instant verified access. No password required.</p>
+              <button type="button" onclick="triggerDeviceAccountLogin()" class="shrink-0 px-3 py-2 bg-brand-ochre hover:bg-brand-ochreHover text-white text-[11px] font-bold rounded-xl shadow-xs transition flex items-center gap-1">
+                <span>Continue</span>
+                <span aria-hidden="true">&rarr;</span>
+              </button>
             </div>
 
-            <button type="submit" class="w-full py-3.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
-              <span>Access Child Portal</span>
-              <span aria-hidden="true">&rarr;</span>
+            <!-- 1-Click Google Sign-In Button -->
+            <button type="button" onclick="startGoogleAuth()" class="w-full py-3 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-3 shadow-sm group">
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+              </svg>
+              <span class="group-hover:text-brand-ochre transition">Continue with Google Account</span>
             </button>
-          </form>
 
-          <!-- ================= FORM B: REGISTRATION ================= -->
+            <!-- Divider -->
+            <div class="flex items-center gap-3 my-2">
+              <div class="h-px bg-brand-border flex-1"></div>
+              <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or sign in with otp</span>
+              <div class="h-px bg-brand-border flex-1"></div>
+            </div>
+
+            <!-- GitHub / Modern 2FA Method Selector Pills -->
+            <div class="grid grid-cols-3 gap-1.5 p-1 bg-brand-subtle rounded-xl border border-brand-border">
+              <button type="button" onclick="selectLoginMethod('phone')" id="pillMethodPhone" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition">
+                📱 WhatsApp
+              </button>
+              <button type="button" onclick="selectLoginMethod('email')" id="pillMethodEmail" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink transition">
+                ✉️ Email OTP
+              </button>
+              <button type="button" onclick="selectLoginMethod('id')" id="pillMethodId" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink transition">
+                🆔 Student ID
+              </button>
+            </div>
+
+            <!-- Main Input Form for OTP Trigger -->
+            <form id="formLogin" onsubmit="handleLoginSubmit(event)" class="space-y-3 pt-1">
+              <div>
+                <label id="loginMethodLabel" class="block text-xs font-bold text-brand-ink mb-1.5">Registered WhatsApp Number</label>
+                <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream overflow-hidden focus-within:border-brand-ochre transition">
+                  <span id="loginPrefix" class="px-3 py-2.5 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
+                  <input type="text" id="loginIdentifier" required placeholder="97667 72819" class="w-full px-3 py-2.5 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+                </div>
+                <p id="loginHelperText" class="text-[10px] text-brand-muted mt-1">We'll send an instant 6-digit OTP code to verify your phone.</p>
+              </div>
+
+              <button type="submit" id="btnLoginSubmit" class="w-full py-3.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                <span id="btnLoginSubmitText">Send 6-Digit OTP</span>
+                <span aria-hidden="true">&rarr;</span>
+              </button>
+            </form>
+
+          </div>
+
+          <!-- ================= SECTION B: REGISTRATION ================= -->
           <form id="formRegister" onsubmit="executeParentRegistration(event)" class="hidden space-y-3.5">
             <div>
               <label class="block text-xs font-bold text-brand-ink mb-1">Parent's Full Name (Mom / Dad)</label>
@@ -813,6 +863,79 @@
     </div>
   </div>
 
+  <!-- ========================================================================= -->
+  <!-- 2FA OTP VERIFICATION MODAL (GitHub / Google Style) -->
+  <!-- ========================================================================= -->
+  <div id="otpVerificationModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn text-center">
+      
+      <!-- Close button -->
+      <button type="button" onclick="closeOtpModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted text-xs font-bold flex items-center justify-center transition">✕</button>
+
+      <!-- Shield Icon & Header -->
+      <div class="space-y-1">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100 text-brand-ochre flex items-center justify-center text-2xl shadow-inner">
+          🛡️
+        </div>
+        <h3 class="text-base font-bold text-brand-ink">Two-Factor Verification</h3>
+        <p class="text-xs text-brand-muted leading-relaxed">
+          We sent a 6-digit security code to<br/>
+          <strong id="otpRecipientLabel" class="text-brand-ink font-semibold">+91 97667 72819</strong>
+        </p>
+      </div>
+
+      <!-- Live Code Notification Simulator Banner -->
+      <div onclick="autoFillOtp()" class="cursor-pointer p-2.5 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 rounded-2xl transition group flex items-center gap-2.5 text-left">
+        <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+          💬
+        </div>
+        <div class="flex-1 overflow-hidden">
+          <div class="text-[9px] uppercase font-bold text-emerald-800 tracking-wider">Simulated Message • Tap to Fill</div>
+          <div class="text-xs font-mono font-bold text-emerald-950 flex items-center gap-2">
+            <span>Code:</span>
+            <span id="activeOtpDisplay" class="bg-white px-2 py-0.5 rounded-md border border-emerald-300 tracking-widest text-emerald-900 font-extrabold">482910</span>
+          </div>
+        </div>
+        <span class="text-xs font-bold text-emerald-700 group-hover:translate-x-0.5 transition">&rarr;</span>
+      </div>
+
+      <!-- 6-Digit Code Inputs -->
+      <div class="py-1">
+        <label class="block text-[11px] font-bold text-brand-ink mb-2">Enter 6-Digit Code</label>
+        <div class="flex justify-between gap-1.5 max-w-[280px] mx-auto" id="otpBoxContainer">
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-1" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-2" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-3" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-4" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-5" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
+          <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" id="otp-6" class="otp-box w-10 h-12 text-center text-xl font-bold rounded-xl border-2 border-brand-border bg-brand-cream focus:bg-white focus:border-brand-ochre outline-none transition" />
+        </div>
+        <p id="otpErrorText" class="text-[11px] text-red-600 font-semibold mt-2 hidden">Invalid code. Please check and try again.</p>
+      </div>
+
+      <!-- Action Button -->
+      <button type="button" onclick="verifyOtpAndProceed()" id="btnVerifyOtp" class="w-full py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
+        <span>Verify & Enter Gurukul</span>
+        <span aria-hidden="true">&rarr;</span>
+      </button>
+
+      <!-- Resend Countdown -->
+      <div class="text-[11px] text-brand-muted">
+        <span id="otpTimerContainer">Resend code in <strong id="otpTimerSeconds" class="text-brand-ink">30</strong>s</span>
+        <button type="button" onclick="resendOtpCode()" id="btnResendOtp" class="hidden text-brand-ochre font-bold hover:underline">
+          Resend New Code
+        </button>
+      </div>
+
+      <div class="pt-2 border-t border-brand-border">
+        <button type="button" onclick="closeOtpModal()" class="text-[11px] text-brand-muted hover:text-brand-ink">
+          &larr; Use another sign-in method
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- JAVASCRIPT PRODUCTION ENGINE -->
   <script>
     // 24/7 Global Cloud Database Endpoint (Works from any phone/device even if laptop is down)
@@ -936,19 +1059,108 @@
     function switchAuthTab(type) {
       const btnLogin = document.getElementById('tabBtnLogin');
       const btnRegister = document.getElementById('tabBtnRegister');
-      const formLogin = document.getElementById('formLogin');
+      const loginSection = document.getElementById('loginSection');
       const formRegister = document.getElementById('formRegister');
 
       if (type === 'login') {
         btnLogin.className = "auth-tab active flex-1 pb-3 text-center text-xs font-bold transition";
         btnRegister.className = "auth-tab flex-1 pb-3 text-center text-xs font-semibold text-brand-muted transition";
-        formLogin.classList.remove('hidden');
-        formRegister.classList.add('hidden');
+        if (loginSection) loginSection.classList.remove('hidden');
+        if (formRegister) formRegister.classList.add('hidden');
       } else {
         btnRegister.className = "auth-tab active flex-1 pb-3 text-center text-xs font-bold transition";
         btnLogin.className = "auth-tab flex-1 pb-3 text-center text-xs font-semibold text-brand-muted transition";
-        formRegister.classList.remove('hidden');
-        formLogin.classList.add('hidden');
+        if (formRegister) formRegister.classList.remove('hidden');
+        if (loginSection) loginSection.classList.add('hidden');
+      }
+    }
+
+    // Render Detected Device Account (GitHub / Google One-Tap Card)
+    function renderDeviceAccountCard() {
+      const db = getStudentDatabase();
+      const card = document.getElementById('deviceAccountCard');
+      if (!card) return;
+
+      const savedSession = localStorage.getItem('vediq_current_session');
+      let current = null;
+      if (savedSession) {
+        try { current = JSON.parse(savedSession); } catch(e){}
+      }
+      if (!current && db.length > 0) {
+        current = db[0];
+      }
+
+      if (current) {
+        card.classList.remove('hidden');
+        const initials = (current.parentName || "Parent").split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() || "PA";
+        const avatar = document.getElementById('deviceAvatar');
+        if (avatar) avatar.innerText = initials;
+        const nameEl = document.getElementById('deviceName');
+        if (nameEl) nameEl.innerText = current.parentName;
+        const detailsEl = document.getElementById('deviceDetails');
+        if (detailsEl) detailsEl.innerText = `Child: ${current.childName} • +91 ${current.phone}`;
+        card.dataset.phone = current.phone;
+        card.dataset.email = current.email;
+        card.dataset.child = current.childName;
+        card.dataset.parent = current.parentName;
+      } else {
+        card.classList.add('hidden');
+      }
+    }
+
+    function triggerDeviceAccountLogin() {
+      const card = document.getElementById('deviceAccountCard');
+      const phone = (card && card.dataset.phone) ? card.dataset.phone : "9766772819";
+      const email = (card && card.dataset.email) ? card.dataset.email : "parent@gmail.com";
+      requestOtpFlow({
+        recipient: phone,
+        displayRecipient: `+91 ${phone} (${email})`,
+        targetIdentifier: phone,
+        type: 'device'
+      });
+    }
+
+    // Switch Login Method (WhatsApp Phone OTP, Email OTP, Student ID)
+    let currentLoginMethod = 'phone';
+    function selectLoginMethod(method) {
+      currentLoginMethod = method;
+      const pillPhone = document.getElementById('pillMethodPhone');
+      const pillEmail = document.getElementById('pillMethodEmail');
+      const pillId = document.getElementById('pillMethodId');
+      const label = document.getElementById('loginMethodLabel');
+      const prefix = document.getElementById('loginPrefix');
+      const input = document.getElementById('loginIdentifier');
+      const helper = document.getElementById('loginHelperText');
+      const btnText = document.getElementById('btnLoginSubmitText');
+
+      [pillPhone, pillEmail, pillId].forEach(p => {
+        if (p) p.className = "py-1.5 px-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink transition";
+      });
+
+      const db = getStudentDatabase();
+      const sample = db.length > 0 ? db[0] : DEFAULT_STUDENT;
+
+      if (method === 'phone') {
+        if (pillPhone) pillPhone.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition";
+        if (label) label.innerText = "Registered WhatsApp Number";
+        if (prefix) { prefix.innerText = "+91"; prefix.classList.remove('hidden'); }
+        if (input) { input.type = "tel"; input.placeholder = "97667 72819"; input.value = sample.phone || ""; }
+        if (helper) helper.innerText = "We'll send an instant 6-digit OTP code to verify your phone.";
+        if (btnText) btnText.innerText = "Send 6-Digit OTP";
+      } else if (method === 'email') {
+        if (pillEmail) pillEmail.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition";
+        if (label) label.innerText = "Parent Email Address";
+        if (prefix) { prefix.innerText = "✉️"; prefix.classList.remove('hidden'); }
+        if (input) { input.type = "email"; input.placeholder = "parent@gmail.com"; input.value = sample.email || ""; }
+        if (helper) helper.innerText = "We'll send a 6-digit verification code to your email inbox.";
+        if (btnText) btnText.innerText = "Send Email OTP";
+      } else if (method === 'id') {
+        if (pillId) pillId.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-white text-brand-ink shadow-xs transition";
+        if (label) label.innerText = "Child's Student ID";
+        if (prefix) { prefix.innerText = "ID"; prefix.classList.remove('hidden'); }
+        if (input) { input.type = "text"; input.placeholder = "VED-2026-108"; input.value = sample.studentId || ""; }
+        if (helper) helper.innerText = "Direct access via registered Gurukul student roll number.";
+        if (btnText) btnText.innerText = "Access Child Portal";
       }
     }
 
@@ -968,14 +1180,22 @@
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = "w-full p-3 rounded-2xl hover:bg-brand-cream border border-brand-border transition flex items-center gap-3 text-left";
-        btn.onclick = () => authenticateViaGoogle(acc.name, acc.email, acc.child);
+        btn.onclick = () => {
+          closeGoogleModal();
+          requestOtpFlow({
+            recipient: acc.email,
+            displayRecipient: acc.email,
+            targetIdentifier: acc.email,
+            type: 'google'
+          });
+        };
         btn.innerHTML = `
           <div class="w-9 h-9 rounded-full bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-sm shrink-0">
             ${acc.name.charAt(0)}
           </div>
           <div class="truncate">
             <div class="text-xs font-bold text-brand-ink truncate">${acc.name}</div>
-            <div class="text-[11px] text-brand-muted truncate">${acc.email}</div>
+            <div class="text-[11px] text-brand-muted truncate">${acc.email} • Child: ${acc.child}</div>
           </div>
         `;
         accountsList.appendChild(btn);
@@ -993,44 +1213,220 @@
     function addNewGoogleAccountPrompt() {
       const email = prompt("Enter your Google Account email address:");
       if (!email) return;
-      const child = prompt("Enter your Child's Full Name:") || "My Child";
-      authenticateViaGoogle("Parent (" + email.split('@')[0] + ")", email, child);
-    }
-
-    function authenticateViaGoogle(parentName, email, childName) {
       closeGoogleModal();
-      const db = getStudentDatabase();
-      let match = db.find(s => s.email.toLowerCase() === email.toLowerCase());
-
-      if (!match) {
-        match = {
-          parentName: parentName,
-          childName: childName,
-          childGrade: "Ages 8-11 • Pravesh",
-          batch: "Daily 5:00 PM – 6:00 PM IST",
-          phone: "9766772819",
-          email: email,
-          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-          focusScore: "88",
-          streak: "18",
-          habits: [true, true, true, false]
-        };
-        saveStudentToDatabase(match);
-      }
-
-      loadDashboardForStudent(match);
+      requestOtpFlow({
+        recipient: email,
+        displayRecipient: email,
+        targetIdentifier: email,
+        type: 'google'
+      });
     }
 
-    // Execute Parent Login (Cloud-Aware)
-    async function executeParentLogin(e) {
+    // Handle Login Form Submit
+    function handleLoginSubmit(e) {
       e.preventDefault();
       const identifier = document.getElementById('loginIdentifier').value.trim();
+      if (!identifier) return;
+
+      if (currentLoginMethod === 'id') {
+        executeDirectLogin(identifier);
+      } else if (currentLoginMethod === 'email') {
+        requestOtpFlow({
+          recipient: identifier,
+          displayRecipient: identifier,
+          targetIdentifier: identifier,
+          type: 'email'
+        });
+      } else {
+        requestOtpFlow({
+          recipient: identifier,
+          displayRecipient: "+91 " + identifier,
+          targetIdentifier: identifier,
+          type: 'phone'
+        });
+      }
+    }
+
+    // Two-Factor Verification Engine (GitHub / Modern 2FA)
+    let currentOtpSession = null;
+    let otpCountdownTimer = null;
+
+    function requestOtpFlow({ recipient, displayRecipient, targetIdentifier, type }) {
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      currentOtpSession = {
+        code: code,
+        recipient: recipient,
+        targetIdentifier: targetIdentifier || recipient,
+        type: type || 'otp',
+        createdAt: Date.now()
+      };
+
+      document.getElementById('otpRecipientLabel').innerText = displayRecipient || recipient;
+      document.getElementById('activeOtpDisplay').innerText = code;
+      const err = document.getElementById('otpErrorText');
+      if (err) err.classList.add('hidden');
+
+      for (let i = 1; i <= 6; i++) {
+        const box = document.getElementById('otp-' + i);
+        if (box) {
+          box.value = '';
+          box.classList.remove('border-red-500');
+        }
+      }
+
+      const modal = document.getElementById('otpVerificationModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      setTimeout(() => {
+        const first = document.getElementById('otp-1');
+        if (first) first.focus();
+      }, 150);
+
+      startOtpTimer();
+    }
+
+    function startOtpTimer() {
+      if (otpCountdownTimer) clearInterval(otpCountdownTimer);
+      let timeLeft = 30;
+      const timerContainer = document.getElementById('otpTimerContainer');
+      const timerSeconds = document.getElementById('otpTimerSeconds');
+      const btnResend = document.getElementById('btnResendOtp');
+
+      if (timerContainer) timerContainer.classList.remove('hidden');
+      if (btnResend) btnResend.classList.add('hidden');
+      if (timerSeconds) timerSeconds.innerText = timeLeft;
+
+      otpCountdownTimer = setInterval(() => {
+        timeLeft--;
+        if (timerSeconds) timerSeconds.innerText = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(otpCountdownTimer);
+          if (timerContainer) timerContainer.classList.add('hidden');
+          if (btnResend) btnResend.classList.remove('hidden');
+        }
+      }, 1000);
+    }
+
+    function resendOtpCode() {
+      if (!currentOtpSession) return;
+      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+      currentOtpSession.code = newCode;
+      document.getElementById('activeOtpDisplay').innerText = newCode;
+      const err = document.getElementById('otpErrorText');
+      if (err) err.classList.add('hidden');
+      startOtpTimer();
+    }
+
+    function closeOtpModal() {
+      const modal = document.getElementById('otpVerificationModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      if (otpCountdownTimer) clearInterval(otpCountdownTimer);
+    }
+
+    function autoFillOtp() {
+      if (!currentOtpSession) return;
+      const digits = currentOtpSession.code.split('');
+      digits.forEach((d, i) => {
+        const box = document.getElementById('otp-' + (i + 1));
+        if (box) box.value = d;
+      });
+      const err = document.getElementById('otpErrorText');
+      if (err) err.classList.add('hidden');
+      verifyOtpAndProceed();
+    }
+
+    function setupOtpInputs() {
+      for (let i = 1; i <= 6; i++) {
+        const box = document.getElementById('otp-' + i);
+        if (!box) continue;
+
+        box.addEventListener('input', (e) => {
+          box.value = box.value.replace(/[^0-9]/g, '');
+          if (box.value && i < 6) {
+            const next = document.getElementById('otp-' + (i + 1));
+            if (next) next.focus();
+          }
+          let allFilled = true;
+          for (let j = 1; j <= 6; j++) {
+            const b = document.getElementById('otp-' + j);
+            if (!b || !b.value) { allFilled = false; break; }
+          }
+          if (allFilled) {
+            verifyOtpAndProceed();
+          }
+        });
+
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !box.value && i > 1) {
+            const prev = document.getElementById('otp-' + (i - 1));
+            if (prev) {
+              prev.focus();
+              prev.value = '';
+            }
+          }
+        });
+
+        box.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData).getData('text').trim();
+          const nums = paste.replace(/[^0-9]/g, '').slice(0, 6);
+          nums.split('').forEach((digit, idx) => {
+            const target = document.getElementById('otp-' + (idx + 1));
+            if (target) target.value = digit;
+          });
+          if (nums.length === 6) {
+            verifyOtpAndProceed();
+          }
+        });
+      }
+    }
+
+    async function verifyOtpAndProceed() {
+      if (!currentOtpSession) return;
+      let entered = '';
+      for (let i = 1; i <= 6; i++) {
+        const box = document.getElementById('otp-' + i);
+        entered += (box ? box.value : '');
+      }
+
+      const err = document.getElementById('otpErrorText');
+      if (entered.length < 6) {
+        if (err) {
+          err.innerText = "Please enter all 6 digits of the verification code.";
+          err.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (entered !== currentOtpSession.code) {
+        if (err) {
+          err.innerText = "Invalid verification code. Please check and try again.";
+          err.classList.remove('hidden');
+        }
+        for (let i = 1; i <= 6; i++) {
+          const box = document.getElementById('otp-' + i);
+          if (box) box.classList.add('border-red-500');
+        }
+        return;
+      }
+
+      // Verification Succeeded!
+      closeOtpModal();
+      await executeDirectLogin(currentOtpSession.targetIdentifier);
+    }
+
+    // Direct Login or Auto-Enrollment (Cloud-Aware)
+    async function executeDirectLogin(identifier) {
       if (!identifier) return;
 
       let db = getStudentDatabase();
       const cleanInput = identifier.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
-      // Look up student by phone, student ID, or email
+      // Search local cache
       let match = db.find(s => {
         const p = s.phone.replace(/[^0-9]/g, '');
         const id = s.studentId.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
@@ -1038,7 +1434,7 @@
         return p === cleanInput || id === cleanInput || em === identifier.toLowerCase();
       });
 
-      // If not in local cache, query live cloud database immediately
+      // Search live cloud DB
       if (!match) {
         setCloudStatus('syncing', 'Checking Cloud...');
         const freshCloudDb = await syncFromCloud();
@@ -1050,28 +1446,26 @@
         });
       }
 
+      // Auto-provision if brand new
       if (!match) {
-        // If first-time user entering a valid 10-digit number, auto-enroll them seamlessly
-        if (cleanInput.length >= 10) {
-          match = {
-            parentName: "Parent",
-            childName: "Enrolled Student",
-            childGrade: "Ages 8-11 • Pravesh",
-            batch: "Daily 5:00 PM – 6:00 PM IST",
-            phone: identifier,
-            email: "student@vediqacademy.com",
-            studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-            focusScore: "88",
-            streak: "18",
-            habits: [true, true, true, false]
-          };
-          saveStudentToDatabase(match);
-        } else {
-          match = DEFAULT_STUDENT;
-        }
+        const isEmail = identifier.includes('@');
+        match = {
+          parentName: isEmail ? ("Parent (" + identifier.split('@')[0] + ")") : "Parent",
+          childName: "Gurukul Student",
+          childGrade: "Ages 8-11 • Pravesh",
+          batch: "Daily 5:00 PM – 6:00 PM IST",
+          phone: isEmail ? "9766772819" : identifier,
+          email: isEmail ? identifier : "student@vediqacademy.com",
+          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+          focusScore: "88",
+          streak: "18",
+          habits: [true, true, true, false]
+        };
+        saveStudentToDatabase(match);
       }
 
       loadDashboardForStudent(match);
+      renderDeviceAccountCard();
     }
 
     // Execute Parent Registration
@@ -1104,6 +1498,7 @@
       saveStudentToDatabase(newStudent);
       alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour child ${childName} has been registered with Student ID: ${newStudent.studentId}.`);
       loadDashboardForStudent(newStudent);
+      renderDeviceAccountCard();
     }
 
     // Load Dashboard with Active Student
@@ -1149,6 +1544,7 @@
         document.getElementById('view-dashboard').classList.add('hidden');
         document.getElementById('navUserPill').classList.add('hidden');
         document.getElementById('view-auth').classList.remove('hidden');
+        renderDeviceAccountCard();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
@@ -1352,8 +1748,19 @@
       const isHindi = document.cookie.includes('googtrans=/en/hi');
       updateLangUI(isHindi ? 'hi' : 'en');
       
+      // Wire up 6-digit OTP input mechanics (auto-advance & backspace)
+      setupOtpInputs();
+
+      // Render Detected Device Account (GitHub / Google One-Tap Card)
+      renderDeviceAccountCard();
+
+      // Default to WhatsApp Phone OTP selector
+      selectLoginMethod('phone');
+
       // Auto-connect and sync from Cloud Database (24/7 persistence)
-      syncFromCloud();
+      syncFromCloud().then(() => {
+        renderDeviceAccountCard();
+      });
 
       const savedSession = localStorage.getItem('vediq_current_session');
       if (savedSession) {
@@ -1367,7 +1774,8 @@
       // Preload default student in input for easy 1-click entry
       const db = getStudentDatabase();
       if (db.length > 0) {
-        document.getElementById('loginIdentifier').value = db[0].phone;
+        const input = document.getElementById('loginIdentifier');
+        if (input) input.value = db[0].phone;
       }
     });
   </script>
