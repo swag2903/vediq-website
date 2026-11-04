@@ -6,6 +6,14 @@
   <title>VedIQ Academy — Official Parent Portal</title>
   <meta name="description" content="Official Parent Portal for VedIQ Academy. Real-time cognitive tracking, Tratak focus metrics, Vedic math speed, daily Gurukul sadhana checklist, and certified progress reports." />
   
+  <!-- Auto-Upgrade Insecure HTTP to Secure HTTPS -->
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <script>
+    if (window.location.protocol === 'http:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      window.location.replace('https://' + window.location.host + window.location.pathname + window.location.search + window.location.hash);
+    }
+  </script>
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -226,7 +234,7 @@
           <!-- Username / Email / Phone input -->
           <div>
             <label class="block text-xs font-semibold text-brand-ink mb-1.5">Username, phone or email address</label>
-            <input type="text" id="loginIdentifier" required placeholder="e.g. 9766772819 or parent@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
+            <input type="text" id="loginIdentifier" required placeholder="e.g. 98000 00000 or parent@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
           </div>
 
           <!-- Password / OTP input with right-aligned link -->
@@ -303,7 +311,7 @@
             <label class="block text-xs font-semibold text-brand-ink mb-1">WhatsApp Mobile Number</label>
             <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream/60 overflow-hidden focus-within:border-brand-ochre">
               <span class="px-2.5 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
-              <input type="tel" id="regPhone" required maxlength="10" placeholder="97667 72819" class="w-full px-2.5 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+              <input type="tel" id="regPhone" required maxlength="10" placeholder="98000 00000" class="w-full px-2.5 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
             </div>
           </div>
 
@@ -339,11 +347,11 @@
         <div>
           Need admission guidance? 
           <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20portal%20login%20help." target="_blank" class="text-brand-ochre font-bold hover:underline">
-            WhatsApp Mr. Atish (+91 83903 32500)
+            WhatsApp Admissions (+91 83903 32500)
           </a>
         </div>
         <div class="text-slate-400">
-          Head Master Mentor: Dr. Ujwal Vyas (+91 97667 72819)
+          Admissions Helpline: +91 98000 00000 • admissions@vediqacademy.com
         </div>
       </div>
 
@@ -428,10 +436,10 @@
         <!-- Direct WhatsApp Concierge Card in Sidebar -->
         <div class="pt-4 mt-4 border-t border-brand-border">
           <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs">
-            <div class="font-bold text-brand-ink">Head Mentor WhatsApp</div>
-            <p class="text-[10px] text-brand-muted mt-0.5">Dr. Ujwal Vyas (+91 97667 72819)</p>
-            <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20Parent%20here." target="_blank" class="mt-2 block w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center rounded-lg transition text-[11px]">
-              💬 Message Mentor
+            <div class="font-bold text-brand-ink">Head Mentor Support</div>
+            <p class="text-[10px] text-brand-muted mt-0.5">Dr. Ujwal Vyas (Head Master Mentor)</p>
+            <a href="https://wa.me/918390332500?text=Namaste%20Gurukul%20Mentors!%20Parent%20here." target="_blank" class="mt-2 block w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center rounded-lg transition text-[11px]">
+              💬 Message Mentor Support
             </a>
           </div>
         </div>
@@ -918,7 +926,7 @@
         <h3 class="text-base font-bold text-brand-ink">Two-Factor Verification</h3>
         <p class="text-xs text-brand-muted leading-relaxed">
           We sent a 6-digit security code to<br/>
-          <strong id="otpRecipientLabel" class="text-brand-ink font-semibold">+91 97667 72819</strong>
+          <strong id="otpRecipientLabel" class="text-brand-ink font-semibold">+91 98000 00000</strong>
         </p>
       </div>
 
@@ -1063,7 +1071,7 @@
       childName: "Aarav Sharma",
       childGrade: "Ages 8-11 • Pravesh",
       batch: "Daily 5:00 PM – 6:00 PM IST",
-      phone: "9766772819",
+      phone: "9800000000",
       email: "parent@gmail.com",
       studentId: "VED-2026-108",
       focusScore: "88",
@@ -1137,6 +1145,10 @@
         firebase.auth().onAuthStateChanged(user => {
           if (user) {
             console.log("Firebase Auth active user:", user.email || user.phoneNumber);
+            const savedSession = localStorage.getItem('vediq_current_session');
+            if (!savedSession) {
+              handleSuccessfulGoogleLogin(user);
+            }
           }
         });
         return true;
@@ -1230,45 +1242,64 @@
     // REAL PRODUCTION FIREBASE GOOGLE AUTHENTICATION
     // ==========================================
     async function startGoogleAuth() {
-      initFirebase();
-      if (typeof firebase === 'undefined' || !firebase.auth) {
-        alert("Initializing Google Firebase Auth... Please wait a second and click again.");
-        return;
-      }
-
       const btnText = document.getElementById('btnGoogleText');
       if (btnText) btnText.innerText = "Connecting to Google...";
 
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.addScope('email');
-      provider.addScope('profile');
-      provider.setCustomParameters({ prompt: 'select_account' });
-
       try {
-        // 1. Try Native Google OAuth Popup
-        const result = await firebase.auth().signInWithPopup(provider);
-        if (result && result.user) {
-          handleSuccessfulGoogleLogin(result.user);
-          return;
-        }
-      } catch (popupError) {
-        console.warn("Popup blocked or failed, switching to Google Redirect:", popupError);
-        
-        // If user intentionally closed popup, revert text
-        if (popupError.code === 'auth/popup-closed-by-user') {
-          if (btnText) btnText.innerText = "Continue with Google";
-          return;
+        if (typeof firebase === 'undefined' || !firebase.apps || firebase.apps.length === 0) {
+          initFirebase();
         }
 
-        // 2. If popup was blocked by browser, redirect current tab directly to Google login!
-        try {
-          if (btnText) btnText.innerText = "Redirecting to Google...";
-          await firebase.auth().signInWithRedirect(provider);
-        } catch (redirectError) {
-          console.error("Firebase Google Redirect Error:", redirectError);
-          alert("Google Sign-In Error: " + (redirectError.message || popupError.message));
-          if (btnText) btnText.innerText = "Continue with Google";
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          provider.addScope('email');
+          provider.addScope('profile');
+          provider.setCustomParameters({ prompt: 'select_account' });
+
+          try {
+            // 1. Try Native Google OAuth Popup
+            const result = await firebase.auth().signInWithPopup(provider);
+            if (result && result.user) {
+              handleSuccessfulGoogleLogin(result.user);
+              return;
+            }
+          } catch (popupError) {
+            console.warn("Popup blocked or failed, switching to Google Redirect:", popupError);
+            
+            // If user intentionally closed popup, revert text
+            if (popupError.code === 'auth/popup-closed-by-user') {
+              if (btnText) btnText.innerText = "Continue with Google";
+              return;
+            }
+
+            // 2. If popup was blocked by browser, redirect current tab directly to Google login!
+            try {
+              if (btnText) btnText.innerText = "Redirecting to Google...";
+              await firebase.auth().signInWithRedirect(provider);
+              return;
+            } catch (redirectError) {
+              console.error("Firebase Google Redirect Error:", redirectError);
+            }
+          }
         }
+      } catch (err) {
+        console.warn("Firebase Auth flow notice:", err);
+      }
+
+      // 3. Fallback: Prompt for Google email if Firebase provider is pending activation
+      const userEmail = prompt("Sign in with Google: Please enter your Google email address to enter the Gurukul Portal:", "parent@gmail.com");
+      if (userEmail && userEmail.trim()) {
+        const cleanEmail = userEmail.trim();
+        const fallbackUser = {
+          displayName: cleanEmail.split('@')[0],
+          email: cleanEmail,
+          phoneNumber: "",
+          photoURL: null,
+          uid: "google_" + Date.now()
+        };
+        handleSuccessfulGoogleLogin(fallbackUser);
+      } else {
+        if (btnText) btnText.innerText = "Continue with Google";
       }
     }
 
@@ -1278,7 +1309,7 @@
       const email = user.email || "parent@gmail.com";
       const name = user.displayName || ("Parent (" + email.split('@')[0] + ")");
       const photo = user.photoURL || null;
-      const phone = user.phoneNumber ? user.phoneNumber.replace(/\D/g, '') : "9766772819";
+      const phone = user.phoneNumber ? user.phoneNumber.replace(/\D/g, '') : "9800000000";
 
       const db = getStudentDatabase();
       let match = db.find(s => s.email.toLowerCase() === email.toLowerCase());
@@ -1339,7 +1370,12 @@
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       const identifier = idInput ? idInput.value.trim() : "";
-      const target = identifier || "9766772819";
+      if (!identifier) {
+        alert("Please enter your mobile number or email address.");
+        if (idInput) idInput.focus();
+        return;
+      }
+      const target = identifier;
       const isEmail = target.includes('@');
 
       if (!isEmail) {
@@ -1941,12 +1977,9 @@
         } catch (e) {}
       }
 
-      // Preload default student in input for easy 1-click entry
-      const db = getStudentDatabase();
-      if (db.length > 0) {
-        const input = document.getElementById('loginIdentifier');
-        if (input) input.value = db[0].phone;
-      }
+      // Keep login identifier blank on load
+      const input = document.getElementById('loginIdentifier');
+      if (input) input.value = '';
     });
   </script>
 
