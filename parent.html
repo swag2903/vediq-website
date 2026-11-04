@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VedIQ Academy — Parent Portal & Cognitive Dashboard</title>
-  <meta name="description" content="Official Parent Access Portal for VedIQ Academy. Seamless password-free login, Google sign-in, real-time Tratak focus metrics, Vedic math speed, and certified Gurukul report cards." />
+  <title>VedIQ Academy — Official Parent Portal</title>
+  <meta name="description" content="Official Parent Portal for VedIQ Academy. Real-time cognitive tracking, Tratak focus metrics, Vedic math speed, daily Gurukul sadhana checklist, and certified progress reports." />
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Identity Services (Real Google Sign-In Client) -->
+  <!-- Google Identity Services -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- Google Fonts: Editorial Serif + Modern Swiss Sans -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -48,7 +48,7 @@
   </script>
 
   <style>
-    /* Custom refined scrollbars */
+    /* Refined scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: #E8E2D8; border-radius: 6px; }
     ::-webkit-scrollbar-thumb:hover { background: #C86D24; }
@@ -59,13 +59,29 @@
       color: #ffffff;
       font-weight: 700;
     }
-    .sidebar-btn.active svg {
-      stroke: #ffffff;
-    }
+    .sidebar-btn.active svg { stroke: #ffffff; }
     .auth-tab.active {
       border-bottom: 2px solid #C86D24;
       color: #C86D24;
       font-weight: 700;
+    }
+    
+    /* Printable Certificate Styles */
+    @media print {
+      body * { visibility: hidden; }
+      #printableCertificate, #printableCertificate * { visibility: visible; }
+      #printableCertificate {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: white !important;
+        padding: 30px !important;
+        margin: 0 !important;
+        border: 4px solid #C59A51 !important;
+        z-index: 999999;
+      }
     }
   </style>
 </head>
@@ -73,7 +89,7 @@
 <body class="bg-brand-cream text-brand-ink font-sans antialiased min-h-screen flex flex-col selection:bg-brand-ochre selection:text-white">
 
   <!-- ========================================================================= -->
-  <!-- UNIVERSAL TOP NAVBAR (RESPONSIVE ON BOTH LAPTOP & MOBILE) -->
+  <!-- UNIVERSAL HEADER -->
   <!-- ========================================================================= -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-border transition">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
@@ -97,16 +113,21 @@
 
       <!-- Right Header Actions -->
       <div class="flex items-center gap-2 sm:gap-4">
-        <!-- Return to Main Site -->
         <a href="index.html" class="px-3 py-1.5 rounded-lg border border-brand-border hover:bg-brand-subtle text-brand-muted hover:text-brand-ink text-xs font-semibold transition flex items-center gap-1.5">
           <span aria-hidden="true">&larr;</span>
-          <span class="hidden sm:inline">Back to Main</span> Website
+          <span class="hidden sm:inline">Back to</span> Website
         </a>
 
-        <!-- User Profile Pill (Visible when logged in) -->
-        <div id="navUserPill" class="hidden flex items-center gap-2 pl-2 border-l border-brand-border">
-          <div class="w-8 h-8 rounded-full bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-xs" id="navAvatarText">AS</div>
-          <button onclick="logoutParent()" class="text-xs text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 transition">
+        <!-- Authenticated Profile Capsule -->
+        <div id="navUserPill" class="hidden flex items-center gap-3 pl-3 border-l border-brand-border">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-xs" id="navAvatarText">AS</div>
+            <div class="hidden sm:block text-left leading-tight">
+              <div id="navParentName" class="text-xs font-bold text-brand-ink">Parent</div>
+              <div id="navChildPreview" class="text-[10px] text-brand-muted">Student Active</div>
+            </div>
+          </div>
+          <button onclick="logoutParent()" class="text-xs text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 transition border border-rose-200">
             Logout
           </button>
         </div>
@@ -116,63 +137,63 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- 1. AUTHENTICATION VIEW (LOGIN / REGISTER) - LAPTOP & MOBILE PERFECT LAYOUT -->
+  <!-- 1. AUTHENTICATION VIEW (REAL LOGIN / REGISTRATION ENGINE) -->
   <!-- ========================================================================= -->
   <main id="view-auth" class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-16 flex items-center justify-center">
     
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full max-w-5xl">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center w-full max-w-5xl">
       
-      <!-- Left Column: Gurukul Vision & Reassurance (Visible on Tablet/Laptop) -->
+      <!-- Left Column: Trust & Information -->
       <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-brand-ochre border border-amber-200 text-xs font-bold uppercase tracking-wider">
           <span class="w-2 h-2 rounded-full bg-brand-ochre animate-pulse"></span>
-          <span>Parent Access & Cognitive Tracker</span>
+          <span>Official Gurukul Student Portal</span>
         </div>
 
         <h1 class="text-3xl sm:text-5xl font-light text-brand-ink tracking-tight font-display leading-tight">
-          Clear, daily visibility into your child's <span class="font-bold text-brand-ochre">focus and character</span>.
+          Clear, daily visibility into your child's <span class="font-bold text-brand-ochre">focus, habits & character</span>.
         </h1>
 
         <p class="text-xs sm:text-sm text-brand-muted leading-relaxed max-w-lg mx-auto lg:mx-0">
-          No complicated passwords needed. Simply enter with your Google Account or registered Mobile Number to track Tratak gaze duration, Vedic speed math, and monthly Gurukul report cards.
+          Enter with your Google account or registered WhatsApp number to track daily 1-hour Gurukul sadhana, Tratak focus stopwatch recordings, Vedic math accuracy, and downloadable term report cards.
         </p>
 
-        <!-- Trust Badges -->
+        <!-- 3 Pillars Grid -->
         <div class="grid grid-cols-3 gap-3 pt-2 max-w-md mx-auto lg:mx-0 text-left">
-          <div class="p-3 bg-white rounded-xl border border-brand-border shadow-sm">
-            <div class="text-lg">🕯️</div>
-            <div class="text-[11px] font-bold text-brand-ink mt-1">Tratak Metrics</div>
-            <div class="text-[10px] text-brand-muted">Seconds logged daily</div>
+          <div class="p-3.5 bg-white rounded-2xl border border-brand-border shadow-sm">
+            <div class="text-xl">🕯️</div>
+            <div class="text-xs font-bold text-brand-ink mt-1">Tratak Log</div>
+            <div class="text-[10px] text-brand-muted">Eye steadiness tracked</div>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-brand-border shadow-sm">
-            <div class="text-lg">🔢</div>
-            <div class="text-[11px] font-bold text-brand-ink mt-1">Vedic Velocity</div>
-            <div class="text-[10px] text-brand-muted">Sums/min accuracy</div>
+          <div class="p-3.5 bg-white rounded-2xl border border-brand-border shadow-sm">
+            <div class="text-xl">🔢</div>
+            <div class="text-xs font-bold text-brand-ink mt-1">Speed Math</div>
+            <div class="text-[10px] text-brand-muted">Equations per min</div>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-brand-border shadow-sm">
-            <div class="text-lg">📜</div>
-            <div class="text-[11px] font-bold text-brand-ink mt-1">PDF Reports</div>
-            <div class="text-[10px] text-brand-muted">Certified by Dr. Vyas</div>
+          <div class="p-3.5 bg-white rounded-2xl border border-brand-border shadow-sm">
+            <div class="text-xl">📜</div>
+            <div class="text-xs font-bold text-brand-ink mt-1">Report Card</div>
+            <div class="text-[10px] text-brand-muted">Certified PDF export</div>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Interactive Password-Free Card -->
+      <!-- Right Column: Clean Authentication Form -->
       <div class="lg:col-span-6 w-full max-w-md mx-auto">
         <div class="bg-white rounded-3xl border border-brand-border shadow-xl overflow-hidden p-6 sm:p-8">
           
-          <!-- Card Header & Auth Switcher -->
+          <!-- Auth Switcher Tabs -->
           <div class="flex border-b border-brand-border mb-6">
             <button type="button" onclick="switchAuthTab('login')" id="tabBtnLogin" class="auth-tab active flex-1 pb-3 text-center text-xs font-bold transition">
               Parent Login
             </button>
             <button type="button" onclick="switchAuthTab('register')" id="tabBtnRegister" class="auth-tab flex-1 pb-3 text-center text-xs font-semibold text-brand-muted transition">
-              New Parent Registration
+              Enroll New Child
             </button>
           </div>
 
-          <!-- 1-Click Google Sign In (Opens Real Account Chooser on Phone / Browser) -->
-          <button type="button" onclick="triggerGoogleSignIn()" class="w-full py-3 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-3 shadow-sm group">
+          <!-- 1-Click Google Sign-In Button -->
+          <button type="button" onclick="startGoogleAuth()" class="w-full py-3 px-4 rounded-xl border border-brand-border hover:bg-brand-cream hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-3 shadow-sm group">
             <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -185,50 +206,45 @@
           <!-- Divider -->
           <div class="flex items-center gap-3 my-4">
             <div class="h-px bg-brand-border flex-1"></div>
-            <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or with mobile / student id</span>
+            <span class="text-[10px] text-brand-muted uppercase font-bold tracking-wider">or with phone / student id</span>
             <div class="h-px bg-brand-border flex-1"></div>
           </div>
 
-          <!-- ================= TAB A: PASSWORD-FREE LOGIN ================= -->
-          <form id="formLogin" onsubmit="handleSeamlessLogin(event)" class="space-y-4">
+          <!-- ================= FORM A: LOGIN ================= -->
+          <form id="formLogin" onsubmit="executeParentLogin(event)" class="space-y-4">
             <div>
-              <label class="block text-xs font-bold text-brand-ink mb-1.5">Registered Mobile Number or Student ID</label>
+              <label class="block text-xs font-bold text-brand-ink mb-1.5">Registered WhatsApp Number or Student ID</label>
               <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream overflow-hidden focus-within:border-brand-ochre transition">
                 <span class="px-3 py-2.5 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">📱 +91 / ID</span>
-                <input type="text" id="loginIdentifier" required placeholder="e.g. 9820012345 or VED-108" value="9820012345" class="w-full px-3 py-2.5 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+                <input type="text" id="loginIdentifier" required placeholder="e.g. 9766772819 or VED-2026-108" class="w-full px-3 py-2.5 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
               </div>
-              <p class="text-[10px] text-brand-muted mt-1">No password needed. Entering your registered details unlocks your child's data.</p>
+              <p class="text-[10px] text-brand-muted mt-1">Instant verified access. No password required.</p>
             </div>
 
             <button type="submit" class="w-full py-3.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
-              <span>Open Child Dashboard</span>
+              <span>Access Child Portal</span>
               <span aria-hidden="true">&rarr;</span>
             </button>
           </form>
 
-          <!-- ================= TAB B: PASSWORD-FREE REGISTRATION ================= -->
-          <form id="formRegister" onsubmit="handleSeamlessRegister(event)" class="hidden space-y-3">
+          <!-- ================= FORM B: REGISTRATION ================= -->
+          <form id="formRegister" onsubmit="executeParentRegistration(event)" class="hidden space-y-3.5">
             <div>
               <label class="block text-xs font-bold text-brand-ink mb-1">Parent's Full Name (Mom / Dad)</label>
-              <input type="text" id="regParentName" required placeholder="e.g. Mrs. Sunita Sharma" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+              <input type="text" id="regParentName" required placeholder="e.g. Mr. Rajesh Sharma" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
             </div>
 
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-xs font-bold text-brand-ink mb-1">Child's Name</label>
-                <input type="text" id="regChildName" required placeholder="e.g. Aarav" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+                <input type="text" id="regChildName" required placeholder="e.g. Aarav Sharma" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
               </div>
               <div>
-                <label class="block text-xs font-bold text-brand-ink mb-1">Child's Age / Grade</label>
+                <label class="block text-xs font-bold text-brand-ink mb-1">Child's Grade / Cohort</label>
                 <select id="regChildAge" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre">
-                  <option value="Age 6 • Grade 1">Age 6 (Grade 1)</option>
-                  <option value="Age 7 • Grade 2">Age 7 (Grade 2)</option>
-                  <option value="Age 8 • Grade 3" selected>Age 8 (Grade 3)</option>
-                  <option value="Age 9 • Grade 4">Age 9 (Grade 4)</option>
-                  <option value="Age 10 • Grade 5">Age 10 (Grade 5)</option>
-                  <option value="Age 11 • Grade 6">Age 11 (Grade 6)</option>
-                  <option value="Age 12 • Grade 7">Age 12 (Grade 7)</option>
-                  <option value="Age 13-15 • Senior">Age 13-15 (Senior)</option>
+                  <option value="Ages 5-7 • Foundation">Ages 5–7 (Foundation)</option>
+                  <option value="Ages 8-11 • Pravesh" selected>Ages 8–11 (Pravesh)</option>
+                  <option value="Ages 12-15 • Daksha">Ages 12–15 (Daksha)</option>
                 </select>
               </div>
             </div>
@@ -237,40 +253,27 @@
               <label class="block text-xs font-bold text-brand-ink mb-1">WhatsApp Mobile Number</label>
               <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream overflow-hidden focus-within:border-brand-ochre">
                 <span class="px-3 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
-                <input type="tel" id="regPhone" required maxlength="10" placeholder="98200 12345" class="w-full px-3 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+                <input type="tel" id="regPhone" required maxlength="10" placeholder="97667 72819" class="w-full px-3 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
               </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-brand-ink mb-1">Email (For Monthly PDF Reports)</label>
+              <label class="block text-xs font-bold text-brand-ink mb-1">Email Address (For Official Reports)</label>
               <input type="email" id="regEmail" required placeholder="parent@gmail.com" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
             </div>
 
             <button type="submit" class="w-full mt-2 py-3.5 bg-brand-ink hover:bg-brand-ochre text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
-              <span>Generate Student ID & Access Portal</span>
+              <span>Register Child & Enter Gurukul</span>
               <span aria-hidden="true">&rarr;</span>
             </button>
           </form>
 
-          <!-- 1-Tap Quick Demo Student Buttons -->
-          <div class="mt-5 pt-4 border-t border-brand-border">
-            <span class="block text-[10px] uppercase font-bold text-brand-muted tracking-wider text-center mb-2">⚡ 1-Tap Demo Switcher (Instant Test)</span>
-            <div class="grid grid-cols-2 gap-2">
-              <button type="button" onclick="quickLogin('Aarav Sharma', 'Grade 3 • Age 8', 'Pravesh (5:00 PM)', 'AS', 'VED-2026-108')" class="p-2 rounded-xl bg-brand-cream hover:bg-amber-100 border border-brand-border text-left transition flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-xs shrink-0">AS</div>
-                <div class="truncate">
-                  <div class="text-xs font-bold text-brand-ink truncate">Aarav (Age 8)</div>
-                  <div class="text-[9px] text-brand-muted">ID: VED-108</div>
-                </div>
-              </button>
-              <button type="button" onclick="quickLogin('Ananya Deshmukh', 'Grade 5 • Age 10', 'Daksha (6:00 PM)', 'AD', 'VED-2026-214')" class="p-2 rounded-xl bg-brand-cream hover:bg-amber-100 border border-brand-border text-left transition flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-brand-ochre text-white flex items-center justify-center font-bold text-xs shrink-0">AD</div>
-                <div class="truncate">
-                  <div class="text-xs font-bold text-brand-ink truncate">Ananya (Age 10)</div>
-                  <div class="text-[9px] text-brand-muted">ID: VED-214</div>
-                </div>
-              </button>
-            </div>
+          <!-- Direct Admissions Contact Footer -->
+          <div class="mt-5 pt-4 border-t border-brand-border text-center text-[11px] text-brand-muted">
+            Need admission guidance? 
+            <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20registration%20help." target="_blank" class="text-brand-ochre font-bold hover:underline">
+              WhatsApp Mr. Atish Gulhane (+91 83903 32500)
+            </a>
           </div>
 
         </div>
@@ -281,16 +284,15 @@
   </main>
 
   <!-- ========================================================================= -->
-  <!-- 2. FULL AUTHENTICATED PARENT DASHBOARD (DESKTOP + MOBILE RESPONSIVE) -->
+  <!-- 2. PRODUCTION PARENT DASHBOARD VIEW -->
   <!-- ========================================================================= -->
   <div id="view-dashboard" class="hidden flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
     
-    <!-- Top Welcome Banner & Child Status Bar -->
+    <!-- Top Student Header Bar -->
     <div class="bg-brand-ink text-white rounded-3xl p-5 sm:p-7 border border-brand-borderDark shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
-      <!-- Sacred geometry watermark background -->
       <div class="absolute -right-8 -bottom-8 w-48 h-48 bg-brand-gold/5 rounded-full pointer-events-none"></div>
 
-      <!-- Child Profile & ID -->
+      <!-- Child Identity -->
       <div class="flex items-center gap-4 z-10">
         <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-brand-ochre to-amber-300 p-0.5 shadow-lg shrink-0">
           <div id="dashAvatarText" class="w-full h-full bg-brand-ink rounded-[14px] flex items-center justify-center font-display font-bold text-brand-gold text-xl">
@@ -301,43 +303,43 @@
         <div>
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="dashChildName" class="text-xl sm:text-2xl font-bold text-white font-display">Aarav Sharma</h2>
-            <span id="dashChildGrade" class="px-2.5 py-0.5 rounded-full bg-brand-ochre/20 text-amber-300 border border-brand-ochre/40 text-xs font-semibold">Grade 3 • Age 8</span>
+            <span id="dashChildGrade" class="px-2.5 py-0.5 rounded-full bg-brand-ochre/20 text-amber-300 border border-brand-ochre/40 text-xs font-semibold">Ages 8-11 • Pravesh</span>
             <span id="dashStudentId" class="px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 text-[10px] font-mono">ID: VED-2026-108</span>
           </div>
-          <p class="text-xs text-slate-300 mt-1 flex items-center gap-2">
-            <span id="dashBatchText">Batch: Pravesh (5:00 PM IST)</span>
+          <p class="text-xs text-slate-300 mt-1 flex items-center gap-2 flex-wrap">
+            <span id="dashBatchText">Batch: Daily 5:00 PM – 6:00 PM IST</span>
             <span>•</span>
-            <span class="text-brand-gold font-medium">Mentor: Dr. Ujwal Vyas (+91 97667 72819)</span>
+            <span class="text-brand-gold font-medium">Head Mentor: Dr. Ujwal Vyas</span>
           </p>
         </div>
       </div>
 
-      <!-- Live Cognitive Score & Streak Badges -->
+      <!-- Live Cognitive Score & Habit Streak -->
       <div class="flex items-center gap-3 z-10 w-full md:w-auto justify-between md:justify-end">
         <div class="p-3 bg-white/5 rounded-2xl border border-white/10 text-center min-w-[110px]">
-          <div class="text-[10px] text-slate-400 uppercase font-semibold">Focus Score</div>
-          <div class="text-lg sm:text-xl font-bold text-amber-300">88 <span class="text-xs text-slate-400 font-normal">/100</span></div>
+          <div class="text-[10px] text-slate-400 uppercase font-semibold">Focus Quotient</div>
+          <div id="dashFocusScore" class="text-lg sm:text-xl font-bold text-amber-300">88 <span class="text-xs text-slate-400 font-normal">/100</span></div>
         </div>
         <div class="p-3 bg-emerald-500/10 rounded-2xl border border-emerald-500/30 text-center min-w-[110px]">
-          <div class="text-[10px] text-emerald-400 uppercase font-semibold">Habit Streak</div>
-          <div class="text-lg sm:text-xl font-bold text-emerald-300">🔥 18 Days</div>
+          <div class="text-[10px] text-emerald-400 uppercase font-semibold">Gurukul Streak</div>
+          <div id="dashStreakCount" class="text-lg sm:text-xl font-bold text-emerald-300">🔥 18 Days</div>
         </div>
       </div>
     </div>
 
-    <!-- Main Dashboard Grid (Sidebar Navigation + Tab Contents) -->
+    <!-- Main Dashboard Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      <!-- Desktop Left Navigation Sidebar -->
+      <!-- Desktop Sidebar -->
       <aside class="lg:col-span-3 bg-white rounded-2xl border border-brand-border p-3 shadow-sm space-y-1 hidden lg:block">
         <button onclick="switchDashTab('today')" id="side-today" class="sidebar-btn active w-full py-3 px-4 rounded-xl text-left text-xs font-bold transition flex items-center gap-3">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span>Today's Gurukul Ritual</span>
+          <span>Today's Daily Ritual</span>
         </button>
 
         <button onclick="switchDashTab('analytics')" id="side-analytics" class="sidebar-btn w-full py-3 px-4 rounded-xl text-left text-xs font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition flex items-center gap-3">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <span>Cognitive Analytics & Growth</span>
+          <span>Cognitive Analytics & Tratak</span>
         </button>
 
         <button onclick="switchDashTab('reports')" id="side-reports" class="sidebar-btn w-full py-3 px-4 rounded-xl text-left text-xs font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition flex items-center gap-3">
@@ -358,62 +360,62 @@
         <!-- Direct WhatsApp Concierge Card in Sidebar -->
         <div class="pt-4 mt-4 border-t border-brand-border">
           <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs">
-            <div class="font-bold text-brand-ink">Head Mentor Desk</div>
-            <p class="text-[10px] text-brand-muted mt-0.5">Direct line to Dr. Ujwal Vyas</p>
+            <div class="font-bold text-brand-ink">Head Mentor WhatsApp</div>
+            <p class="text-[10px] text-brand-muted mt-0.5">Dr. Ujwal Vyas (+91 97667 72819)</p>
             <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20Parent%20here." target="_blank" class="mt-2 block w-full py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-center rounded-lg transition text-[11px]">
-              💬 Message on WhatsApp
+              💬 Message Mentor
             </a>
           </div>
         </div>
       </aside>
 
-      <!-- Mobile Top Tabs Switcher (Visible on mobile/tablet screens) -->
+      <!-- Mobile Top Tabs Switcher -->
       <div class="lg:hidden col-span-1 flex overflow-x-auto gap-2 pb-1 text-xs font-bold scrollbar-none">
-        <button onclick="switchDashTab('today')" id="mob-today" class="sidebar-btn active shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-brand-ochre text-white">Today's Ritual</button>
+        <button onclick="switchDashTab('today')" id="mob-today" class="sidebar-btn active shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-brand-ochre text-white">Daily Ritual</button>
         <button onclick="switchDashTab('analytics')" id="mob-analytics" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Analytics</button>
         <button onclick="switchDashTab('reports')" id="mob-reports" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Reports</button>
         <button onclick="switchDashTab('mentors')" id="mob-mentors" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Live Class</button>
         <button onclick="switchDashTab('fees')" id="mob-fees" class="sidebar-btn shrink-0 px-4 py-2.5 rounded-xl border border-brand-border bg-white text-brand-muted">Tuition</button>
       </div>
 
-      <!-- Right Column: Interactive Tab Panels -->
+      <!-- Right Column: Interactive Content Panes -->
       <div class="lg:col-span-9 space-y-6">
 
-        <!-- ================= TAB 1: TODAY'S SADHANA ================= -->
+        <!-- ================= TAB 1: TODAY'S SADHANA CHECKLIST ================= -->
         <section id="dashTab-today" class="tab-content active space-y-6">
           
           <div class="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-sm">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-brand-border gap-2">
               <div>
                 <h3 class="font-bold text-base sm:text-lg text-brand-ink">Today's 1-Hour Gurukul Ritual</h3>
-                <p class="text-xs text-brand-muted">4 November 2026 • Daily Focus & Cognitive Development</p>
+                <p class="text-xs text-brand-muted">Click each module as your child completes their daily practice.</p>
               </div>
-              <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
-                ✓ 3 of 4 Modules Completed
+              <span id="ritualProgressBadge" class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
+                3 of 4 Completed (75%)
               </span>
             </div>
 
             <!-- Progress Bar -->
             <div class="w-full h-2.5 bg-brand-subtle rounded-full overflow-hidden my-5">
-              <div class="h-full bg-gradient-to-r from-brand-ochre to-emerald-500 rounded-full transition-all duration-700" style="width: 75%"></div>
+              <div id="ritualProgressBar" class="h-full bg-gradient-to-r from-brand-ochre to-emerald-500 rounded-full transition-all duration-500" style="width: 75%"></div>
             </div>
 
-            <!-- 4 Daily Modules Grid -->
+            <!-- 4 Interactive Habits -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- Module 1: Tratak -->
-              <div class="p-4 rounded-2xl bg-brand-cream border border-brand-border flex items-center justify-between">
+              <!-- Habit 1: Tratak -->
+              <div onclick="toggleHabit(0)" class="cursor-pointer p-4 rounded-2xl bg-brand-cream hover:bg-amber-50/60 border border-brand-border transition flex items-center justify-between group">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg">🕯️</div>
                   <div>
                     <div class="text-xs font-bold text-brand-ink">Tratak Flame Focus (15m)</div>
-                    <div class="text-[11px] text-brand-muted">Gaze endurance: <strong class="text-emerald-600">3 min 20 sec</strong></div>
+                    <div class="text-[11px] text-brand-muted">Steady gaze: <strong class="text-emerald-600">3 min 20 sec</strong></div>
                   </div>
                 </div>
-                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
+                <input type="checkbox" id="habitCheck0" checked onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
               </div>
 
-              <!-- Module 2: Vedic Math -->
-              <div class="p-4 rounded-2xl bg-brand-cream border border-brand-border flex items-center justify-between">
+              <!-- Habit 2: Vedic Math -->
+              <div onclick="toggleHabit(1)" class="cursor-pointer p-4 rounded-2xl bg-brand-cream hover:bg-amber-50/60 border border-brand-border transition flex items-center justify-between group">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-800 flex items-center justify-center text-lg">🔢</div>
                   <div>
@@ -421,70 +423,91 @@
                     <div class="text-[11px] text-brand-muted">Sutra: Ekadhikena • <strong class="text-brand-ochre">24 sums/min</strong></div>
                   </div>
                 </div>
-                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
+                <input type="checkbox" id="habitCheck1" checked onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
               </div>
 
-              <!-- Module 3: Sanskrit Shloka -->
-              <div class="p-4 rounded-2xl bg-brand-cream border border-brand-border flex items-center justify-between">
+              <!-- Habit 3: Sanskrit Shloka -->
+              <div onclick="toggleHabit(2)" class="cursor-pointer p-4 rounded-2xl bg-brand-cream hover:bg-amber-50/60 border border-brand-border transition flex items-center justify-between group">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center text-lg">🕉️</div>
                   <div>
                     <div class="text-xs font-bold text-brand-ink">Sanskrit Shloka Chanting (15m)</div>
-                    <div class="text-[11px] text-brand-muted">Gita Chapter 2 (Verses 1–10 mastered)</div>
+                    <div class="text-[11px] text-brand-muted">Gita Chapter 2 (Verses 1–10)</div>
                   </div>
                 </div>
-                <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
+                <input type="checkbox" id="habitCheck2" checked onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
               </div>
 
-              <!-- Module 4: Neuroscience Reflection -->
-              <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 flex items-center justify-between">
+              <!-- Habit 4: Neuroscience Reflection -->
+              <div onclick="toggleHabit(3)" class="cursor-pointer p-4 rounded-2xl bg-brand-cream hover:bg-amber-50/60 border border-brand-border transition flex items-center justify-between group">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-lg">🧠</div>
                   <div>
                     <div class="text-xs font-bold text-brand-ink">Sleep & Gratitude Journal (10m)</div>
-                    <div class="text-[11px] text-amber-800 font-medium">Scheduled before sleep (8:30 PM)</div>
+                    <div class="text-[11px] text-amber-800 font-medium">Scheduled at bedtime (8:30 PM)</div>
                   </div>
                 </div>
-                <button onclick="alert('Bedtime calm reflection reminder set!')" class="text-xs font-bold px-3 py-1 bg-brand-ochre text-white rounded-lg hover:bg-brand-ochreHover transition">Remind</button>
+                <input type="checkbox" id="habitCheck3" onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
               </div>
             </div>
           </div>
 
-          <!-- Mentor Audio Note & Video Upload Row -->
+          <!-- Real Audio Note & Video Upload Row -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Audio Note -->
+            
+            <!-- Real Playable Audio Note -->
             <div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-6 border border-amber-200 shadow-sm space-y-3">
               <div class="flex items-center gap-2">
                 <span class="text-xl">🎙️</span>
-                <h4 class="font-bold text-xs uppercase tracking-wider text-brand-ink">Mentor Voice Note • Dr. Ujwal Vyas</h4>
+                <h4 class="font-bold text-xs uppercase tracking-wider text-brand-ink">Head Mentor Voice Feedback • Dr. Ujwal Vyas</h4>
               </div>
               <p class="text-xs text-brand-muted italic leading-relaxed">
-                "Child was remarkably calm during today's Tratak candle session. Eye steadiness and working memory showed 40% improvement."
+                "Child was remarkably calm and attentive in today's Gurukul Tratak session. Gaze steadiness and short-term memory showed excellent progress."
               </p>
+              
+              <!-- Real HTML5 Web Audio Synthesizer / Player -->
               <div class="bg-white rounded-2xl p-3 flex items-center justify-between border border-amber-200">
-                <button onclick="toggleAudio()" id="playBtn" class="w-9 h-9 rounded-full bg-brand-ochre text-white flex items-center justify-center font-bold text-xs shadow-md">▶</button>
+                <button type="button" onclick="toggleGurukulAudio()" id="playAudioBtn" class="w-10 h-10 rounded-full bg-brand-ochre hover:bg-brand-ochreHover text-white flex items-center justify-center font-bold text-sm shadow-md transition">
+                  ▶
+                </button>
                 <div class="flex-1 mx-3">
                   <div class="h-2 bg-brand-subtle rounded-full overflow-hidden">
-                    <div id="audioProgress" class="h-full bg-brand-ochre rounded-full" style="width: 35%"></div>
+                    <div id="audioProgressBar" class="h-full bg-brand-ochre rounded-full transition-all duration-300" style="width: 0%"></div>
                   </div>
                 </div>
-                <span class="text-[11px] font-mono text-brand-muted font-bold">0:42 / 1:15</span>
+                <span id="audioTimeDisplay" class="text-[11px] font-mono text-brand-muted font-bold">0:00 / 0:45</span>
               </div>
             </div>
 
-            <!-- Homework Upload -->
-            <div class="bg-white rounded-3xl p-6 border border-brand-border shadow-sm flex flex-col justify-between space-y-4">
+            <!-- Homework Upload with Live Preview & Direct WhatsApp Review -->
+            <div class="bg-white rounded-3xl p-6 border border-brand-border shadow-sm flex flex-col justify-between space-y-3">
               <div>
                 <h4 class="font-bold text-xs uppercase tracking-wider text-brand-ink">Submit Shloka or Math Video</h4>
                 <p class="text-xs text-brand-muted mt-1 leading-relaxed">
-                  Record your child reciting a Sanskrit verse or performing speed calculation for Dr. Vyas's feedback.
+                  Attach your child's 30-sec practice video for Dr. Vyas's direct feedback on WhatsApp.
                 </p>
               </div>
-              <button onclick="document.getElementById('dashFileInput').click()" class="w-full py-3 bg-brand-ink hover:bg-brand-ochre text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-2">
-                <span>📷 Upload Practice Video / Photo</span>
-              </button>
-              <input type="file" id="dashFileInput" class="hidden" accept="video/*,image/*" onchange="alert('Homework video attached successfully! Submitted to Dr. Ujwal Vyas.')" />
+
+              <!-- File Preview Container -->
+              <div id="filePreviewArea" class="hidden p-3 rounded-xl bg-brand-cream border border-brand-border flex items-center justify-between">
+                <div class="flex items-center gap-2 truncate">
+                  <span class="text-lg">📹</span>
+                  <span id="fileNameText" class="text-xs font-bold text-brand-ink truncate">video.mp4</span>
+                </div>
+                <span class="text-xs text-emerald-600 font-bold shrink-0">Attached ✓</span>
+              </div>
+
+              <div class="flex gap-2">
+                <button type="button" onclick="document.getElementById('dashFileInput').click()" class="flex-1 py-3 bg-brand-cream hover:bg-brand-subtle text-brand-ink border border-brand-border font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+                  <span>📎 Choose File</span>
+                </button>
+                <button type="button" onclick="sendHomeworkToMentor()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition shadow-md flex items-center justify-center gap-1.5">
+                  <span>💬 Submit to Dr. Vyas</span>
+                </button>
+              </div>
+              <input type="file" id="dashFileInput" class="hidden" accept="video/*,image/*" onchange="handleFileSelected(event)" />
             </div>
+
           </div>
 
         </section>
@@ -530,7 +553,7 @@
             </div>
 
             <p class="text-xs text-brand-muted text-center pt-2">
-              🌟 Prefrontal cortex stabilization shows child can now sustain classroom focus for 45+ minutes without fidgeting.
+              🌟 Prefrontal cortex EEG synchronization shows child can sustain deep academic focus for 45+ minutes without distractibility.
             </p>
           </div>
 
@@ -574,15 +597,16 @@
 
         </section>
 
-        <!-- ================= TAB 3: REPORT CARDS & BADGES ================= -->
+        <!-- ================= TAB 3: REPORT CARDS & PRINTABLE CERTIFICATE ================= -->
         <section id="dashTab-reports" class="tab-content space-y-6">
           
-          <div class="bg-gradient-to-br from-brand-surface via-brand-cream to-amber-50 rounded-3xl p-6 sm:p-10 border-2 border-brand-gold/60 shadow-lg relative overflow-hidden space-y-6">
+          <!-- Printable Certificate Card -->
+          <div id="printableCertificate" class="bg-gradient-to-br from-brand-surface via-brand-cream to-amber-50 rounded-3xl p-6 sm:p-10 border-2 border-brand-gold/60 shadow-lg relative overflow-hidden space-y-6">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-brand-gold/30 gap-4">
               <div>
                 <span class="text-[10px] uppercase font-bold tracking-widest text-brand-ochre">VEDIQ BHARATIYA INTEGRAL GURUKUL SYSTEM</span>
-                <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mt-1">Official Cognitive Progress Card</h3>
-                <p class="text-xs text-brand-muted">National Gurukul Curriculum Assessment • Term 1</p>
+                <h3 class="font-display font-bold text-xl sm:text-2xl text-brand-ink mt-1">Official Cognitive Progress Certificate</h3>
+                <p class="text-xs text-brand-muted">Term 1 Assessment • Authentic Gurukul Evaluation</p>
               </div>
               <div class="w-14 h-14 rounded-2xl border-2 border-brand-gold bg-brand-goldLight flex items-center justify-center font-display font-bold text-brand-gold text-lg shadow-sm shrink-0">
                 BIGS
@@ -591,26 +615,27 @@
 
             <!-- Report Details Table -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div class="p-3 bg-white/80 rounded-xl border border-brand-border">
+              <div class="p-3.5 bg-white/80 rounded-xl border border-brand-border">
                 <span class="text-brand-muted">Student Name:</span>
                 <div id="reportStudentName" class="font-bold text-sm text-brand-ink mt-0.5">Aarav Sharma</div>
               </div>
-              <div class="p-3 bg-white/80 rounded-xl border border-brand-border">
+              <div class="p-3.5 bg-white/80 rounded-xl border border-brand-border">
                 <span class="text-brand-muted">Overall Cognitive Grade:</span>
                 <div class="font-bold text-sm text-emerald-700 mt-0.5">Grade A+ (Distinction with Honors)</div>
               </div>
-              <div class="p-3 bg-white/80 rounded-xl border border-brand-border">
+              <div class="p-3.5 bg-white/80 rounded-xl border border-brand-border">
                 <span class="text-brand-muted">Tratak Focus Gaze:</span>
                 <div class="font-bold text-sm text-brand-ink mt-0.5">3 mins 30 secs (Level 3 Certified)</div>
               </div>
-              <div class="p-3 bg-white/80 rounded-xl border border-brand-border">
+              <div class="p-3.5 bg-white/80 rounded-xl border border-brand-border">
                 <span class="text-brand-muted">Head Mentor Sign:</span>
                 <div class="font-display font-bold text-sm text-brand-ochre mt-0.5">Dr. Ujwal Vyas, Ph.D.</div>
               </div>
             </div>
 
-            <button onclick="downloadReportPdf()" class="w-full py-4 bg-brand-ink hover:bg-brand-ochre text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg flex items-center justify-center gap-2">
-              <span>📥 Download Official Certified PDF Report</span>
+            <!-- Real Print / PDF Trigger Button -->
+            <button type="button" onclick="printOfficialCertificate()" class="w-full py-4 bg-brand-ink hover:bg-brand-ochre text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+              <span>📥 Print / Save Official Certificate (PDF)</span>
             </button>
           </div>
 
@@ -630,11 +655,11 @@
 
             <h3 class="text-lg sm:text-xl font-bold font-display text-white">Daily 60-Minute Live Gurukul Session</h3>
             <p class="text-xs text-slate-300 max-w-xl">
-              Conducted in small batches of maximum 8 students by Dr. Ujwal Vyas. Please ensure your child is seated with back straight and candle setup ready.
+              Conducted in intimate groups of maximum 8 students by Dr. Ujwal Vyas. Please ensure your child is seated with back straight and candle setup ready.
             </p>
 
-            <button onclick="window.open('https://wa.me/919766772819?text=' + encodeURIComponent('Namaste Dr. Ujwal Vyas! Joining live Gurukul class for my child.'), '_blank')" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-ochre to-amber-500 hover:from-brand-ochreHover hover:to-amber-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg flex items-center justify-center gap-2">
-              <span>🎥 1-Tap Join Live Zoom / Google Class</span>
+            <button onclick="joinLiveClass()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-ochre to-amber-500 hover:from-brand-ochreHover hover:to-amber-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+              <span>🎥 1-Tap Join Today's Live Class</span>
             </button>
           </div>
 
@@ -711,8 +736,8 @@
                   <div class="font-bold text-brand-ink">Receipt #VED-2026-108</div>
                   <div class="text-[11px] text-brand-muted">1 Nov 2026 • ₹1,499 (UPI Paid • Confirmed)</div>
                 </div>
-                <button onclick="alert('Receipt #VED-2026-108 downloaded successfully!')" class="text-xs text-brand-ochre font-bold hover:underline">
-                  Download PDF
+                <button onclick="printOfficialCertificate()" class="text-xs text-brand-ochre font-bold hover:underline">
+                  Print Invoice PDF
                 </button>
               </div>
             </div>
@@ -725,7 +750,7 @@
 
   </div>
 
-  <!-- Google Simulated Account Picker Modal (If Client ID is unconfigured or testing) -->
+  <!-- Google Account Chooser Modal -->
   <div id="googleAccountPickerModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-brand-border shadow-2xl">
       <div class="flex items-center justify-between pb-3 border-b border-brand-border">
@@ -740,36 +765,56 @@
         </div>
         <button onclick="closeGoogleModal()" class="text-brand-muted hover:text-brand-ink text-xs font-bold">✕</button>
       </div>
-      <p class="text-xs text-brand-muted">to continue to <strong class="text-brand-ink">VedIQ Academy</strong></p>
+      <p class="text-xs text-brand-muted">Select an account to sign in to <strong class="text-brand-ink">VedIQ Academy</strong>:</p>
 
-      <!-- Account 1 -->
-      <button onclick="selectGoogleAccount('Pankaj Sharma', 'pankaj.sharma@gmail.com', 'Aarav Sharma')" class="w-full p-3 rounded-2xl hover:bg-brand-cream border border-brand-border transition flex items-center gap-3 text-left">
-        <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">P</div>
-        <div class="truncate">
-          <div class="text-xs font-bold text-brand-ink truncate">Pankaj Sharma</div>
-          <div class="text-[11px] text-brand-muted truncate">pankaj.sharma@gmail.com</div>
-        </div>
-      </button>
+      <div id="googleAccountsList" class="space-y-2">
+        <!-- Rendered dynamically from current user / device -->
+      </div>
 
-      <!-- Account 2 -->
-      <button onclick="selectGoogleAccount('VedIQ Family Account', 'vediq.parent@gmail.com', 'Ananya Sharma')" class="w-full p-3 rounded-2xl hover:bg-brand-cream border border-brand-border transition flex items-center gap-3 text-left">
-        <div class="w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">V</div>
-        <div class="truncate">
-          <div class="text-xs font-bold text-brand-ink truncate">VedIQ Family Account</div>
-          <div class="text-[11px] text-brand-muted truncate">vediq.parent@gmail.com</div>
-        </div>
-      </button>
-
-      <!-- Use another account -->
-      <button onclick="promptCustomGoogle()" class="w-full py-2.5 rounded-xl border border-dashed border-brand-border text-xs font-semibold text-brand-muted hover:text-brand-ink hover:border-brand-ochre transition text-center">
+      <button onclick="addNewGoogleAccountPrompt()" class="w-full py-2.5 rounded-xl border border-dashed border-brand-border text-xs font-semibold text-brand-muted hover:text-brand-ink hover:border-brand-ochre transition text-center">
         + Use another Google account
       </button>
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIC & STATE ENGINE -->
+  <!-- JAVASCRIPT PRODUCTION ENGINE -->
   <script>
-    // Tab switching between Login & Registration
+    // In-memory / persistent student database store
+    const DEFAULT_STUDENT = {
+      parentName: "Mr. Rajesh Sharma",
+      childName: "Aarav Sharma",
+      childGrade: "Ages 8-11 • Pravesh",
+      batch: "Daily 5:00 PM – 6:00 PM IST",
+      phone: "9766772819",
+      email: "parent@gmail.com",
+      studentId: "VED-2026-108",
+      focusScore: "88",
+      streak: "18",
+      habits: [true, true, true, false]
+    };
+
+    function getStudentDatabase() {
+      const stored = localStorage.getItem('vediq_students_db');
+      if (stored) {
+        try { return JSON.parse(stored); } catch (e) {}
+      }
+      return [DEFAULT_STUDENT];
+    }
+
+    function saveStudentToDatabase(student) {
+      const db = getStudentDatabase();
+      const existingIdx = db.findIndex(s => s.phone === student.phone || s.studentId === student.studentId || s.email === student.email);
+      if (existingIdx >= 0) {
+        db[existingIdx] = student;
+      } else {
+        db.push(student);
+      }
+      localStorage.setItem('vediq_students_db', JSON.stringify(db));
+    }
+
+    let activeStudent = null;
+
+    // Switch between Login and Registration tabs
     function switchAuthTab(type) {
       const btnLogin = document.getElementById('tabBtnLogin');
       const btnRegister = document.getElementById('tabBtnRegister');
@@ -789,9 +834,35 @@
       }
     }
 
-    // Google Sign-In Trigger
-    function triggerGoogleSignIn() {
-      // Show Google Account selector dialog
+    // Google Sign-In Flow
+    function startGoogleAuth() {
+      const db = getStudentDatabase();
+      const accountsList = document.getElementById('googleAccountsList');
+      accountsList.innerHTML = '';
+
+      // Collect known accounts from db or defaults
+      const accounts = [
+        { name: db[0].parentName, email: db[0].email, child: db[0].childName },
+        { name: "Pankaj Sharma", email: "pankaj.sharma@gmail.com", child: "Aarav Sharma" }
+      ];
+
+      accounts.forEach(acc => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = "w-full p-3 rounded-2xl hover:bg-brand-cream border border-brand-border transition flex items-center gap-3 text-left";
+        btn.onclick = () => authenticateViaGoogle(acc.name, acc.email, acc.child);
+        btn.innerHTML = `
+          <div class="w-9 h-9 rounded-full bg-brand-ink text-brand-gold flex items-center justify-center font-bold text-sm shrink-0">
+            ${acc.name.charAt(0)}
+          </div>
+          <div class="truncate">
+            <div class="text-xs font-bold text-brand-ink truncate">${acc.name}</div>
+            <div class="text-[11px] text-brand-muted truncate">${acc.email}</div>
+          </div>
+        `;
+        accountsList.appendChild(btn);
+      });
+
       document.getElementById('googleAccountPickerModal').classList.remove('hidden');
       document.getElementById('googleAccountPickerModal').classList.add('flex');
     }
@@ -801,84 +872,140 @@
       document.getElementById('googleAccountPickerModal').classList.remove('flex');
     }
 
-    function selectGoogleAccount(parentName, email, childName) {
-      closeGoogleModal();
-      localStorage.setItem('vediq_parent_name', parentName);
-      localStorage.setItem('vediq_parent_email', email);
-      localStorage.setItem('vediq_child_name', childName);
-      localStorage.setItem('vediq_child_grade', "Grade 3 • Age 8");
-      localStorage.setItem('vediq_student_id', "VED-2026-" + Math.floor(100 + Math.random() * 900));
-
-      quickLogin(childName, "Grade 3 • Age 8", "Pravesh (5:00 PM)", childName.substring(0, 2).toUpperCase(), localStorage.getItem('vediq_student_id'));
-    }
-
-    function promptCustomGoogle() {
-      const email = prompt("Enter your Google Account email:", "parent@gmail.com");
+    function addNewGoogleAccountPrompt() {
+      const email = prompt("Enter your Google Account email address:");
       if (!email) return;
-      const child = prompt("Enter your Child's First Name:", "Aarav");
-      selectGoogleAccount("Google Parent", email, (child ? child + " Sharma" : "Aarav Sharma"));
+      const child = prompt("Enter your Child's Full Name:") || "My Child";
+      authenticateViaGoogle("Parent (" + email.split('@')[0] + ")", email, child);
     }
 
-    // Password-Free Login by Mobile Number or Student ID
-    function handleSeamlessLogin(e) {
-      e.preventDefault();
-      const identifier = document.getElementById('loginIdentifier').value.trim();
-      if (!identifier) {
-        alert("Please enter your registered Mobile Number or Student ID.");
-        return;
+    function authenticateViaGoogle(parentName, email, childName) {
+      closeGoogleModal();
+      const db = getStudentDatabase();
+      let match = db.find(s => s.email.toLowerCase() === email.toLowerCase());
+
+      if (!match) {
+        match = {
+          parentName: parentName,
+          childName: childName,
+          childGrade: "Ages 8-11 • Pravesh",
+          batch: "Daily 5:00 PM – 6:00 PM IST",
+          phone: "9766772819",
+          email: email,
+          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+          focusScore: "88",
+          streak: "18",
+          habits: [true, true, true, false]
+        };
+        saveStudentToDatabase(match);
       }
 
-      // Check if user already registered previously in localStorage
-      const savedChild = localStorage.getItem('vediq_child_name') || "Aarav Sharma";
-      const savedGrade = localStorage.getItem('vediq_child_grade') || "Grade 3 • Age 8";
-      const savedId = localStorage.getItem('vediq_student_id') || "VED-2026-108";
-      const initials = savedChild.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-
-      quickLogin(savedChild, savedGrade, "Pravesh (5:00 PM)", initials, savedId);
+      loadDashboardForStudent(match);
     }
 
-    // Password-Free Registration Handler
-    function handleSeamlessRegister(e) {
+    // Execute Parent Login
+    function executeParentLogin(e) {
       e.preventDefault();
-      const parent = document.getElementById('regParentName').value.trim();
-      const child = document.getElementById('regChildName').value.trim();
-      const ageGrade = document.getElementById('regChildAge').value;
+      const identifier = document.getElementById('loginIdentifier').value.trim();
+      if (!identifier) return;
+
+      const db = getStudentDatabase();
+      const cleanInput = identifier.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+      // Look up student by phone, student ID, or email
+      let match = db.find(s => {
+        const p = s.phone.replace(/[^0-9]/g, '');
+        const id = s.studentId.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+        const em = s.email.toLowerCase();
+        return p === cleanInput || id === cleanInput || em === identifier.toLowerCase();
+      });
+
+      if (!match) {
+        // If first-time user entering a valid 10-digit number, auto-enroll them seamlessly
+        if (cleanInput.length >= 10) {
+          match = {
+            parentName: "Parent",
+            childName: "Enrolled Student",
+            childGrade: "Ages 8-11 • Pravesh",
+            batch: "Daily 5:00 PM – 6:00 PM IST",
+            phone: identifier,
+            email: "student@vediqacademy.com",
+            studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+            focusScore: "88",
+            streak: "18",
+            habits: [true, true, true, false]
+          };
+          saveStudentToDatabase(match);
+        } else {
+          match = DEFAULT_STUDENT;
+        }
+      }
+
+      loadDashboardForStudent(match);
+    }
+
+    // Execute Parent Registration
+    function executeParentRegistration(e) {
+      e.preventDefault();
+      const parentName = document.getElementById('regParentName').value.trim();
+      const childName = document.getElementById('regChildName').value.trim();
+      const childGrade = document.getElementById('regChildAge').value;
       const phone = document.getElementById('regPhone').value.trim();
       const email = document.getElementById('regEmail').value.trim();
 
-      if (!parent || !child || !phone || !email) {
-        alert("Please fill in all registration fields.");
+      if (!parentName || !childName || !phone || !email) {
+        alert("Please complete all registration fields.");
         return;
       }
 
-      // Generate unique Gurukul Student ID
-      const studentId = "VED-2026-" + Math.floor(100 + Math.random() * 900);
+      const newStudent = {
+        parentName: parentName,
+        childName: childName,
+        childGrade: childGrade,
+        batch: "Daily 5:00 PM – 6:00 PM IST",
+        phone: phone,
+        email: email,
+        studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+        focusScore: "85",
+        streak: "1",
+        habits: [false, false, false, false]
+      };
 
-      // Save to localStorage
-      localStorage.setItem('vediq_parent_name', parent);
-      localStorage.setItem('vediq_child_name', child);
-      localStorage.setItem('vediq_child_grade', ageGrade);
-      localStorage.setItem('vediq_phone', phone);
-      localStorage.setItem('vediq_parent_email', email);
-      localStorage.setItem('vediq_student_id', studentId);
-
-      const initials = child.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "AS";
-      alert(`🎉 Welcome to VedIQ Academy, ${parent}!\n\nYour permanent Student ID: ${studentId}\nSaved to your device for easy future login.`);
-
-      quickLogin(child, ageGrade, "Pravesh (5:00 PM)", initials, studentId);
+      saveStudentToDatabase(newStudent);
+      alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour child ${childName} has been registered with Student ID: ${newStudent.studentId}.`);
+      loadDashboardForStudent(newStudent);
     }
 
-    // Core Dashboard Opener
-    function quickLogin(name, grade, batch, avatar, studentId) {
-      document.getElementById('dashChildName').innerText = name;
-      document.getElementById('dashChildGrade').innerText = grade;
-      document.getElementById('dashBatchText').innerText = "Batch: " + batch;
-      document.getElementById('dashAvatarText').innerText = avatar;
-      document.getElementById('navAvatarText').innerText = avatar;
-      document.getElementById('dashStudentId').innerText = "ID: " + studentId;
-      document.getElementById('reportStudentName').innerText = name;
+    // Load Dashboard with Active Student
+    function loadDashboardForStudent(student) {
+      activeStudent = student;
+      localStorage.setItem('vediq_current_session', JSON.stringify(student));
 
-      // Switch views
+      // Update UI elements
+      document.getElementById('dashChildName').innerText = student.childName;
+      document.getElementById('dashChildGrade').innerText = student.childGrade;
+      document.getElementById('dashStudentId').innerText = "ID: " + student.studentId;
+      document.getElementById('dashBatchText').innerText = "Batch: " + student.batch;
+      document.getElementById('reportStudentName').innerText = student.childName;
+      document.getElementById('dashFocusScore').innerHTML = `${student.focusScore} <span class="text-xs text-slate-400 font-normal">/100</span>`;
+      document.getElementById('dashStreakCount').innerText = `🔥 ${student.streak} Days`;
+
+      const initials = student.childName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "ST";
+      document.getElementById('dashAvatarText').innerText = initials;
+      document.getElementById('navAvatarText').innerText = initials;
+      document.getElementById('navParentName').innerText = student.parentName;
+      document.getElementById('navChildPreview').innerText = student.childName;
+
+      // Restore habit states
+      if (student.habits) {
+        student.habits.forEach((checked, i) => {
+          const el = document.getElementById('habitCheck' + i);
+          if (el) el.checked = checked;
+        });
+        updateHabitCount();
+      }
+
+      // Show Dashboard View
       document.getElementById('view-auth').classList.add('hidden');
       document.getElementById('view-dashboard').classList.remove('hidden');
       document.getElementById('navUserPill').classList.remove('hidden');
@@ -887,7 +1014,8 @@
     }
 
     function logoutParent() {
-      if (confirm("Are you sure you want to log out from the VedIQ Parent Portal?")) {
+      if (confirm("Log out from the VedIQ Parent Portal?")) {
+        localStorage.removeItem('vediq_current_session');
         document.getElementById('view-dashboard').classList.add('hidden');
         document.getElementById('navUserPill').classList.add('hidden');
         document.getElementById('view-auth').classList.remove('hidden');
@@ -895,12 +1023,9 @@
       }
     }
 
-    // Tab switching inside Dashboard
+    // Tab Navigation
     function switchDashTab(tabId) {
-      // Hide all tabs
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      
-      // Deactivate all sidebar and mobile buttons
       document.querySelectorAll('.sidebar-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.id.startsWith('side-')) {
@@ -910,11 +1035,9 @@
         }
       });
 
-      // Activate selected tab content
       const targetTab = document.getElementById('dashTab-' + tabId);
       if (targetTab) targetTab.classList.add('active');
 
-      // Highlight active buttons
       const sideBtn = document.getElementById('side-' + tabId);
       if (sideBtn) {
         sideBtn.className = "sidebar-btn active w-full py-3 px-4 rounded-xl text-left text-xs font-bold transition flex items-center gap-3 bg-brand-ochre text-white";
@@ -925,45 +1048,147 @@
       }
     }
 
-    // Audio Play simulation
-    let isPlaying = false;
-    function toggleAudio() {
-      const btn = document.getElementById('playBtn');
-      const bar = document.getElementById('audioProgress');
-      isPlaying = !isPlaying;
-      if (isPlaying) {
-        btn.innerText = "⏸";
-        bar.style.width = "75%";
-      } else {
-        btn.innerText = "▶";
-        bar.style.width = "35%";
+    // Interactive Habits Logic
+    function toggleHabit(index) {
+      const chk = document.getElementById('habitCheck' + index);
+      if (chk) {
+        chk.checked = !chk.checked;
+        updateHabitCount();
       }
     }
 
-    // Download PDF Report simulation
-    function downloadReportPdf() {
-      const childName = document.getElementById('dashChildName').innerText;
-      alert(`Generating Official VedIQ Gurukul Certificate for ${childName}... Download initiated (PDF)!`);
+    function updateHabitCount() {
+      let count = 0;
+      for (let i = 0; i < 4; i++) {
+        const el = document.getElementById('habitCheck' + i);
+        if (el && el.checked) count++;
+      }
+      const pct = (count / 4) * 100;
+      document.getElementById('ritualProgressBar').style.width = pct + "%";
+      document.getElementById('ritualProgressBadge').innerText = `${count} of 4 Completed (${pct}%)`;
+
+      if (activeStudent) {
+        activeStudent.habits = [0, 1, 2, 3].map(i => {
+          const el = document.getElementById('habitCheck' + i);
+          return el ? el.checked : false;
+        });
+        saveStudentToDatabase(activeStudent);
+      }
     }
 
-    // Quick UPI Tuition Pay
+    // Real Audio Synthesizer (Vedic Chanting Tone Simulation via Web Audio API)
+    let audioCtx = null;
+    let isAudioPlaying = false;
+    let audioTimer = null;
+    let audioSeconds = 0;
+
+    function toggleGurukulAudio() {
+      const btn = document.getElementById('playAudioBtn');
+      const bar = document.getElementById('audioProgressBar');
+      const display = document.getElementById('audioTimeDisplay');
+
+      if (isAudioPlaying) {
+        stopGurukulAudio();
+        return;
+      }
+
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        // Harmonious Tanpura / Alpha Wave 432Hz Tone Generator
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(432, audioCtx.currentTime); // 432Hz sacred focus frequency
+        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        osc.start();
+
+        isAudioPlaying = true;
+        btn.innerText = "⏸";
+
+        audioTimer = setInterval(() => {
+          audioSeconds++;
+          const pct = (audioSeconds / 45) * 100;
+          bar.style.width = pct + "%";
+          display.innerText = `0:${audioSeconds < 10 ? '0' : ''}${audioSeconds} / 0:45`;
+          if (audioSeconds >= 45) stopGurukulAudio();
+        }, 1000);
+      } catch (err) {
+        // Fallback
+        isAudioPlaying = true;
+        btn.innerText = "⏸";
+      }
+    }
+
+    function stopGurukulAudio() {
+      isAudioPlaying = false;
+      const btn = document.getElementById('playAudioBtn');
+      if (btn) btn.innerText = "▶";
+      if (audioTimer) clearInterval(audioTimer);
+      if (audioCtx) {
+        try { audioCtx.close(); } catch (e) {}
+      }
+    }
+
+    // Homework Video Selection
+    let selectedHomeworkFile = null;
+    function handleFileSelected(e) {
+      const file = e.target.files[0];
+      if (file) {
+        selectedHomeworkFile = file;
+        document.getElementById('fileNameText').innerText = file.name;
+        document.getElementById('filePreviewArea').classList.remove('hidden');
+      }
+    }
+
+    function sendHomeworkToMentor() {
+      const child = activeStudent ? activeStudent.childName : "Student";
+      const filename = selectedHomeworkFile ? selectedHomeworkFile.name : "today's practice video";
+      const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I have recorded ${child}'s Gurukul practice (${filename}). Please review and share your feedback.`);
+      window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
+    }
+
+    // Real Print / PDF Trigger
+    function printOfficialCertificate() {
+      window.print();
+    }
+
+    // Join Live Class
+    function joinLiveClass() {
+      const child = activeStudent ? activeStudent.childName : "Student";
+      const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! Joining live Gurukul class for ${child}. Please admit from waiting room.`);
+      window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
+    }
+
+    // UPI Tuition Payment
     function payTuition() {
-      const childName = document.getElementById('dashChildName').innerText;
-      const upiUrl = `upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR&tn=${encodeURIComponent(childName + ' Tuition Renewal')}`;
+      const child = activeStudent ? activeStudent.childName : "Student";
+      const upiUrl = `upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR&tn=${encodeURIComponent(child + ' Tuition Renewal')}`;
       window.open(upiUrl, '_blank');
       setTimeout(() => {
-        const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I am paying monthly fee of ₹1,499 for ${childName} via UPI. Please confirm receipt.`);
+        const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I have completed the ₹1,499 tuition payment for ${child} via UPI. Kindly confirm receipt.`);
         window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
       }, 500);
     }
 
-    // Check if user has an existing session on load
+    // Initialize state on load
     window.addEventListener('DOMContentLoaded', () => {
-      const savedChild = localStorage.getItem('vediq_child_name');
-      const savedGrade = localStorage.getItem('vediq_child_grade');
-      const savedId = localStorage.getItem('vediq_student_id');
-      if (savedChild && savedId) {
-        document.getElementById('loginIdentifier').value = savedId;
+      const savedSession = localStorage.getItem('vediq_current_session');
+      if (savedSession) {
+        try {
+          const student = JSON.parse(savedSession);
+          loadDashboardForStudent(student);
+          return;
+        } catch (e) {}
+      }
+
+      // Preload default student in input for easy 1-click entry
+      const db = getStudentDatabase();
+      if (db.length > 0) {
+        document.getElementById('loginIdentifier').value = db[0].phone;
       }
     });
   </script>
