@@ -627,17 +627,17 @@
     </div>
   </section>
 
-  <!-- TUITION PLANS (Minimalist Harmonious Cards) -->
+  <!-- TUITION PLANS (Minimalist Harmonious Cards with Integrated Payment Gateways) -->
   <section id="plans" class="py-24 bg-brand-cream border-b border-brand-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="text-center max-w-2xl mx-auto mb-16">
         <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Investment in Character</span>
         <h2 class="mt-2 text-3xl font-light text-brand-ink tracking-tight">
-          Simple, Transparent Plans
+          Simple, Transparent Tuition
         </h2>
         <p class="text-xs text-brand-muted mt-2">
-          Less than ₹50 a day to establish unbroken focus and emotional resilience.
+          Less than ₹50 a day to establish unbroken focus and emotional resilience. All Indian & Global payment methods supported.
         </p>
       </div>
 
@@ -662,9 +662,15 @@
               <li class="flex items-center gap-2 text-brand-faint">✕ Physical Premium Workbook Kit</li>
             </ul>
           </div>
-          <button onclick="openDemoModal('Basic Plan')" class="mt-8 w-full py-2.5 rounded-lg text-xs font-bold border border-brand-border hover:bg-brand-subtle transition">
-            Book Free Demo
-          </button>
+          <div class="mt-8 space-y-2">
+            <button onclick="openPaymentModal('Basic Plan', '₹999')" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink hover:bg-brand-ochre transition flex items-center justify-center gap-2 shadow-sm">
+              <span>Enroll & Pay ₹999</span>
+              <svg class="w-3.5 h-3.5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="openDemoModal('Basic Plan')" class="w-full py-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition">
+              or Book 3-Day Free Demo
+            </button>
+          </div>
         </div>
 
         <!-- Standard (Highlighted) -->
@@ -691,9 +697,15 @@
             </ul>
           </div>
 
-          <button onclick="openDemoModal('Standard Plan')" class="mt-8 w-full py-2.5 rounded-lg text-xs font-bold bg-brand-ochre text-white hover:bg-brand-ochreHover shadow-ochre transition">
-            Claim 3-Day Free Demo
-          </button>
+          <div class="mt-8 space-y-2">
+            <button onclick="openPaymentModal('Standard Plan', '₹1,499')" class="w-full py-3 rounded-lg text-xs font-bold bg-brand-ochre text-white hover:bg-brand-ochreHover shadow-ochre transition flex items-center justify-center gap-2">
+              <span>Enroll & Pay ₹1,499</span>
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="openDemoModal('Standard Plan')" class="w-full py-2 rounded-lg text-[11px] font-semibold text-brand-faint hover:text-white transition">
+              or Claim 3-Day Free Demo
+            </button>
+          </div>
         </div>
 
         <!-- Premium -->
@@ -715,11 +727,34 @@
               <li class="flex items-center gap-2 text-brand-ink">✓ Annual Certification & Medals</li>
             </ul>
           </div>
-          <button onclick="openDemoModal('Premium Plan')" class="mt-8 w-full py-2.5 rounded-lg text-xs font-bold border border-brand-border hover:bg-brand-subtle transition">
-            Book Free Demo
-          </button>
+          <div class="mt-8 space-y-2">
+            <button onclick="openPaymentModal('Premium Plan', '₹2,499')" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink hover:bg-brand-ochre transition flex items-center justify-center gap-2 shadow-sm">
+              <span>Enroll & Pay ₹2,499</span>
+              <svg class="w-3.5 h-3.5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="openDemoModal('Premium Plan')" class="w-full py-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition">
+              or Book 3-Day Free Demo
+            </button>
+          </div>
         </div>
 
+      </div>
+
+      <!-- Payment Gateways & Trust Badges Strip -->
+      <div class="mt-14 max-w-4xl mx-auto p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-wrap items-center justify-between gap-4 text-xs text-brand-muted">
+        <div class="flex items-center gap-3">
+          <span class="font-bold text-brand-ink text-[11px] uppercase tracking-wider">Accepted Payment Gateways:</span>
+          <div class="flex items-center gap-2 flex-wrap text-[11px]">
+            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">⚡ UPI (GPay / PhonePe / Paytm / BHIM)</span>
+            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">💳 Cards (Visa, Mastercard, RuPay)</span>
+            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">🏦 Netbanking (All Banks)</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-[10px] text-emerald-700 font-bold">
+          <span>🔒 256-Bit SSL Encrypted</span>
+          <span>•</span>
+          <span>Instant WhatsApp Receipt</span>
+        </div>
       </div>
 
     </div>
@@ -873,7 +908,127 @@
     </div>
   </footer>
 
-  <!-- DEMO BOOKING MODAL -->
+  <!-- PAYMENT GATEWAY MODAL (UPI, Cards, Netbanking, QR Code) -->
+  <div id="paymentModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-2xl max-w-lg w-full p-6 sm:p-8 relative border border-brand-border shadow-2xl animate-in fade-in duration-200">
+      <button onclick="closePaymentModal()" class="absolute top-5 right-5 text-brand-muted hover:text-brand-ink text-sm p-1 font-bold">✕</button>
+
+      <!-- Header & Selected Plan Info -->
+      <div class="border-b border-brand-border pb-5 mb-5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-brand-ochre px-2 py-0.5 rounded bg-brand-ochreLight">100% Secure Checkout</span>
+          <span class="text-xs text-emerald-600 font-bold flex items-center gap-1">🔒 256-Bit SSL</span>
+        </div>
+        <div class="flex items-center justify-between mt-3">
+          <div>
+            <h3 class="text-xl font-bold text-brand-ink font-display" id="payModalPlanTitle">Standard Plan Enrollment</h3>
+            <p class="text-xs text-brand-muted mt-0.5">Bharatiya Integral Gurukul System (BIGS)</p>
+          </div>
+          <div class="text-right">
+            <span class="text-2xl font-black text-brand-ink font-display" id="payModalAmount">₹1,499</span>
+            <span class="text-[11px] text-brand-muted block">/ month</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Method Tabs -->
+      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-brand-cream border border-brand-border mb-6">
+        <button onclick="switchPayTab('upi')" id="tabPayUpi" class="pay-tab py-2 px-2 rounded-lg text-center text-xs font-bold bg-brand-ink text-white transition">
+          ⚡ UPI / QR
+        </button>
+        <button onclick="switchPayTab('card')" id="tabPayCard" class="pay-tab py-2 px-2 rounded-lg text-center text-xs font-semibold text-brand-muted hover:text-brand-ink transition">
+          💳 Cards / NetBanking
+        </button>
+        <button onclick="switchPayTab('whatsapp')" id="tabPayWhatsApp" class="pay-tab py-2 px-2 rounded-lg text-center text-xs font-semibold text-brand-muted hover:text-brand-ink transition">
+          💬 WhatsApp Pay
+        </button>
+      </div>
+
+      <!-- Tab 1: UPI & QR Code -->
+      <div id="payContentUpi" class="space-y-4">
+        <div class="p-4 rounded-xl bg-brand-cream border border-brand-border flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+          <!-- Stylized QR Display -->
+          <div class="w-28 h-28 bg-white p-2 rounded-xl border border-brand-border flex flex-col items-center justify-center shrink-0 shadow-sm">
+            <svg class="w-20 h-20 text-brand-ink" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-5 0h2v2h-2v-2zm2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2zm6 2h2v2h-2v-2zm-2 2h2v2h-2v-2z"/>
+            </svg>
+            <span class="text-[8px] font-bold text-brand-muted uppercase">Scan to Pay</span>
+          </div>
+          <div class="space-y-2">
+            <span class="text-[11px] font-bold text-brand-ink">Official Gurukul UPI ID:</span>
+            <div class="flex items-center gap-2">
+              <code class="px-2.5 py-1 rounded bg-white border border-brand-border text-xs font-mono font-bold text-brand-ochre select-all" id="upiIdText">9766772819@upi</code>
+              <button onclick="copyUpiId()" class="px-2 py-1 rounded bg-brand-ink text-white text-[10px] font-bold hover:bg-brand-ochre transition">
+                <span id="copyUpiBtnText">Copy</span>
+              </button>
+            </div>
+            <p class="text-[10px] text-brand-muted">Supported apps: Google Pay, PhonePe, Paytm, BHIM, Cred.</p>
+          </div>
+        </div>
+
+        <!-- 1-Tap Mobile UPI Intent Buttons -->
+        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <a id="gpayLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
+            <span>Google Pay</span>
+          </a>
+          <a id="phonepeLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
+            <span>PhonePe</span>
+          </a>
+          <a id="paytmLink" href="upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&cu=INR" class="p-2.5 rounded-lg border border-brand-border bg-white hover:bg-brand-subtle font-bold text-brand-ink flex items-center justify-center gap-1.5 transition">
+            <span>Paytm</span>
+          </a>
+        </div>
+
+        <button onclick="confirmUpiPayment()" class="w-full py-3 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-emerald-700 hover:bg-emerald-800 transition flex items-center justify-center gap-2 shadow-sm">
+          <span>I Have Completed Payment &rarr; Send Confirmation</span>
+        </button>
+      </div>
+
+      <!-- Tab 2: Credit / Debit Cards & NetBanking -->
+      <div id="payContentCard" class="hidden space-y-4 text-xs">
+        <div class="p-4 rounded-xl bg-brand-cream border border-brand-border space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-brand-ink">Debit / Credit Card / NetBanking</span>
+            <span class="text-[10px] text-brand-faint">Razorpay / Cashfree</span>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-brand-ink mb-1">Card Number</label>
+            <input type="text" placeholder="4111 •••• •••• ••••" class="w-full px-3 py-2 rounded-lg border border-brand-border bg-white focus:outline-none focus:border-brand-ochre text-xs" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-brand-ink mb-1">Expiry</label>
+              <input type="text" placeholder="MM / YY" class="w-full px-3 py-2 rounded-lg border border-brand-border bg-white focus:outline-none focus:border-brand-ochre text-xs" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-brand-ink mb-1">CVV</label>
+              <input type="password" maxlength="4" placeholder="•••" class="w-full px-3 py-2 rounded-lg border border-brand-border bg-white focus:outline-none focus:border-brand-ochre text-xs" />
+            </div>
+          </div>
+        </div>
+
+        <button onclick="confirmCardPayment()" class="w-full py-3 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-brand-ink hover:bg-brand-ochre transition flex items-center justify-center gap-2">
+          <span>Pay Securely <span id="payCardAmountBtn">₹1,499</span></span>
+        </button>
+        <p class="text-[10px] text-center text-brand-faint">All major Indian banks, Visa, Mastercard, RuPay & Amex supported.</p>
+      </div>
+
+      <!-- Tab 3: WhatsApp Concierge Link -->
+      <div id="payContentWhatsApp" class="hidden space-y-4 text-xs">
+        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-2">
+          <p class="font-bold text-sm">Need a Custom Invoice or Official Link?</p>
+          <p class="text-xs text-emerald-900 leading-relaxed">
+            Message Vyas Sir directly. We will instantly generate a verified payment link with GST invoice for your child's enrollment.
+          </p>
+        </div>
+
+        <a id="payWhatsAppDirectBtn" href="https://wa.me/919766772819?text=Namaste%20Vyas%20Sir!%20I%20want%20to%20enroll%20in%20VedIQ%20Academy.%20Please%20send%20the%20payment%20link." target="_blank" class="w-full py-3 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 transition flex items-center justify-center gap-2 shadow-sm">
+          <span>Message Vyas Sir for Payment Link &rarr;</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
   <div id="demoModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-brand-surface rounded-2xl max-w-md w-full p-6 sm:p-8 relative border border-brand-border shadow-2xl">
       <button onclick="closeDemoModal()" class="absolute top-5 right-5 text-brand-muted hover:text-brand-ink text-sm p-1">✕</button>
@@ -1213,6 +1368,71 @@
 
       // 4. Attempt direct WhatsApp window open
       window.open(waUrl, '_blank');
+    }
+
+    // Payment Modal Functions
+    let currentPlanName = "Standard Plan";
+    let currentPlanAmount = "₹1,499";
+
+    function openPaymentModal(planName, amount) {
+      currentPlanName = planName;
+      currentPlanAmount = amount;
+
+      document.getElementById('payModalPlanTitle').innerText = `${planName} Enrollment`;
+      document.getElementById('payModalAmount').innerText = amount;
+      document.getElementById('payCardAmountBtn').innerText = amount;
+
+      // Update mobile UPI intent links with dynamic price
+      const numericAmount = amount.replace(/[^0-9]/g, '');
+      const upiUrl = `upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=${numericAmount}&cu=INR&tn=${encodeURIComponent(planName + ' Admission')}`;
+      document.getElementById('gpayLink').href = upiUrl;
+      document.getElementById('phonepeLink').href = upiUrl;
+      document.getElementById('paytmLink').href = upiUrl;
+
+      // Update WhatsApp direct invoice link
+      const waMsg = encodeURIComponent(`Namaste Vyas Sir! I want to enroll in the ${planName} (${amount}/month). Please send me the official payment link & GST invoice receipt.`);
+      document.getElementById('payWhatsAppDirectBtn').href = `https://wa.me/919766772819?text=${waMsg}`;
+
+      switchPayTab('upi');
+      document.getElementById('paymentModal').classList.remove('hidden');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.add('hidden');
+    }
+
+    function switchPayTab(tab) {
+      const tabs = ['upi', 'card', 'whatsapp'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tabPay' + t.charAt(0).toUpperCase() + t.slice(1));
+        const content = document.getElementById('payContent' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === tab) {
+          btn.className = "pay-tab py-2 px-2 rounded-lg text-center text-xs font-bold bg-brand-ink text-white transition";
+          content.classList.remove('hidden');
+        } else {
+          btn.className = "pay-tab py-2 px-2 rounded-lg text-center text-xs font-semibold text-brand-muted hover:text-brand-ink transition";
+          content.classList.add('hidden');
+        }
+      });
+    }
+
+    function copyUpiId() {
+      const upi = document.getElementById('upiIdText').innerText;
+      navigator.clipboard.writeText(upi);
+      const btn = document.getElementById('copyUpiBtnText');
+      btn.innerText = "Copied!";
+      setTimeout(() => { btn.innerText = "Copy"; }, 2000);
+    }
+
+    function confirmUpiPayment() {
+      const msg = encodeURIComponent(`Namaste Vyas Sir! I have completed the UPI payment of ${currentPlanAmount} for the ${currentPlanName} on vediqacademy.com. Please confirm my child's batch slot & workbook delivery.`);
+      window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
+      closePaymentModal();
+    }
+
+    function confirmCardPayment() {
+      alert("Redirecting to 256-bit Secure Gateway... Processing transaction.");
+      confirmUpiPayment();
     }
 
     // Mobile Nav
