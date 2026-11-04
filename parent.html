@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VedIQ Academy — Parent App Portal</title>
+  <meta name="description" content="VedIQ Academy Parent Portal: Track your child's daily 1-hour Gurukul ritual, Tratak endurance, Vedic math velocity, shloka retention, and certified progress reports." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Cinzel"', 'serif'],
+          },
+          colors: {
+            brand: {
+              cream: '#FAF8F5',
+              surface: '#FFFFFF',
+              subtle: '#F4EFEA',
+              border: '#E8E2D8',
+              ochre: '#C86D24',
+              ochreHover: '#B05917',
+              ochreLight: '#FBF1E8',
+              gold: '#C59A51',
+              goldLight: '#FDF7EC',
+              ink: '#0C111D',
+              muted: '#667085',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-thumb { background: #E8E2D8; border-radius: 4px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .nav-btn.active { color: #C86D24; font-weight: 700; }
+    .nav-btn.active svg { stroke: #C86D24; }
+  </style>
+</head>
+
+<body class="bg-slate-900 text-brand-ink font-sans min-h-screen flex items-center justify-center p-2 sm:p-6 antialiased selection:bg-brand-ochre selection:text-white">
+
+  <!-- Desktop Presentation Shell / Device Frame -->
+  <div class="w-full max-w-md bg-brand-cream rounded-[36px] shadow-2xl border-4 border-slate-700/80 overflow-hidden flex flex-col h-[844px] relative">
+
+    <!-- Top Status Bar (iOS / Android Style) -->
+    <header class="bg-brand-ink text-white px-6 pt-3 pb-3 flex items-center justify-between text-xs shrink-0 select-none">
+      <div class="flex items-center gap-1.5 font-semibold text-white/90">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>9:41 AM</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] uppercase font-bold tracking-wider text-brand-gold bg-white/10 px-2 py-0.5 rounded-full border border-brand-gold/30">VedIQ Parent</span>
+        <a href="index.html" title="Back to Main Website" class="text-xs text-white/60 hover:text-white transition">✕</a>
+      </div>
+    </header>
+
+    <!-- Student Header & Profile Quick-Switch -->
+    <div class="bg-brand-ink text-white px-5 pt-3 pb-4 border-b border-white/10 shrink-0">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <!-- Child Avatar -->
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-ochre to-amber-300 p-0.5 shadow-md">
+              <div class="w-full h-full bg-brand-ink rounded-[14px] flex items-center justify-center font-display font-bold text-brand-gold text-lg">
+                AS
+              </div>
+            </div>
+            <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-brand-ink flex items-center justify-center text-[9px] text-white">✓</span>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-bold text-base text-white">Aarav Sharma</h1>
+              <span class="text-[10px] bg-brand-ochre/20 text-amber-300 border border-brand-ochre/40 px-2 py-0.2 rounded-full font-semibold">Grade 3 • Age 8</span>
+            </div>
+            <p class="text-xs text-slate-300 flex items-center gap-1 mt-0.5">
+              <span>Batch: Pravesh (5:00 PM IST)</span>
+              <span>•</span>
+              <span class="text-brand-gold font-medium">Dr. Ujwal Vyas</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Notification Bell -->
+        <button onclick="alert('Notification: Dr. Ujwal Vyas updated Aarav’s Tratak endurance score (+35s today)!')" class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 transition relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          <span class="w-2 h-2 rounded-full bg-rose-500 absolute top-2 right-2"></span>
+        </button>
+      </div>
+
+      <!-- Quick Gurukul Focus Quotient Bar -->
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-2.5 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🧠</span>
+          <div>
+            <div class="text-[10px] text-slate-300 uppercase font-semibold">Cognitive Focus Score</div>
+            <div class="font-bold text-amber-300 text-sm">88 <span class="text-[10px] text-slate-400 font-normal">/ 100 (Top 5%)</span></div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-xl text-[11px] font-bold border border-emerald-500/30">
+          <span>🔥</span>
+          <span>18-Day Streak</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrollable Body Content (Phone Screen) -->
+    <main class="flex-1 overflow-y-auto p-4 space-y-4">
+
+      <!-- ================= TAB 1: TODAY'S SADHANA ================= -->
+      <section id="tab-today" class="tab-content active space-y-4">
+        
+        <!-- Today's Completion Card -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 class="font-bold text-sm text-brand-ink">Today's 1-Hour Ritual</h2>
+              <p class="text-xs text-brand-muted">Wednesday, 4 November 2026</p>
+            </div>
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">3 of 4 Completed</span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="w-full h-2 bg-brand-subtle rounded-full overflow-hidden mb-4">
+            <div class="h-full bg-gradient-to-r from-brand-ochre to-emerald-500 rounded-full" style="width: 75%"></div>
+          </div>
+
+          <!-- 4 Daily Ritual Modules -->
+          <div class="space-y-2.5">
+            <!-- 1. Tratak -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-brand-cream border border-brand-border">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center text-sm font-bold">🕯️</div>
+                <div>
+                  <div class="text-xs font-bold text-brand-ink">Tratak Flame Focus (15m)</div>
+                  <div class="text-[11px] text-brand-muted">Gaze endurance: <strong class="text-emerald-600">3 min 20 sec</strong></div>
+                </div>
+              </div>
+              <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
+            </div>
+
+            <!-- 2. Vedic Math -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-brand-cream border border-brand-border">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-800 flex items-center justify-center text-sm font-bold">🔢</div>
+                <div>
+                  <div class="text-xs font-bold text-brand-ink">Vedic Speed Math (20m)</div>
+                  <div class="text-[11px] text-brand-muted">Sutra: Ekadhikena • <strong class="text-brand-ochre">24 sums/min</strong></div>
+                </div>
+              </div>
+              <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
+            </div>
+
+            <!-- 3. Sanskrit Shloka -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-brand-cream border border-brand-border">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-800 flex items-center justify-center text-sm font-bold">🕉️</div>
+                <div>
+                  <div class="text-xs font-bold text-brand-ink">Sanskrit Shloka Chanting (15m)</div>
+                  <div class="text-[11px] text-brand-muted">Gita Ch. 2 (Slokas 1–10 mastered)</div>
+                </div>
+              </div>
+              <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">✓</span>
+            </div>
+
+            <!-- 4. Neuroscience Reflection (Pending) -->
+            <div class="flex items-center justify-between p-3 rounded-xl bg-amber-50/70 border border-amber-200">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center text-sm font-bold">🧠</div>
+                <div>
+                  <div class="text-xs font-bold text-brand-ink">Neuroscience & Sleep Journal (10m)</div>
+                  <div class="text-[11px] text-amber-800 font-medium">Scheduled before bedtime (8:30 PM)</div>
+                </div>
+              </div>
+              <button onclick="alert('Reminder set for 8:30 PM bedtime reflection!')" class="text-[10px] font-bold bg-brand-ochre text-white px-2.5 py-1 rounded-lg hover:bg-brand-ochreHover transition">Remind</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Mentor Voice Note -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-200 shadow-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-base">🎙️</span>
+            <h3 class="font-bold text-xs text-brand-ink uppercase tracking-wide">Mentor Audio Note • Dr. Ujwal Vyas</h3>
+          </div>
+          <p class="text-xs text-brand-muted mb-3 italic">
+            "Aarav was exceptionally calm during today’s Tratak candle session. His eye steadiness improved by 40% over last week."
+          </p>
+          <div class="bg-white rounded-xl p-2.5 flex items-center justify-between border border-amber-200/80">
+            <button onclick="toggleAudio()" id="playBtn" class="w-8 h-8 rounded-full bg-brand-ochre text-white flex items-center justify-center text-xs font-bold shadow-sm">
+              ▶
+            </button>
+            <div class="flex-1 mx-3">
+              <div class="h-1.5 bg-brand-subtle rounded-full overflow-hidden">
+                <div id="audioProgress" class="h-full bg-brand-ochre rounded-full" style="width: 35%"></div>
+              </div>
+            </div>
+            <span class="text-[10px] text-brand-muted font-bold">0:42 / 1:15</span>
+          </div>
+        </div>
+
+        <!-- Homework Upload Card -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border flex items-center justify-between">
+          <div>
+            <div class="font-bold text-xs text-brand-ink">Upload Shloka Recitation Video</div>
+            <div class="text-[11px] text-brand-muted">Submit for Dr. Vyas’s personal review</div>
+          </div>
+          <button onclick="document.getElementById('fileInput').click()" class="px-3 py-1.5 bg-brand-ink hover:bg-brand-ochre text-white font-bold text-xs rounded-xl transition flex items-center gap-1 shadow-sm">
+            <span>📷 Record</span>
+          </button>
+          <input type="file" id="fileInput" class="hidden" accept="video/*,image/*" onchange="alert('Homework video attached successfully! Submitted to Dr. Ujwal Vyas.')" />
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: COGNITIVE ANALYTICS ================= -->
+      <section id="tab-analytics" class="tab-content space-y-4">
+        
+        <!-- Metric 1: Tratak Concentration Graph -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <h3 class="font-bold text-xs text-brand-ink">Tratak Steady Gaze Endurance</h3>
+              <p class="text-[11px] text-brand-muted">Non-blink continuous flame focus</p>
+            </div>
+            <div class="text-right">
+              <span class="text-sm font-extrabold text-emerald-600">+165 Sec</span>
+              <div class="text-[9px] text-brand-muted uppercase font-semibold">4-Week Growth</div>
+            </div>
+          </div>
+
+          <!-- Bar Chart Visualization -->
+          <div class="h-32 flex items-end justify-between gap-3 pt-6 pb-2 px-2 border-b border-brand-border">
+            <div class="flex-1 flex flex-col items-center gap-1.5">
+              <span class="text-[10px] font-bold text-brand-muted">45s</span>
+              <div class="w-full bg-brand-subtle rounded-t-lg transition-all duration-500" style="height: 25%"></div>
+              <span class="text-[10px] text-brand-muted font-medium">Wk 1</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1.5">
+              <span class="text-[10px] font-bold text-brand-muted">90s</span>
+              <div class="w-full bg-amber-200 rounded-t-lg transition-all duration-500" style="height: 45%"></div>
+              <span class="text-[10px] text-brand-muted font-medium">Wk 2</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1.5">
+              <span class="text-[10px] font-bold text-brand-ochre">140s</span>
+              <div class="w-full bg-brand-ochre/70 rounded-t-lg transition-all duration-500" style="height: 65%"></div>
+              <span class="text-[10px] text-brand-muted font-medium">Wk 3</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1.5">
+              <span class="text-[10px] font-bold text-emerald-600">210s</span>
+              <div class="w-full bg-emerald-500 rounded-t-lg shadow-sm transition-all duration-500" style="height: 95%"></div>
+              <span class="text-[10px] text-emerald-700 font-bold">Wk 4</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-brand-muted mt-2 text-center">
+            🌟 Aarav's focus endurance has improved by <strong class="text-brand-ink">366%</strong> in 30 days.
+          </p>
+        </div>
+
+        <!-- Metric 2: Vedic Math Speed -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="font-bold text-xs text-brand-ink">Vedic Mental Math Velocity</h3>
+              <p class="text-[11px] text-brand-muted">Equations computed mentally per minute</p>
+            </div>
+            <span class="px-2.5 py-1 bg-amber-50 text-brand-ochre text-xs font-bold rounded-lg border border-amber-200">24 / min</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 text-center">
+            <div class="p-3 bg-brand-cream rounded-xl border border-brand-border">
+              <div class="text-[10px] text-brand-muted uppercase font-semibold">Speed Accuracy</div>
+              <div class="text-base font-extrabold text-brand-ink mt-0.5">96.4%</div>
+              <div class="text-[10px] text-emerald-600 font-bold">Top 2% in Batch</div>
+            </div>
+            <div class="p-3 bg-brand-cream rounded-xl border border-brand-border">
+              <div class="text-[10px] text-brand-muted uppercase font-semibold">Sutras Mastered</div>
+              <div class="text-base font-extrabold text-brand-ochre mt-0.5">6 of 16</div>
+              <div class="text-[10px] text-brand-muted">Level 1 Complete</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric 3: Brain Balance Quotient -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border shadow-sm">
+          <h3 class="font-bold text-xs text-brand-ink mb-1">Dual-Hemisphere Brain Balance</h3>
+          <p class="text-[11px] text-brand-muted mb-3">Vedic holistic intellect matrix</p>
+
+          <div class="space-y-2">
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span>Left Brain (Logic, Math, Grammar)</span>
+                <span class="text-brand-ink font-bold">92%</span>
+              </div>
+              <div class="w-full h-2 bg-brand-subtle rounded-full overflow-hidden">
+                <div class="h-full bg-blue-600 rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span>Right Brain (Intuition, Visualization, Memory)</span>
+                <span class="text-brand-ink font-bold">88%</span>
+              </div>
+              <div class="w-full h-2 bg-brand-subtle rounded-full overflow-hidden">
+                <div class="h-full bg-purple-600 rounded-full" style="width: 88%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs font-semibold mb-1">
+                <span>Vedic Character & Emotional Calm (Sattva)</span>
+                <span class="text-brand-ink font-bold">95%</span>
+              </div>
+              <div class="w-full h-2 bg-brand-subtle rounded-full overflow-hidden">
+                <div class="h-full bg-amber-500 rounded-full" style="width: 95%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 3: REPORT CARDS & BADGES ================= -->
+      <section id="tab-reports" class="tab-content space-y-4">
+        
+        <!-- Official Gurukul Certificate Card -->
+        <div class="bg-gradient-to-br from-brand-surface via-brand-cream to-amber-50 rounded-2xl p-5 border-2 border-brand-gold/60 shadow-md relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-brand-gold/10 rounded-full pointer-events-none"></div>
+
+          <div class="flex items-center justify-between mb-3 border-b border-brand-gold/30 pb-3">
+            <div>
+              <span class="text-[9px] uppercase font-bold tracking-widest text-brand-ochre">VEDIQ BHARATIYA INTEGRAL GURUKUL</span>
+              <h3 class="font-display font-bold text-base text-brand-ink">Cognitive Progress Card</h3>
+            </div>
+            <div class="w-10 h-10 rounded-full border-2 border-brand-gold bg-brand-goldLight flex items-center justify-center font-display font-bold text-brand-gold text-xs shadow-sm">
+              BIGS
+            </div>
+          </div>
+
+          <div class="space-y-1.5 text-xs text-brand-ink mb-4">
+            <div class="flex justify-between py-1 border-b border-brand-border/60">
+              <span class="text-brand-muted">Student Name:</span>
+              <span class="font-bold">Aarav Sharma</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-brand-border/60">
+              <span class="text-brand-muted">Evaluation Term:</span>
+              <span class="font-semibold">Month 1 (Foundation Stage)</span>
+            </div>
+            <div class="flex justify-between py-1 border-b border-brand-border/60">
+              <span class="text-brand-muted">Overall Cognitive Grade:</span>
+              <span class="font-bold text-emerald-700">A+ (Distinction)</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-brand-muted">Head Mentor Sign:</span>
+              <span class="font-display font-bold text-brand-ochre text-xs">Dr. Ujwal Vyas, Ph.D.</span>
+            </div>
+          </div>
+
+          <!-- Download Action -->
+          <button onclick="downloadReportPdf()" class="w-full py-2.5 bg-brand-ink hover:bg-brand-ochre text-white font-bold text-xs rounded-xl transition shadow-md flex items-center justify-center gap-2">
+            <span>📥 Download Certified PDF Report</span>
+          </button>
+        </div>
+
+        <!-- Badges & Honors Grid -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border shadow-sm">
+          <h3 class="font-bold text-xs text-brand-ink mb-3">Earned Gurukul Honors & Badges</h3>
+          <div class="grid grid-cols-3 gap-2.5 text-center">
+            <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200">
+              <div class="text-2xl mb-1">🥇</div>
+              <div class="text-[11px] font-bold text-brand-ink">Tratak Star</div>
+              <div class="text-[9px] text-brand-muted">3+ Mins Steady</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-orange-50 border border-orange-200">
+              <div class="text-2xl mb-1">⚡</div>
+              <div class="text-[11px] font-bold text-brand-ink">Aryabhata</div>
+              <div class="text-[9px] text-brand-muted">Speed Math Ace</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-purple-50 border border-purple-200">
+              <div class="text-2xl mb-1">📜</div>
+              <div class="text-[11px] font-bold text-brand-ink">Veda Dhwaj</div>
+              <div class="text-[9px] text-brand-muted">10 Shlokas</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 4: MENTORS & LIVE CLASS ================= -->
+      <section id="tab-mentors" class="tab-content space-y-4">
+        
+        <!-- Live Batch Join Card -->
+        <div class="bg-brand-ink text-white rounded-2xl p-4 border border-brand-borderDark shadow-lg">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Live Classroom</span>
+            </div>
+            <span class="text-[11px] text-slate-300">Starts at 5:00 PM IST</span>
+          </div>
+          <h3 class="font-bold text-sm text-white mb-1">Daily 60-Minute Gurukul Ritual Session</h3>
+          <p class="text-xs text-slate-300 mb-4">Mentor: Dr. Ujwal Vyas • Batch size: Max 8 students</p>
+
+          <button onclick="window.open('https://wa.me/919766772819?text=' + encodeURIComponent('Namaste Dr. Ujwal Vyas! Joining Aarav Sharma for today\'s 5:00 PM live Gurukul class.'), '_blank')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-brand-ochre to-amber-500 hover:from-brand-ochreHover hover:to-amber-600 text-white font-bold text-xs transition shadow-md flex items-center justify-center gap-2">
+            <span>🎥 1-Tap Join Live Zoom / Class</span>
+          </button>
+        </div>
+
+        <!-- Mentors Contact Cards -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border space-y-3 shadow-sm">
+          <h3 class="font-bold text-xs text-brand-ink">Direct Mentor Concierge</h3>
+
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-brand-cream border border-brand-border">
+            <div>
+              <div class="text-xs font-bold text-brand-ink">Dr. Ujwal Vyas</div>
+              <div class="text-[10px] text-brand-muted">Head & Master Mentor</div>
+            </div>
+            <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20Parent%20of%20Aarav%20here." target="_blank" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg transition flex items-center gap-1">
+              <span>💬 WhatsApp</span>
+            </a>
+          </div>
+
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-brand-cream border border-brand-border">
+            <div>
+              <div class="text-xs font-bold text-brand-ink">Mr. Atish Gulhane</div>
+              <div class="text-[10px] text-brand-muted">Admissions & Operations Lead</div>
+            </div>
+            <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Parent%20of%20Aarav%20here." target="_blank" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] rounded-lg transition flex items-center gap-1">
+              <span>💬 WhatsApp</span>
+            </a>
+          </div>
+
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-brand-cream border border-brand-border">
+            <div>
+              <div class="text-xs font-bold text-brand-ink">Mr. Swagatam Shukla</div>
+              <div class="text-[10px] text-brand-muted">Academic Tech & App Support</div>
+            </div>
+            <a href="https://wa.me/919594806822?text=Namaste%20Mr.%20Swagatam!%20Need%20tech%20support%20for%20VedIQ." target="_blank" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-800 text-white font-bold text-[11px] rounded-lg transition flex items-center gap-1">
+              <span>💬 Support</span>
+            </a>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= TAB 5: FEES & SUBSCRIPTION ================= -->
+      <section id="tab-fees" class="tab-content space-y-4">
+        
+        <div class="bg-white rounded-2xl p-4 border border-brand-border shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="font-bold text-xs text-brand-ink">Monthly Gurukul Tuition</h3>
+              <p class="text-[11px] text-brand-muted">Auto-invoiced on 1st of every month</p>
+            </div>
+            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-lg">Active</span>
+          </div>
+
+          <div class="p-3 bg-brand-cream rounded-xl border border-brand-border space-y-1.5 text-xs mb-4">
+            <div class="flex justify-between">
+              <span class="text-brand-muted">Plan:</span>
+              <span class="font-bold text-brand-ink">Foundation Tier (1 Hr/Day)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-brand-muted">Monthly Fee:</span>
+              <span class="font-extrabold text-brand-ochre text-sm">₹1,499 / Month</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-brand-muted">Next Due Date:</span>
+              <span class="font-semibold text-brand-ink">1 December 2026</span>
+            </div>
+          </div>
+
+          <button onclick="payTuition()" class="w-full py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl transition shadow-md flex items-center justify-center gap-1.5">
+            <span>⚡ Pay ₹1,499 via UPI / GPay / PhonePe</span>
+          </button>
+        </div>
+
+        <!-- Receipt History -->
+        <div class="bg-white rounded-2xl p-4 border border-brand-border shadow-sm">
+          <h3 class="font-bold text-xs text-brand-ink mb-2">Past Invoices & Receipts</h3>
+          <div class="divide-y divide-brand-border text-xs">
+            <div class="py-2.5 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-brand-ink">Receipt #VED-2026-108</div>
+                <div class="text-[10px] text-brand-muted">1 Nov 2026 • ₹1,499 (UPI Paid)</div>
+              </div>
+              <button onclick="alert('Receipt #VED-2026-108 downloaded successfully!')" class="text-xs text-brand-ochre font-bold hover:underline">Download PDF</button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (5 Tabs) -->
+    <nav class="bg-white border-t border-brand-border px-3 py-2 flex items-center justify-around shrink-0 select-none">
+      
+      <!-- Tab 1 -->
+      <button onclick="switchTab('today')" id="nav-today" class="nav-btn active flex flex-col items-center gap-1 text-[10px] font-semibold text-brand-muted hover:text-brand-ochre transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Today</span>
+      </button>
+
+      <!-- Tab 2 -->
+      <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-brand-muted hover:text-brand-ochre transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span>Growth</span>
+      </button>
+
+      <!-- Tab 3 -->
+      <button onclick="switchTab('reports')" id="nav-reports" class="nav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-brand-muted hover:text-brand-ochre transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span>Report</span>
+      </button>
+
+      <!-- Tab 4 -->
+      <button onclick="switchTab('mentors')" id="nav-mentors" class="nav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-brand-muted hover:text-brand-ochre transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        <span>Class</span>
+      </button>
+
+      <!-- Tab 5 -->
+      <button onclick="switchTab('fees')" id="nav-fees" class="nav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-brand-muted hover:text-brand-ochre transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        <span>Fees</span>
+      </button>
+
+    </nav>
+  </div>
+
+  <script>
+    // Tab switching logic
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      const selectedTab = document.getElementById('tab-' + tabId);
+      const selectedBtn = document.getElementById('nav-' + tabId);
+
+      if (selectedTab) selectedTab.classList.add('active');
+      if (selectedBtn) selectedBtn.classList.add('active');
+    }
+
+    // Audio Play simulation
+    let isPlaying = false;
+    function toggleAudio() {
+      const btn = document.getElementById('playBtn');
+      const bar = document.getElementById('audioProgress');
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        btn.innerText = "⏸";
+        bar.style.width = "75%";
+      } else {
+        btn.innerText = "▶";
+        bar.style.width = "35%";
+      }
+    }
+
+    // Download PDF Report simulation
+    function downloadReportPdf() {
+      alert("Generating Official VedIQ Gurukul Certificate for Aarav Sharma... Download initiated (PDF)!");
+    }
+
+    // Quick UPI Tuition Pay
+    function payTuition() {
+      const upiUrl = "upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR&tn=Aarav%20Sharma%20Tuition%20Renewal";
+      window.open(upiUrl, '_blank');
+      setTimeout(() => {
+        const msg = encodeURIComponent("Namaste Dr. Ujwal Vyas! I am paying Aarav Sharma's monthly fee of ₹1,499 via UPI. Please confirm receipt.");
+        window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
+      }, 500);
+    }
+  </script>
+</body>
+</html>
