@@ -380,7 +380,11 @@
           <div class="flex items-center gap-2 flex-wrap">
             <h2 id="dashChildName" class="text-xl sm:text-2xl font-bold text-white font-display">Aarav Sharma</h2>
             <span id="dashChildGrade" class="px-2.5 py-0.5 rounded-full bg-brand-ochre/20 text-amber-300 border border-brand-ochre/40 text-xs font-semibold">Ages 8-11 • Pravesh</span>
-            <span id="dashStudentId" class="px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 text-[10px] font-mono">ID: VED-2026-108</span>
+            <span id="dashStudentId" class="px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 text-[10px] font-mono">ID: VED-2026-101</span>
+            <button type="button" onclick="openChildProfileModal(false)" class="px-2.5 py-0.5 rounded-full bg-white/15 hover:bg-white/25 text-amber-200 hover:text-white text-[11px] font-bold border border-white/20 transition flex items-center gap-1 cursor-pointer">
+              <span>✏️</span>
+              <span>Edit Child Profile</span>
+            </button>
           </div>
           <p class="text-xs text-slate-300 mt-1 flex items-center gap-2 flex-wrap">
             <span id="dashBatchText">Batch: Daily 5:00 PM – 6:00 PM IST</span>
@@ -982,6 +986,74 @@
     </div>
   </div>
 
+  <!-- ========================================================================= -->
+  <!-- CHILD PROFILE SETUP & EDIT MODAL (Per-Account Isolation) -->
+  <!-- ========================================================================= -->
+  <div id="childProfileModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn">
+      
+      <!-- Close button -->
+      <button type="button" onclick="closeChildProfileModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted text-xs font-bold flex items-center justify-center transition">✕</button>
+
+      <!-- Header -->
+      <div class="space-y-1 text-center">
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100 text-brand-ochre flex items-center justify-center text-2xl shadow-inner">
+          🎓
+        </div>
+        <h3 id="childModalTitle" class="text-base sm:text-lg font-bold text-brand-ink">Configure Child's Gurukul Profile</h3>
+        <p class="text-xs text-brand-muted leading-relaxed">
+          Link your child's progress tracker, Tratak analytics, and daily sadhana to your account.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <form onsubmit="saveChildProfile(event)" class="space-y-3 pt-2">
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Full Name *</label>
+          <input type="text" id="editChildName" required placeholder="e.g. Aarav Sharma or Ananya Patel" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Age Cohort</label>
+            <select id="editChildGrade" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
+              <option value="Ages 5-7 • Foundation">Ages 5–7 (Foundation)</option>
+              <option value="Ages 8-11 • Pravesh">Ages 8–11 (Pravesh)</option>
+              <option value="Ages 12-15 • Daksha">Ages 12–15 (Daksha)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-brand-ink mb-1">Daily Live Batch</label>
+            <select id="editChildBatch" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre">
+              <option value="Daily 4:00 PM – 5:00 PM IST">4:00 PM – 5:00 PM</option>
+              <option value="Daily 5:00 PM – 6:00 PM IST">5:00 PM – 6:00 PM</option>
+              <option value="Daily 6:00 PM – 7:00 PM IST">6:00 PM – 7:00 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">Parent's Full Name (Mom / Dad)</label>
+          <input type="text" id="editParentName" required placeholder="e.g. Rajesh Sharma" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-brand-ink mb-1">WhatsApp Mobile Number</label>
+          <div class="flex items-center rounded-xl border border-brand-border bg-brand-cream/60 overflow-hidden focus-within:border-brand-ochre">
+            <span class="px-2.5 py-2 text-xs font-bold text-brand-muted bg-brand-subtle border-r border-brand-border">+91</span>
+            <input type="tel" id="editPhone" maxlength="10" placeholder="98000 00000" class="w-full px-2.5 py-2 bg-transparent text-xs font-bold text-brand-ink focus:outline-none" />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2 mt-2">
+          <span>Save Profile & Open Dashboard</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
   <!-- JAVASCRIPT PRODUCTION ENGINE -->
   <script>
     // 24/7 Global Cloud Database Endpoint (Works from any phone/device even if laptop is down)
@@ -1065,33 +1137,89 @@
       return false;
     }
 
-    // In-memory / persistent student database store
-    const DEFAULT_STUDENT = {
-      parentName: "Mr. Rajesh Sharma",
-      childName: "Aarav Sharma",
-      childGrade: "Ages 8-11 • Pravesh",
-      batch: "Daily 5:00 PM – 6:00 PM IST",
-      phone: "9800000000",
-      email: "parent@gmail.com",
-      studentId: "VED-2026-108",
-      focusScore: "88",
-      streak: "18",
-      habits: [true, true, true, false]
-    };
+    // In-memory / persistent student database store with distinct demo accounts
+    const INITIAL_STUDENTS = [
+      {
+        parentName: "Mr. Rajesh Sharma",
+        childName: "Aarav Sharma",
+        childGrade: "Ages 8-11 • Pravesh",
+        batch: "Daily 5:00 PM – 6:00 PM IST",
+        phone: "9800000001",
+        email: "parent1@gmail.com",
+        studentId: "VED-2026-101",
+        focusScore: "88",
+        streak: "18",
+        habits: [true, true, true, false]
+      },
+      {
+        parentName: "Mrs. Sunita Patel",
+        childName: "Ananya Patel",
+        childGrade: "Ages 5-7 • Foundation",
+        batch: "Daily 4:00 PM – 5:00 PM IST",
+        phone: "9800000002",
+        email: "parent2@gmail.com",
+        studentId: "VED-2026-102",
+        focusScore: "94",
+        streak: "24",
+        habits: [true, true, true, true]
+      }
+    ];
 
     function getStudentDatabase() {
       const stored = localStorage.getItem('vediq_students_db');
       if (stored) {
-        try { return JSON.parse(stored); } catch (e) {}
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {}
       }
-      return [DEFAULT_STUDENT];
+      return INITIAL_STUDENTS;
+    }
+
+    // Comprehensive identifier matcher (Email, Phone last 10 digits, Student ID, or Firebase UID)
+    function findStudentInDatabase(identifier, customDb = null) {
+      if (!identifier) return null;
+      const db = customDb || getStudentDatabase();
+      const rawInput = identifier.toString().trim().toLowerCase();
+      const digitsOnly = rawInput.replace(/\D/g, '');
+      const last10 = digitsOnly.length >= 10 ? digitsOnly.slice(-10) : digitsOnly;
+      const isEmail = rawInput.includes('@');
+
+      return db.find(s => {
+        if (!s) return false;
+        // 1. Email comparison
+        if (isEmail && s.email && s.email.toLowerCase().trim() === rawInput) return true;
+        // 2. Phone comparison (normalized last 10 digits)
+        if (last10 && s.phone) {
+          const sDigits = s.phone.replace(/\D/g, '');
+          const sLast10 = sDigits.length >= 10 ? sDigits.slice(-10) : sDigits;
+          if (sLast10 && sLast10 === last10) return true;
+        }
+        // 3. Student ID comparison
+        if (s.studentId && s.studentId.toLowerCase().replace(/[^a-z0-9]/g, '') === rawInput.replace(/[^a-z0-9]/g, '')) return true;
+        // 4. Firebase UID comparison
+        if (s.firebaseUid && s.firebaseUid === rawInput) return true;
+        return false;
+      }) || null;
     }
 
     function saveStudentToDatabase(student) {
+      if (!student) return;
       const db = getStudentDatabase();
-      const existingIdx = db.findIndex(s => s.phone === student.phone || s.studentId === student.studentId || s.email === student.email);
+      const existingIdx = db.findIndex(s => {
+        if (student.studentId && s.studentId === student.studentId) return true;
+        if (student.email && s.email && s.email.toLowerCase().trim() === student.email.toLowerCase().trim()) return true;
+        if (student.firebaseUid && s.firebaseUid && s.firebaseUid === student.firebaseUid) return true;
+        if (student.phone && s.phone) {
+          const p1 = student.phone.replace(/\D/g, '').slice(-10);
+          const p2 = s.phone.replace(/\D/g, '').slice(-10);
+          if (p1 && p1 === p2) return true;
+        }
+        return false;
+      });
+
       if (existingIdx >= 0) {
-        db[existingIdx] = student;
+        db[existingIdx] = Object.assign({}, db[existingIdx], student);
       } else {
         db.push(student);
       }
@@ -1306,37 +1434,51 @@
     // Process authenticated Firebase Google user and enter Gurukul Dashboard
     function handleSuccessfulGoogleLogin(user) {
       if (!user) return;
-      const email = user.email || "parent@gmail.com";
-      const name = user.displayName || ("Parent (" + email.split('@')[0] + ")");
+      const email = (user.email || "").trim().toLowerCase();
+      const displayName = user.displayName || "";
       const photo = user.photoURL || null;
-      const phone = user.phoneNumber ? user.phoneNumber.replace(/\D/g, '') : "9800000000";
+      const phoneDigits = user.phoneNumber ? user.phoneNumber.replace(/\D/g, '').slice(-10) : "";
 
       const db = getStudentDatabase();
-      let match = db.find(s => s.email.toLowerCase() === email.toLowerCase());
+      let match = findStudentInDatabase(email, db);
+      if (!match && user.uid) {
+        match = db.find(s => s.firebaseUid === user.uid);
+      }
+      if (!match && phoneDigits) {
+        match = findStudentInDatabase(phoneDigits, db);
+      }
 
       if (!match) {
+        // Brand new parent logging in with Google
+        const inferredParent = displayName || (email ? ("Parent (" + email.split('@')[0] + ")") : "Gurukul Parent");
         match = {
-          parentName: name,
-          childName: "Gurukul Student",
+          parentName: inferredParent,
+          childName: "", // will prompt parent
           childGrade: "Ages 8-11 • Pravesh",
           batch: "Daily 5:00 PM – 6:00 PM IST",
-          phone: phone,
-          email: email,
+          phone: phoneDigits || "9800000000",
+          email: email || "parent@gmail.com",
           studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-          focusScore: "92",
+          focusScore: "90",
           streak: "1",
-          habits: [true, true, true, false],
+          habits: [false, false, false, false],
           photoUrl: photo,
           firebaseUid: user.uid
         };
         saveStudentToDatabase(match);
       } else {
         if (photo) match.photoUrl = photo;
-        match.firebaseUid = user.uid;
+        if (user.uid) match.firebaseUid = user.uid;
+        if (displayName && (!match.parentName || match.parentName === "Parent")) match.parentName = displayName;
         saveStudentToDatabase(match);
       }
 
       loadDashboardForStudent(match);
+
+      // Prompt to configure child name if not yet set
+      if (!match.childName || match.childName === "Gurukul Student") {
+        setTimeout(() => openChildProfileModal(true), 400);
+      }
     }
 
     // Handle Login Form Submit (GitHub style Image 2 + Firebase Email/Password Auth)
@@ -1614,53 +1756,47 @@
       await executeDirectLogin(currentOtpSession.targetIdentifier);
     }
 
-    // Direct Login or Auto-Enrollment (Cloud-Aware)
+    // Direct Login or Auto-Enrollment (Cloud-Aware, Exact Account Match)
     async function executeDirectLogin(identifier) {
       if (!identifier) return;
 
-      let db = getStudentDatabase();
-      const cleanInput = identifier.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+      // 1. Search local DB
+      let match = findStudentInDatabase(identifier);
 
-      // Search local cache
-      let match = db.find(s => {
-        const p = s.phone.replace(/[^0-9]/g, '');
-        const id = s.studentId.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-        const em = s.email.toLowerCase();
-        return p === cleanInput || id === cleanInput || em === identifier.toLowerCase();
-      });
-
-      // Search live cloud DB
+      // 2. If not found locally, query live cloud DB
       if (!match) {
         setCloudStatus('syncing', 'Checking Cloud...');
         const freshCloudDb = await syncFromCloud();
-        match = freshCloudDb.find(s => {
-          const p = s.phone.replace(/[^0-9]/g, '');
-          const id = s.studentId.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-          const em = s.email.toLowerCase();
-          return p === cleanInput || id === cleanInput || em === identifier.toLowerCase();
-        });
+        match = findStudentInDatabase(identifier, freshCloudDb);
       }
 
-      // Auto-provision if brand new
+      // 3. Auto-provision if brand new identifier
       if (!match) {
         const isEmail = identifier.includes('@');
+        const digits = identifier.replace(/\D/g, '');
+        const phone = digits.length >= 10 ? digits.slice(-10) : (digits || "9800000000");
+
         match = {
-          parentName: isEmail ? ("Parent (" + identifier.split('@')[0] + ")") : "Parent",
-          childName: "Gurukul Student",
+          parentName: isEmail ? ("Parent (" + identifier.split('@')[0] + ")") : "Gurukul Parent",
+          childName: "", // will prompt
           childGrade: "Ages 8-11 • Pravesh",
           batch: "Daily 5:00 PM – 6:00 PM IST",
-          phone: isEmail ? "9766772819" : identifier,
-          email: isEmail ? identifier : "student@vediqacademy.com",
+          phone: phone,
+          email: isEmail ? identifier.trim().toLowerCase() : "parent@vediqacademy.com",
           studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-          focusScore: "88",
-          streak: "18",
-          habits: [true, true, true, false]
+          focusScore: "90",
+          streak: "1",
+          habits: [false, false, false, false]
         };
         saveStudentToDatabase(match);
       }
 
       loadDashboardForStudent(match);
-      renderDeviceAccountCard();
+
+      // Prompt to configure child name if not yet set
+      if (!match.childName || match.childName === "Gurukul Student") {
+        setTimeout(() => openChildProfileModal(true), 400);
+      }
     }
 
     // Execute Parent Registration
@@ -1669,10 +1805,11 @@
       const parentName = document.getElementById('regParentName').value.trim();
       const childName = document.getElementById('regChildName').value.trim();
       const childGrade = document.getElementById('regChildAge').value;
-      const phone = document.getElementById('regPhone').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
+      const rawPhone = document.getElementById('regPhone').value.trim();
+      const phoneDigits = rawPhone.replace(/\D/g, '').slice(-10);
+      const email = document.getElementById('regEmail').value.trim().toLowerCase();
 
-      if (!parentName || !childName || !phone || !email) {
+      if (!parentName || !childName || !phoneDigits || !email) {
         alert("Please complete all registration fields.");
         return;
       }
@@ -1682,7 +1819,7 @@
         childName: childName,
         childGrade: childGrade,
         batch: "Daily 5:00 PM – 6:00 PM IST",
-        phone: phone,
+        phone: phoneDigits,
         email: email,
         studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
         focusScore: "85",
@@ -1691,9 +1828,8 @@
       };
 
       saveStudentToDatabase(newStudent);
-      alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour child ${childName} has been registered with Student ID: ${newStudent.studentId}.`);
+      alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour child ${childName} has been enrolled successfully with Student ID: ${newStudent.studentId}.`);
       loadDashboardForStudent(newStudent);
-      renderDeviceAccountCard();
     }
 
     // Load Dashboard with Active Student
@@ -1701,20 +1837,21 @@
       activeStudent = student;
       localStorage.setItem('vediq_current_session', JSON.stringify(student));
 
-      // Update UI elements
-      document.getElementById('dashChildName').innerText = student.childName;
-      document.getElementById('dashChildGrade').innerText = student.childGrade;
-      document.getElementById('dashStudentId').innerText = "ID: " + student.studentId;
-      document.getElementById('dashBatchText').innerText = "Batch: " + student.batch;
-      document.getElementById('reportStudentName').innerText = student.childName;
-      document.getElementById('dashFocusScore').innerHTML = `${student.focusScore} <span class="text-xs text-slate-400 font-normal">/100</span>`;
-      document.getElementById('dashStreakCount').innerText = `🔥 ${student.streak} Days`;
+      // Display Child Name or Setup Prompt
+      const cName = (student.childName && student.childName !== "Gurukul Student") ? student.childName : "Your Child";
+      document.getElementById('dashChildName').innerText = cName;
+      document.getElementById('dashChildGrade').innerText = student.childGrade || "Ages 8-11 • Pravesh";
+      document.getElementById('dashStudentId').innerText = "ID: " + (student.studentId || "VED-2026-101");
+      document.getElementById('dashBatchText').innerText = "Batch: " + (student.batch || "Daily 5:00 PM – 6:00 PM IST");
+      document.getElementById('reportStudentName').innerText = cName;
+      document.getElementById('dashFocusScore').innerHTML = `${student.focusScore || "90"} <span class="text-xs text-slate-400 font-normal">/100</span>`;
+      document.getElementById('dashStreakCount').innerText = `🔥 ${student.streak || "1"} Days`;
 
-      const initials = student.childName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "ST";
+      const initials = cName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "ST";
       document.getElementById('dashAvatarText').innerText = initials;
       document.getElementById('navAvatarText').innerText = initials;
-      document.getElementById('navParentName').innerText = student.parentName;
-      document.getElementById('navChildPreview').innerText = student.childName;
+      document.getElementById('navParentName').innerText = student.parentName || "Parent";
+      document.getElementById('navChildPreview').innerText = cName;
 
       // Restore habit states
       if (student.habits) {
@@ -1736,12 +1873,89 @@
     function logoutParent() {
       if (confirm("Log out from the VedIQ Parent Portal?")) {
         localStorage.removeItem('vediq_current_session');
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+          try { firebase.auth().signOut(); } catch (e) {}
+        }
         document.getElementById('view-dashboard').classList.add('hidden');
         document.getElementById('navUserPill').classList.add('hidden');
         document.getElementById('view-auth').classList.remove('hidden');
-        renderDeviceAccountCard();
+        const idInput = document.getElementById('loginIdentifier');
+        if (idInput) idInput.value = '';
+        const passInput = document.getElementById('loginPassword');
+        if (passInput) passInput.value = '';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
+    }
+
+    // Modal to Setup or Edit Child's Profile
+    function openChildProfileModal(isFirstTime = false) {
+      const modal = document.getElementById('childProfileModal');
+      const title = document.getElementById('childModalTitle');
+      if (title) {
+        title.innerText = isFirstTime ? "🎉 Welcome! Set Up Your Child's Profile" : "✏️ Edit Child's Gurukul Profile";
+      }
+
+      if (activeStudent) {
+        const nameInput = document.getElementById('editChildName');
+        const gradeInput = document.getElementById('editChildGrade');
+        const batchInput = document.getElementById('editChildBatch');
+        const parentInput = document.getElementById('editParentName');
+        const phoneInput = document.getElementById('editPhone');
+
+        if (nameInput) nameInput.value = (activeStudent.childName && activeStudent.childName !== "Gurukul Student") ? activeStudent.childName : "";
+        if (gradeInput && activeStudent.childGrade) gradeInput.value = activeStudent.childGrade;
+        if (batchInput && activeStudent.batch) batchInput.value = activeStudent.batch;
+        if (parentInput) parentInput.value = activeStudent.parentName || "";
+        if (phoneInput && activeStudent.phone) {
+          const cleanP = activeStudent.phone.replace(/\D/g, '').slice(-10);
+          phoneInput.value = cleanP;
+        }
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+          const nameInput = document.getElementById('editChildName');
+          if (nameInput) nameInput.focus();
+        }, 150);
+      }
+    }
+
+    function closeChildProfileModal() {
+      const modal = document.getElementById('childProfileModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function saveChildProfile(e) {
+      e.preventDefault();
+      const childName = document.getElementById('editChildName').value.trim();
+      const childGrade = document.getElementById('editChildGrade').value;
+      const batch = document.getElementById('editChildBatch').value;
+      const parentName = document.getElementById('editParentName').value.trim();
+      const rawPhone = document.getElementById('editPhone').value.trim();
+      const phone = rawPhone.replace(/\D/g, '').slice(-10);
+
+      if (!childName) {
+        alert("Please enter your child's name.");
+        return;
+      }
+
+      if (activeStudent) {
+        activeStudent.childName = childName;
+        activeStudent.childGrade = childGrade;
+        activeStudent.batch = batch;
+        if (parentName) activeStudent.parentName = parentName;
+        if (phone) activeStudent.phone = phone;
+
+        saveStudentToDatabase(activeStudent);
+        loadDashboardForStudent(activeStudent);
+      }
+
+      closeChildProfileModal();
     }
 
     // Tab Navigation
@@ -1869,7 +2083,7 @@
       const child = activeStudent ? activeStudent.childName : "Student";
       const filename = selectedHomeworkFile ? selectedHomeworkFile.name : "today's practice video";
       const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I have recorded ${child}'s Gurukul practice (${filename}). Please review and share your feedback.`);
-      window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
+      window.open(`https://wa.me/918390332500?text=${msg}`, '_blank');
     }
 
     // Real Print / PDF Trigger
@@ -1881,17 +2095,17 @@
     function joinLiveClass() {
       const child = activeStudent ? activeStudent.childName : "Student";
       const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! Joining live Gurukul class for ${child}. Please admit from waiting room.`);
-      window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
+      window.open(`https://wa.me/918390332500?text=${msg}`, '_blank');
     }
 
     // UPI Tuition Payment
     function payTuition() {
       const child = activeStudent ? activeStudent.childName : "Student";
-      const upiUrl = `upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=1499&cu=INR&tn=${encodeURIComponent(child + ' Tuition Renewal')}`;
+      const upiUrl = `upi://pay?pa=vediqacademy@upi&pn=VedIQ%20Academy&am=1499&cu=INR&tn=${encodeURIComponent(child + ' Tuition Renewal')}`;
       window.open(upiUrl, '_blank');
       setTimeout(() => {
-        const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I have completed the ₹1,499 tuition payment for ${child} via UPI. Kindly confirm receipt.`);
-        window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
+        const msg = encodeURIComponent(`Namaste Gurukul Team! I have completed the ₹1,499 tuition payment for ${child} via UPI. Kindly confirm receipt.`);
+        window.open(`https://wa.me/918390332500?text=${msg}`, '_blank');
       }, 500);
     }
 
