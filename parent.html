@@ -61,6 +61,11 @@
   </script>
 
   <style>
+    /* Fast Touch & Instant Click Engine: Zero 300ms Mobile Delay */
+    *, html, body, button, a, input, select {
+      touch-action: manipulation;
+    }
+
     /* Refined scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: #E8E2D8; border-radius: 6px; }
@@ -1482,7 +1487,11 @@
     async function syncFromCloud() {
       setCloudStatus('syncing', 'Connecting Cloud...');
       try {
-        const resp = await fetch(CLOUD_API_URL, { cache: 'no-cache' });
+        // Fast 2.5s Timeout AbortController to prevent any hanging or freeze
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const resp = await fetch(CLOUD_API_URL, { cache: 'no-cache', signal: controller.signal });
+        clearTimeout(timeoutId);
         if (resp.ok) {
           const cloudData = await resp.json();
           if (Array.isArray(cloudData) && cloudData.length > 0) {
@@ -2202,7 +2211,7 @@
       if (passInput) passInput.classList.remove('border-rose-500', 'bg-rose-50/40');
     }
 
-    // Handle Login Form Submit (Strict Password Verification + Firebase Email/Password Auth)
+    // Handle Login Form Submit (Strict Password Verification + Fast Loading Feedback)
     async function handleLoginSubmit(e) {
       e.preventDefault();
       clearLoginError();
@@ -2210,52 +2219,75 @@
       const password = document.getElementById('loginPassword').value;
       if (!identifier) return;
 
-      if (!password) {
-        showLoginError("Please enter your password or click 'Sign in with OTP' below.");
-        return;
+      const btn = document.getElementById('btnMainSignIn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="inline-block animate-spin">⏳</span> <span>Signing in...</span>`;
       }
 
-      // 1. Search local DB or live Cloud DB
-      let match = findStudentInDatabase(identifier);
-      if (!match) {
-        setCloudStatus('syncing', 'Checking account...');
-        const freshCloudDb = await syncFromCloud();
-        match = findStudentInDatabase(identifier, freshCloudDb);
-      }
-
-      // If user does not exist at all, reject!
-      if (!match) {
-        showLoginError("No account found with this email or phone. Please create an account or verify your details.");
-        return;
-      }
-
-      // 2. User exists: strictly verify password!
-      const correctPassword = match.password || "password123";
-
-      // If registered with Firebase email/password
-      if (identifier.includes('@') && typeof firebase !== 'undefined' && firebase.auth) {
-        initFirebase();
-        try {
-          const res = await firebase.auth().signInWithEmailAndPassword(identifier, password);
-          if (res && res.user) {
-            loadDashboardForStudent(match);
-            return;
-          }
-        } catch (fbErr) {
-          if (fbErr.code === 'auth/wrong-password' || fbErr.code === 'auth/invalid-credential') {
-            showLoginError("Incorrect password. Please enter the correct password or sign in with OTP.");
-            return;
-          }
+      function restoreBtn() {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>Sign in</span> <span aria-hidden="true">&rarr;</span>`;
         }
       }
 
-      if (password !== correctPassword) {
-        showLoginError("Incorrect password. Please enter the correct password or sign in with OTP.");
+      if (!password) {
+        showLoginError("Please enter your password or click 'Sign in with OTP' below.");
+        restoreBtn();
         return;
       }
 
-      // Correct credentials -> Log in!
-      loadDashboardForStudent(match);
+      try {
+        // 1. Search local DB or live Cloud DB
+        let match = findStudentInDatabase(identifier);
+        if (!match) {
+          setCloudStatus('syncing', 'Checking account...');
+          const freshCloudDb = await syncFromCloud();
+          match = findStudentInDatabase(identifier, freshCloudDb);
+        }
+
+        // If user does not exist at all, reject!
+        if (!match) {
+          showLoginError("No account found with this email or phone. Please create an account or verify your details.");
+          restoreBtn();
+          return;
+        }
+
+        // 2. User exists: strictly verify password!
+        const correctPassword = match.password || "password123";
+
+        // If registered with Firebase email/password
+        if (identifier.includes('@') && typeof firebase !== 'undefined' && firebase.auth) {
+          initFirebase();
+          try {
+            const res = await firebase.auth().signInWithEmailAndPassword(identifier, password);
+            if (res && res.user) {
+              loadDashboardForStudent(match);
+              restoreBtn();
+              return;
+            }
+          } catch (fbErr) {
+            if (fbErr.code === 'auth/wrong-password' || fbErr.code === 'auth/invalid-credential') {
+              showLoginError("Incorrect password. Please enter the correct password or sign in with OTP.");
+              restoreBtn();
+              return;
+            }
+          }
+        }
+
+        if (password !== correctPassword) {
+          showLoginError("Incorrect password. Please enter the correct password or sign in with OTP.");
+          restoreBtn();
+          return;
+        }
+
+        // Correct credentials -> Log in!
+        loadDashboardForStudent(match);
+        restoreBtn();
+      } catch (err) {
+        restoreBtn();
+      }
     }
 
     // Trigger OTP Flow for Mobile Phone SMS / WhatsApp (Dedicated Gurukul Interface - No Prompts)
@@ -2618,11 +2650,25 @@
       }
 
       const err = document.getElementById('otpErrorText');
+      const btn = document.getElementById('btnVerifyOtp');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="inline-block animate-spin">⏳</span> <span>Verifying...</span>`;
+      }
+
+      function restoreOtpBtn() {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>Verify &amp; Enter Gurukul</span> <span aria-hidden="true">&rarr;</span>`;
+        }
+      }
+
       if (entered.length < 6) {
         if (err) {
           err.innerText = "Please enter all 6 digits of the verification code.";
           err.classList.remove('hidden');
         }
+        restoreOtpBtn();
         return;
       }
 
@@ -2632,6 +2678,7 @@
           err.innerText = "This OTP has expired (valid for 2 minutes only). Please tap 'Resend New Code' below.";
           err.classList.remove('hidden');
         }
+        restoreOtpBtn();
         return;
       }
 
@@ -2641,6 +2688,7 @@
           const result = await window.confirmationResult.confirm(entered);
           if (result && result.user) {
             closeOtpModal();
+            restoreOtpBtn();
             await executeDirectLogin(currentOtpSession.targetIdentifier);
             return;
           }
@@ -2652,6 +2700,7 @@
               err.innerText = "Invalid SMS code. Please re-check or tap the instant code banner.";
               err.classList.remove('hidden');
             }
+            restoreOtpBtn();
             return;
           }
         }
@@ -2666,11 +2715,13 @@
           const box = document.getElementById('otp-' + i);
           if (box) box.classList.add('border-red-500');
         }
+        restoreOtpBtn();
         return;
       }
 
       // Verification Succeeded!
       closeOtpModal();
+      restoreOtpBtn();
       await executeDirectLogin(currentOtpSession.targetIdentifier);
     }
 

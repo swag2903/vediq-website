@@ -65,6 +65,11 @@
   </script>
 
   <style>
+    /* Fast Touch & Instant Click Engine: Zero 300ms Mobile Delay */
+    *, html, body, button, a, input, select {
+      touch-action: manipulation;
+    }
+
     /* Smooth transitions and custom minimalist scrollbar */
     html {
       -webkit-font-smoothing: antialiased;
@@ -1614,14 +1619,13 @@
       document.getElementById('mobileDrawer').classList.toggle('hidden');
     }
 
-    // Remove Netlify Drawer / Feedback Badge Completely
+    // Clean Netlify drawer once on load (No CPU loop)
     function purgeNetlifyDrawer() {
       const selectors = ['netlify-drawer', '#netlify-drawer-root', '[data-netlify-drawer]', 'div[class*="feedback-badge"]'];
       selectors.forEach(sel => {
         document.querySelectorAll(sel).forEach(el => el.remove());
       });
     }
-    setInterval(purgeNetlifyDrawer, 200);
 
     // Dual Language Translation Engine (Toggle View — No Dropdown Menu)
     function googleTranslateElementInit() {
