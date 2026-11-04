@@ -1485,27 +1485,49 @@
       currentPlanName = planName;
       currentPlanAmount = amount;
 
-      document.getElementById('payModalPlanTitle').innerText = `${planName} Enrollment`;
-      document.getElementById('payModalAmount').innerText = amount;
-      document.getElementById('payCardAmountBtn').innerText = amount;
+      const titleEl = document.getElementById('payModalPlanTitle');
+      const amountEl = document.getElementById('payModalAmount');
+      const cardAmountEl = document.getElementById('payCardAmountBtn');
+      if (titleEl) titleEl.innerText = `${planName} Enrollment`;
+      if (amountEl) amountEl.innerText = amount;
+      if (cardAmountEl) cardAmountEl.innerText = amount;
 
       // Update mobile UPI intent links with dynamic price
       const numericAmount = amount.replace(/[^0-9]/g, '');
       const upiUrl = `upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=${numericAmount}&cu=INR&tn=${encodeURIComponent(planName + ' Admission')}`;
-      document.getElementById('gpayLink').href = upiUrl;
-      document.getElementById('phonepeLink').href = upiUrl;
-      document.getElementById('paytmLink').href = upiUrl;
+      const gpay = document.getElementById('gpayLink');
+      const phonepe = document.getElementById('phonepeLink');
+      const paytm = document.getElementById('paytmLink');
+      if (gpay) gpay.href = upiUrl;
+      if (phonepe) phonepe.href = upiUrl;
+      if (paytm) paytm.href = upiUrl;
+
+      // Update live scannable QR code
+      const qrImg = document.getElementById('upiQrImg');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+      }
 
       // Update WhatsApp direct invoice link
       const waMsg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I want to enroll in the ${planName} (${amount}/month). Please send me the official payment link & GST invoice receipt.`);
-      document.getElementById('payWhatsAppDirectBtn').href = `https://wa.me/919766772819?text=${waMsg}`;
+      const waBtn = document.getElementById('payWhatsAppDirectBtn');
+      if (waBtn) waBtn.href = `https://wa.me/919766772819?text=${waMsg}`;
 
       switchPayTab('upi');
-      document.getElementById('paymentModal').classList.remove('hidden');
+      
+      const modal = document.getElementById('paymentModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+      }
     }
 
     function closePaymentModal() {
-      document.getElementById('paymentModal').classList.add('hidden');
+      const modal = document.getElementById('paymentModal');
+      if (modal) {
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+      }
     }
 
     function switchPayTab(tab) {
