@@ -1047,12 +1047,12 @@
         <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 space-y-2">
           <p class="font-bold text-sm">Need a Custom Invoice or Official Link?</p>
           <p class="text-xs text-emerald-900 leading-relaxed">
-            Message Vyas Sir directly. We will instantly generate a verified payment link with GST invoice for your child's enrollment.
+            Message Dr. Ujwal Vyas directly. We will instantly generate a verified payment link with GST invoice for your child's enrollment.
           </p>
         </div>
 
-        <a id="payWhatsAppDirectBtn" href="https://wa.me/919766772819?text=Namaste%20Vyas%20Sir!%20I%20want%20to%20enroll%20in%20VedIQ%20Academy.%20Please%20send%20the%20payment%20link." target="_blank" class="w-full py-3 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 transition flex items-center justify-center gap-2 shadow-sm">
-          <span>Message Vyas Sir for Payment Link &rarr;</span>
+        <a id="payWhatsAppDirectBtn" href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20I%20want%20to%20enroll%20in%20VedIQ%20Academy.%20Please%20send%20the%20payment%20link." target="_blank" class="w-full py-3 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 transition flex items-center justify-center gap-2 shadow-sm">
+          <span>Message Dr. Ujwal Vyas for Payment Link &rarr;</span>
         </a>
       </div>
 
@@ -1114,9 +1114,9 @@
 
         <div id="demoSuccessState" class="hidden p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 text-center space-y-2 mt-2">
           <p class="font-bold">✓ Slot Registered & Logged!</p>
-          <p class="text-[11px] text-emerald-800">If WhatsApp did not open automatically, click below to chat with Vyas Sir:</p>
+          <p class="text-[11px] text-emerald-800">If WhatsApp did not open automatically, click below to chat with Dr. Ujwal Vyas:</p>
           <a id="demoWhatsappDirectLink" href="#" target="_blank" class="inline-block px-4 py-2 rounded-lg bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition">
-            Open WhatsApp Chat with Vyas Sir &rarr;
+            Open WhatsApp Chat with Dr. Ujwal Vyas &rarr;
           </a>
         </div>
       </form>
@@ -1385,8 +1385,8 @@
         // Soft-fail safe (lead still goes to WhatsApp)
       });
 
-      // 2. Prepare WhatsApp Direct Link for Vyas Sir
-      const msg = encodeURIComponent(`Namaste Vyas Sir! I registered for the Free 3-Day Demo on vediqacademy.com.\n\n👤 Parent: ${parentName}\n📞 Phone: ${phone}\n👶 Child Age: ${age}\n📍 City: ${city}\n🎯 Focus: ${challenge}`);
+      // 2. Prepare WhatsApp Direct Link for Dr. Ujwal Vyas
+      const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I registered for the Free 3-Day Demo on vediqacademy.com.\n\n👤 Parent: ${parentName}\n📞 Phone: ${phone}\n👶 Child Age: ${age}\n📍 City: ${city}\n🎯 Focus: ${challenge}`);
       const waUrl = `https://wa.me/919766772819?text=${msg}`;
 
       // 3. Reveal success state inside modal as bulletproof fallback
@@ -1419,7 +1419,7 @@
       document.getElementById('paytmLink').href = upiUrl;
 
       // Update WhatsApp direct invoice link
-      const waMsg = encodeURIComponent(`Namaste Vyas Sir! I want to enroll in the ${planName} (${amount}/month). Please send me the official payment link & GST invoice receipt.`);
+      const waMsg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I want to enroll in the ${planName} (${amount}/month). Please send me the official payment link & GST invoice receipt.`);
       document.getElementById('payWhatsAppDirectBtn').href = `https://wa.me/919766772819?text=${waMsg}`;
 
       switchPayTab('upi');
@@ -1454,7 +1454,7 @@
     }
 
     function confirmUpiPayment() {
-      const msg = encodeURIComponent(`Namaste Vyas Sir! I have completed the UPI payment of ${currentPlanAmount} for the ${currentPlanName} on vediqacademy.com. Please confirm my child's batch slot & workbook delivery.`);
+      const msg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I have completed the UPI payment of ${currentPlanAmount} for the ${currentPlanName} on vediqacademy.com. Please confirm my child's batch slot & workbook delivery.`);
       window.open(`https://wa.me/919766772819?text=${msg}`, '_blank');
       closePaymentModal();
     }

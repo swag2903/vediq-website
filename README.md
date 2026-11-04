@@ -23,6 +23,6 @@ We created a high-converting, mobile-responsive, ultra-premium landing page and 
    - **10 min:** Reflection & Sanskar (Gratitude to Parents & Daily Affirmation)
 
 3. **Leadership & Contacts:**
-   - **Vyas Sir** (Main / Head & Master Mentor): `+91 97667 72819`
-   - **Atish Sir** (Admissions & Operations Lead): `+91 83903 32500`
-   - **Swag** (Academic & Support Coordinator): `+91 95948 06822`
+   - **Dr. Ujwal Vyas** (Head & Master Mentor): `+91 97667 72819`
+   - **Mr. Atish Gulhane** (Admissions & Operations Lead): `+91 83903 32500`
+   - **Mr. Swagatam Shukla** (Community & Academic Tech Support): `+91 95948 06822`
