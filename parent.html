@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VedIQ Academy — Official Parent Portal</title>
   <meta name="description" content="Official Parent Portal for VedIQ Academy. Real-time cognitive tracking, Tratak focus metrics, Vedic math speed, daily Gurukul sadhana checklist, and certified progress reports." />
+  <meta name="keywords" content="VedIQ Academy Parent Portal, VedIQ Login, Student Progress, Tratak analytics, Gurukul portal" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://vediqacademy.com/parent.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="VedIQ Academy — Official Parent Portal" />
+  <meta property="og:description" content="Official Parent Portal for VedIQ Academy. Track child cognitive progress, daily sadhana, and certified report cards." />
+  <meta property="og:url" content="https://vediqacademy.com/parent.html" />
+  <meta property="og:site_name" content="VedIQ Academy" />
   
   <!-- Auto-Upgrade Insecure HTTP to Secure HTTPS -->
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
@@ -64,6 +73,57 @@
     /* Fast Touch & Instant Click Engine: Zero 300ms Mobile Delay */
     *, html, body, button, a, input, select {
       touch-action: manipulation;
+    }
+
+    /* ========================================================================= */
+    /* PREMIUM SOOTHING & HARDWARE-ACCELERATED ANIMATIONS (Apple & CRED Inspired) */
+    /* ========================================================================= */
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    :root {
+      --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+      --soothing-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    /* Interactive Elevate Cards */
+    .soothing-card {
+      transition: transform 0.35s var(--spring-easing), box-shadow 0.35s var(--spring-easing), border-color 0.35s ease;
+      will-change: transform, box-shadow;
+    }
+    .soothing-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 32px -8px rgba(12, 17, 29, 0.08), 0 4px 12px rgba(200, 109, 36, 0.06);
+    }
+
+    /* Tactile Spring Buttons */
+    button, a.btn, .tactile-btn {
+      transition: transform 0.2s var(--spring-easing), box-shadow 0.2s var(--spring-easing), background-color 0.2s ease, opacity 0.2s ease;
+      will-change: transform;
+    }
+    button:active, a.btn:active, .tactile-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Gentle Floating Animation (Sacred & Modern) */
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    .animate-float {
+      animation: gentleFloat 5s ease-in-out infinite;
+    }
+
+    /* Golden Aura Glow (Soothing Pulse) */
+    @keyframes auraGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(200, 109, 36, 0.2); }
+      50% { box-shadow: 0 0 18px 4px rgba(200, 109, 36, 0.22); }
+    }
+    .animate-aura {
+      animation: auraGlow 3.5s ease-in-out infinite;
     }
 
     /* Refined scrollbar */
@@ -220,7 +280,7 @@
           <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-2 py-1 text-brand-muted hover:text-brand-ink transition text-xs">हिन्दी</button>
         </div>
 
-        <a href="index.html" class="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border border-brand-border hover:bg-brand-subtle text-brand-muted hover:text-brand-ink text-xs font-semibold transition flex items-center gap-1 shrink-0">
+        <a href="index.html" class="hidden xs:inline-flex px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg border border-brand-border hover:bg-brand-subtle text-brand-muted hover:text-brand-ink text-xs font-semibold transition items-center gap-1 shrink-0">
           <span aria-hidden="true">&larr;</span>
           <span class="hidden sm:inline">Back to</span> Site
         </a>
@@ -235,7 +295,7 @@
             </div>
           </div>
           <!-- Logout Button (Always 100% visible, fully readable, perfectly aligned on phones) -->
-          <button type="button" onclick="logoutParent()" class="inline-flex items-center gap-1 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 sm:px-3 py-1.5 rounded-xl border border-rose-200 shadow-xs transition shrink-0 cursor-pointer">
+          <button type="button" onclick="logoutParent()" class="inline-flex items-center gap-1 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 px-3 py-1.5 rounded-xl shadow-xs transition shrink-0 cursor-pointer whitespace-nowrap">
             <span>🚪</span>
             <span>Logout</span>
           </button>
@@ -493,7 +553,7 @@
               <span>✏️</span>
               <span>Edit Profile</span>
             </button>
-            <button type="button" onclick="logoutParent()" class="px-2.5 py-1 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 hover:text-white text-xs font-bold border border-rose-500/30 transition flex items-center gap-1 cursor-pointer">
+            <button type="button" onclick="logoutParent()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
               <span>🚪</span>
               <span>Logout</span>
             </button>
@@ -576,7 +636,7 @@
         <button onclick="switchDashTab('reports')" id="mob-reports" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs">Reports</button>
         <button onclick="switchDashTab('mentors')" id="mob-mentors" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs">Live Class</button>
         <button onclick="switchDashTab('fees')" id="mob-fees" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs">Tuition</button>
-        <button type="button" onclick="logoutParent()" class="shrink-0 px-3.5 py-2 rounded-xl border border-rose-300 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center gap-1.5 shadow-xs transition cursor-pointer">
+        <button type="button" onclick="logoutParent()" class="shrink-0 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs transition cursor-pointer whitespace-nowrap">
           <span>🚪</span>
           <span>Logout</span>
         </button>
@@ -948,6 +1008,14 @@
           </div>
 
         </section>
+
+        <!-- Mobile Bottom Logout Banner (Guarantees Logout is Always Visible on Phones) -->
+        <div class="lg:hidden pt-4 pb-6 text-center">
+          <button type="button" onclick="logoutParent()" class="w-full py-3.5 px-4 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-sm border-2 border-rose-200 shadow-sm flex items-center justify-center gap-2 transition cursor-pointer">
+            <span class="text-base">🚪</span>
+            <span>Logout from Parent Portal</span>
+          </button>
+        </div>
 
       </div>
     </div>
@@ -1528,18 +1596,22 @@
     async function pushToCloud(db) {
       setCloudStatus('syncing', 'Saving to Cloud...');
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
         const resp = await fetch(CLOUD_API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(db)
+          body: JSON.stringify(db),
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
         if (resp.ok) {
           setCloudStatus('synced', 'Cloud Saved ☁️');
           setTimeout(() => setCloudStatus('synced', 'Cloud Live ☁️'), 2500);
           return true;
         }
       } catch (err) {
-        console.warn("Cloud push failed, cached locally:", err);
+        console.warn("Cloud push fallback to local cache:", err);
         setCloudStatus('offline', 'Cached Locally');
       }
       return false;
@@ -3410,9 +3482,9 @@
     });
   </script>
 
-  <!-- Google Translate Backend Container & Script -->
+  <!-- Google Translate Backend Container & Script (Async Non-Blocking) -->
   <div id="google_translate_element" style="display:none !important;"></div>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
 
 </body>
 </html>

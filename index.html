@@ -5,6 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VedIQ Academy — Ancient Wisdom. Scientific Mind.</title>
   <meta name="description" content="VedIQ Academy: India's Premier Scientific + Vedic Brain Development System for Children aged 5–15. 1 Hour Daily for Lifelong Focus, Discipline & Intelligence." />
+  <meta name="keywords" content="VedIQ Academy, VedIQ, Vedic Maths, Tratak concentration, Gurukul education, child brain development, ancient wisdom scientific mind, Dr Ujwal Vyas, brain training children" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <link rel="canonical" href="https://vediqacademy.com/" />
+
+  <!-- Open Graph / Facebook / WhatsApp Preview -->
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="VedIQ Academy — Ancient Wisdom. Scientific Mind." />
+  <meta property="og:description" content="India's Premier Scientific + Vedic Brain Development System for Children aged 5–15. Daily Tratak, Vedic Maths & Cognitive Training." />
+  <meta property="og:url" content="https://vediqacademy.com/" />
+  <meta property="og:site_name" content="VedIQ Academy" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VedIQ Academy — Ancient Wisdom. Scientific Mind." />
+  <meta name="twitter:description" content="India's Premier Scientific + Vedic Brain Development System for Children aged 5–15. 1 Hour Daily for Lifelong Focus." />
+
+  <!-- Schema.org JSON-LD Structured Data for Google Top Search Rankings -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "VedIQ Academy",
+    "alternateName": ["VedIQ", "Vediq Academy", "VedIQ Gurukul"],
+    "url": "https://vediqacademy.com/",
+    "logo": "https://vediqacademy.com/",
+    "description": "India's Premier Scientific + Vedic Brain Development System for Children aged 5–15. 1 Hour Daily for Lifelong Focus, Discipline & Intelligence.",
+    "telephone": "+91-8390332500",
+    "email": "admissions@vediqacademy.com",
+    "sameAs": [
+      "https://www.vediqacademy.com/"
+    ]
+  }
+  </script>
 
   <!-- Auto-Upgrade Insecure HTTP to Secure HTTPS -->
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
@@ -70,11 +104,74 @@
       touch-action: manipulation;
     }
 
-    /* Smooth transitions and custom minimalist scrollbar */
+    /* ========================================================================= */
+    /* PREMIUM SOOTHING & HARDWARE-ACCELERATED ANIMATIONS (Apple & CRED Inspired) */
+    /* ========================================================================= */
     html {
+      scroll-behavior: smooth;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
+
+    :root {
+      --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+      --soothing-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    /* Interactive Elevate Cards */
+    .soothing-card {
+      transition: transform 0.35s var(--spring-easing), box-shadow 0.35s var(--spring-easing), border-color 0.35s ease;
+      will-change: transform, box-shadow;
+    }
+    .soothing-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(12, 17, 29, 0.08), 0 4px 12px rgba(200, 109, 36, 0.06);
+    }
+
+    /* Tactile Spring Buttons */
+    button, a.btn, .tactile-btn {
+      transition: transform 0.2s var(--spring-easing), box-shadow 0.2s var(--spring-easing), background-color 0.2s ease, opacity 0.2s ease;
+      will-change: transform;
+    }
+    button:active, a.btn:active, .tactile-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Gentle Floating Animation (Sacred & Modern) */
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    .animate-float {
+      animation: gentleFloat 5s ease-in-out infinite;
+    }
+
+    /* Golden Aura Glow (Soothing Pulse) */
+    @keyframes auraGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(200, 109, 36, 0.2); }
+      50% { box-shadow: 0 0 18px 4px rgba(200, 109, 36, 0.22); }
+    }
+    .animate-aura {
+      animation: auraGlow 3.5s ease-in-out infinite;
+    }
+
+    /* Soft Scroll Reveal (GPU Accelerated Compositor) */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.65s var(--spring-easing), transform 0.65s var(--spring-easing);
+      will-change: opacity, transform;
+    }
+    .reveal-on-scroll.is-revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delay-100 { transition-delay: 0.1s; }
+    .delay-200 { transition-delay: 0.2s; }
+    .delay-300 { transition-delay: 0.3s; }
+    .delay-400 { transition-delay: 0.4s; }
+
     ::selection {
       background-color: #C86D24;
       color: #FFFFFF;
@@ -343,7 +440,7 @@
   </section>
 
   <!-- THE THREE PILLARS (Minimalist Editorial Grid - Stacks on Mobile & Tablet for Maximum Legibility) -->
-  <section class="py-20 bg-brand-surface border-b border-brand-border">
+  <section class="py-20 bg-brand-surface border-b border-brand-border reveal-on-scroll">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="max-w-2xl mb-12 text-center sm:text-left">
@@ -356,7 +453,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         
         <!-- Pillar 1 -->
-        <div class="p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40 transition">
+        <div class="soothing-card p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40">
           <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
             01
           </div>
@@ -370,7 +467,7 @@
         </div>
 
         <!-- Pillar 2 -->
-        <div class="p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40 transition">
+        <div class="soothing-card p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40">
           <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
             02
           </div>
@@ -384,7 +481,7 @@
         </div>
 
         <!-- Pillar 3 -->
-        <div class="p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40 transition">
+        <div class="soothing-card p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40">
           <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
             03
           </div>
@@ -403,7 +500,7 @@
   </section>
 
   <!-- DAILY 1-HOUR PROTOCOL (Smooth Thumb Scrubber on Phones / Grid on PC) -->
-  <section id="system" class="py-20 sm:py-24 bg-brand-cream border-b border-brand-border">
+  <section id="system" class="py-20 sm:py-24 bg-brand-cream border-b border-brand-border reveal-on-scroll">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-4">
@@ -1675,6 +1772,28 @@
       }
     }
 
+    // Hardware-Accelerated Smooth Scroll Reveal (60/120fps Compositor)
+    function initScrollReveal() {
+      const targets = document.querySelectorAll('.reveal-on-scroll');
+      if (!targets.length) return;
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(el => el.classList.add('is-revealed'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -30px 0px'
+      });
+      targets.forEach(el => observer.observe(el));
+    }
+
     // Init
     window.addEventListener('DOMContentLoaded', () => {
       const isHindi = document.cookie.includes('googtrans=/en/hi');
@@ -1684,12 +1803,13 @@
       switchStage('foundation');
       selectScript(1);
       updateROI();
+      initScrollReveal();
     });
   </script>
 
-  <!-- Google Translate Backend Container & Script -->
+  <!-- Google Translate Backend Container & Script (Async Non-Blocking) -->
   <div id="google_translate_element" style="display:none !important;"></div>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
 
 </body>
 </html>

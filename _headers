@@ -1,17 +1,30 @@
-# Netlify Production Security & Caching Headers
 /*
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
   X-XSS-Protection: 1; mode=block
+  X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
 
-/favicon.ico
-  Cache-Control: public, max-age=86400
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
 
 /*.css
   Cache-Control: public, max-age=31536000, immutable
 
-/*.js
+/*.svg
   Cache-Control: public, max-age=31536000, immutable
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.xml
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/*.txt
+  Cache-Control: public, max-age=3600, must-revalidate
