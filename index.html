@@ -1025,7 +1025,7 @@
   </footer>
 
   <!-- PAYMENT GATEWAY MODAL (UPI, Cards, Netbanking, QR Code) -->
-  <div id="paymentModal" style="display:none;" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm items-center justify-center p-4">
+  <div id="paymentModal" style="display:none;" class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
     <div class="bg-brand-surface rounded-2xl max-w-lg w-full p-6 sm:p-8 relative border border-brand-border shadow-2xl animate-in fade-in duration-200 max-h-[90vh] overflow-y-auto">
       <button onclick="closePaymentModal()" class="absolute top-5 right-5 text-brand-muted hover:text-brand-ink text-sm p-1 font-bold">✕</button>
 
@@ -1520,43 +1520,50 @@
     let currentPlanAmount = "₹1,499";
 
     function openPaymentModal(planName, amount) {
-      currentPlanName = planName;
-      currentPlanAmount = amount;
+      try {
+        currentPlanName = planName;
+        currentPlanAmount = amount;
 
-      const titleEl = document.getElementById('payModalPlanTitle');
-      const amountEl = document.getElementById('payModalAmount');
-      const cardAmountEl = document.getElementById('payCardAmountBtn');
-      if (titleEl) titleEl.innerText = `${planName} Enrollment`;
-      if (amountEl) amountEl.innerText = amount;
-      if (cardAmountEl) cardAmountEl.innerText = amount;
+        const modal = document.getElementById('paymentModal');
+        if (!modal) {
+          window.open(`https://wa.me/919766772819?text=${encodeURIComponent('Namaste Dr. Ujwal Vyas! I want to enroll in ' + planName + ' (' + amount + '/month). Please share official payment link.')}`, '_blank');
+          return;
+        }
 
-      // Update mobile UPI intent links with dynamic price
-      const numericAmount = amount.replace(/[^0-9]/g, '');
-      const upiUrl = `upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=${numericAmount}&cu=INR&tn=${encodeURIComponent(planName + ' Admission')}`;
-      const gpay = document.getElementById('gpayLink');
-      const phonepe = document.getElementById('phonepeLink');
-      const paytm = document.getElementById('paytmLink');
-      if (gpay) gpay.href = upiUrl;
-      if (phonepe) phonepe.href = upiUrl;
-      if (paytm) paytm.href = upiUrl;
+        const titleEl = document.getElementById('payModalPlanTitle');
+        const amountEl = document.getElementById('payModalAmount');
+        const cardAmountEl = document.getElementById('payCardAmountBtn');
+        if (titleEl) titleEl.innerText = `${planName} Enrollment`;
+        if (amountEl) amountEl.innerText = amount;
+        if (cardAmountEl) cardAmountEl.innerText = amount;
 
-      // Update live scannable QR code
-      const qrImg = document.getElementById('upiQrImg');
-      if (qrImg) {
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
-      }
+        // Update mobile UPI intent links with dynamic price
+        const numericAmount = amount.replace(/[^0-9]/g, '');
+        const upiUrl = `upi://pay?pa=9766772819@upi&pn=VedIQ%20Academy&am=${numericAmount}&cu=INR&tn=${encodeURIComponent(planName + ' Admission')}`;
+        const gpay = document.getElementById('gpayLink');
+        const phonepe = document.getElementById('phonepeLink');
+        const paytm = document.getElementById('paytmLink');
+        if (gpay) gpay.href = upiUrl;
+        if (phonepe) phonepe.href = upiUrl;
+        if (paytm) paytm.href = upiUrl;
 
-      // Update WhatsApp direct invoice link
-      const waMsg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I want to enroll in the ${planName} (${amount}/month). Please send me the official payment link & GST invoice receipt.`);
-      const waBtn = document.getElementById('payWhatsAppDirectBtn');
-      if (waBtn) waBtn.href = `https://wa.me/919766772819?text=${waMsg}`;
+        // Update live scannable QR code
+        const qrImg = document.getElementById('upiQrImg');
+        if (qrImg) {
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+        }
 
-      switchPayTab('upi');
-      
-      const modal = document.getElementById('paymentModal');
-      if (modal) {
+        // Update WhatsApp direct invoice link
+        const waMsg = encodeURIComponent(`Namaste Dr. Ujwal Vyas! I want to enroll in the ${planName} (${amount}/month). Please send me the official payment link & GST invoice receipt.`);
+        const waBtn = document.getElementById('payWhatsAppDirectBtn');
+        if (waBtn) waBtn.href = `https://wa.me/919766772819?text=${waMsg}`;
+
+        switchPayTab('upi');
         modal.style.display = 'flex';
         modal.classList.remove('hidden');
+      } catch (err) {
+        console.error("Payment modal error:", err);
+        window.open(`https://wa.me/919766772819?text=${encodeURIComponent('Namaste Dr. Ujwal Vyas! I want to enroll in ' + planName + ' (' + amount + '/month). Please share official payment link.')}`, '_blank');
       }
     }
 
