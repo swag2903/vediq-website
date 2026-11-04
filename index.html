@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VedIQ Academy — Ancient Wisdom. Scientific Mind.</title>
+  <meta name="description" content="VedIQ Academy: India's Premier Scientific + Vedic Brain Development System for Children aged 5–15. 1 Hour Daily for Lifelong Focus, Discipline & Intelligence." />
+
+  <!-- Google Fonts: Editorial Serif + Modern Swiss/Geometric Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            display: ['"Cinzel"', 'serif'],
+          },
+          colors: {
+            brand: {
+              cream: '#FAF8F5',       /* Warm ivory/linen canvas */
+              surface: '#FFFFFF',
+              subtle: '#F3EFEA',      /* Muted stone tint */
+              border: '#E8E3DA',      /* Hairline luxury border */
+              borderDark: '#232A36',
+              
+              /* Coordinated Gurukul Heritage & Modernity Accent Palette */
+              ochre: '#C86D24',       /* Sophisticated terracotta ochre */
+              ochreHover: '#B05917',
+              ochreLight: '#FBF1E8',
+              gold: '#C59A51',        /* Sacred muted brass/gold */
+              goldLight: '#FDF7EC',
+              
+              /* Monochromatic Luxury Charcoal & Ink */
+              ink: '#0C111D',         /* Deepest midnight obsidian */
+              slate: '#1E2532',       /* Dark slate card surface */
+              muted: '#667085',       /* High legibility neutral text */
+              faint: '#98A2B3',       /* Subtle labels & indicators */
+            }
+          },
+          boxShadow: {
+            'subtle': '0 1px 3px rgba(12, 17, 29, 0.04), 0 10px 24px -4px rgba(12, 17, 29, 0.04)',
+            'hover': '0 4px 6px -1px rgba(12, 17, 29, 0.04), 0 20px 32px -8px rgba(12, 17, 29, 0.08)',
+            'ochre': '0 12px 28px -6px rgba(200, 109, 36, 0.22)',
+            'darkCard': '0 20px 40px -15px rgba(0, 0, 0, 0.5)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Smooth transitions and custom minimalist scrollbar */
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    ::selection {
+      background-color: #C86D24;
+      color: #FFFFFF;
+    }
+    /* Elegant hairline pattern */
+    .bg-fine-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(232, 227, 218, 0.6) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(232, 227, 218, 0.6) 1px, transparent 1px);
+    }
+    /* Subdued noise / grain overlay effect */
+    .glass-surface {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .glass-dark {
+      background: rgba(12, 17, 29, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+
+<body class="bg-brand-cream text-brand-ink font-sans selection:bg-brand-ochre selection:text-white leading-relaxed">
+
+  <!-- MINIMALIST TOP STATUS BAR -->
+  <aside class="border-b border-brand-border bg-brand-surface text-brand-muted text-[11px] sm:text-xs font-medium py-2 px-4 transition">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-ochre animate-pulse"></span>
+        <span class="text-brand-ink font-semibold tracking-wide">ADMISSION COHORT OPEN</span>
+        <span class="hidden md:inline text-brand-faint">•</span>
+        <span class="hidden md:inline">Free 3-Day Live Gurukul Workshop (Ages 5–15). Maximum 8 students per batch.</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#demo-modal" onclick="openDemoModal()" class="text-brand-ochre font-bold hover:text-brand-ochreHover flex items-center gap-1 transition">
+          Claim Demo Seat <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- REFINED NAVIGATION -->
+  <header class="sticky top-0 z-40 glass-surface border-b border-brand-border transition duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center font-display font-semibold text-lg border border-brand-borderDark shadow-sm group-hover:border-brand-ochre transition duration-300">
+          <!-- Minimalist Geometric Emblem: Rising Sun Arc + Neural Focus -->
+          <svg class="w-5 h-5 text-brand-gold group-hover:text-brand-ochre transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-xl tracking-wider text-brand-ink">VED<span class="text-brand-ochre">IQ</span></span>
+            <span class="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-brand-subtle text-brand-muted tracking-widest border border-brand-border">ACADEMY</span>
+          </div>
+          <p class="text-[10px] text-brand-muted font-medium tracking-wide">Ancient Wisdom • Modern IQ & Focus</p>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-brand-muted">
+        <a href="#system" class="hover:text-brand-ochre transition">1-Hour Daily</a>
+        <a href="#curriculum" class="hover:text-brand-ochre transition">10-Year Roadmap</a>
+        <a href="#scripts" class="hover:text-brand-ochre transition">Teaching Scripts</a>
+        <a href="#app" class="hover:text-brand-ochre transition">Parent App</a>
+        <a href="#franchise" class="hover:text-brand-ochre transition">Franchise</a>
+        <a href="#plans" class="hover:text-brand-ochre transition">Tuition</a>
+      </nav>
+
+      <!-- Desktop CTAs -->
+      <div class="hidden sm:flex items-center gap-3">
+        <a href="https://wa.me/?text=Namaste!%20I%20am%20interested%20in%20the%20VedIQ%20Academy%20program." target="_blank" class="px-3.5 py-2 rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-ink border border-brand-border hover:bg-brand-subtle transition flex items-center gap-1.5" title="WhatsApp Admissions">
+          <svg class="w-4 h-4 fill-current text-emerald-600" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+        <button onclick="openDemoModal()" class="px-5 py-2 rounded-lg text-xs font-bold text-white bg-brand-ink hover:bg-brand-ochre hover:shadow-ochre transition duration-200">
+          Book Free Demo
+        </button>
+      </div>
+
+      <!-- Mobile Button -->
+      <button onclick="toggleMobileNav()" class="lg:hidden p-2 rounded-lg text-brand-ink hover:bg-brand-subtle" aria-label="Toggle Menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobileDrawer" class="hidden lg:hidden border-b border-brand-border bg-brand-surface px-6 py-6 space-y-4 text-sm font-semibold text-brand-ink">
+      <a href="#system" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">1-Hour Daily System</a>
+      <a href="#curriculum" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">10-Year Roadmap</a>
+      <a href="#scripts" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Word-to-Word Scripts</a>
+      <a href="#app" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Parent App Preview</a>
+      <a href="#franchise" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Franchise & Teachers</a>
+      <a href="#plans" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Tuition Plans</a>
+      <div class="pt-4 border-t border-brand-border flex flex-col gap-2.5">
+        <button onclick="toggleMobileNav(); openDemoModal();" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink">
+          Book Free 3-Day Demo
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO: EDITORIAL LUXURY & REFINED BREATHING ROOM -->
+  <section class="relative pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden bg-fine-grid border-b border-brand-border">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- Minimalist Category Pill -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surface border border-brand-border shadow-subtle mb-8">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-ochre"></span>
+        <span class="text-[11px] font-bold uppercase tracking-wider text-brand-ink">The Parallel Education System</span>
+        <span class="text-brand-border">•</span>
+        <span class="text-[11px] font-medium text-brand-muted">Ages 5 to 15</span>
+      </div>
+
+      <!-- Hero Headline with Cormorant Garamond Serif Accent -->
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-light text-brand-ink tracking-tight max-w-4xl mx-auto leading-[1.08]">
+        Ancient wisdom for the <br />
+        <span class="font-serif italic font-semibold text-brand-ochre">modern scientific mind.</span>
+      </h1>
+
+      <!-- Refined Subtitle -->
+      <p class="mt-7 text-base sm:text-lg text-brand-muted max-w-2xl mx-auto font-normal leading-relaxed">
+        Modern education teaches knowledge; <strong class="text-brand-ink font-semibold">VedIQ Academy trains the mind</strong>. A daily 1-hour Gurukul ritual fusing ancient Tratak concentration, Vedic mathematics, and neuroscience to build unbreakable focus and noble character.
+      </p>
+
+      <!-- Primary Action Buttons -->
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="openDemoModal()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs tracking-wider uppercase text-white bg-brand-ink hover:bg-brand-ochre hover:shadow-ochre transition duration-200">
+          Book Free 3-Day Demo Class
+        </button>
+        <a href="#system" class="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-xs tracking-wider uppercase text-brand-ink bg-brand-surface border border-brand-border hover:bg-brand-subtle transition">
+          View 60-Minute Ritual
+        </a>
+      </div>
+
+      <!-- Trust & Credibility Metrics -->
+      <div class="mt-16 pt-10 border-t border-brand-border/80 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto text-left">
+        <div>
+          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">60 Min</span>
+          <p class="text-[11px] text-brand-muted mt-0.5">Daily calibrated routine</p>
+        </div>
+        <div>
+          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">+30%</span>
+          <p class="text-[11px] text-brand-muted mt-0.5">Focus boost in 7 days</p>
+        </div>
+        <div>
+          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">1:8</span>
+          <p class="text-[11px] text-brand-muted mt-0.5">Micro-batch mentorship</p>
+        </div>
+        <div>
+          <span class="text-2xl sm:text-3xl font-display font-semibold text-brand-ink">365</span>
+          <p class="text-[11px] text-brand-muted mt-0.5">Standardized daily lessons</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- THE THREE PILLARS (Minimalist Editorial Grid) -->
+  <section class="py-20 bg-brand-surface border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-2xl mb-14">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Core Philosophy</span>
+        <h2 class="mt-2 text-2xl sm:text-3xl font-light text-brand-ink tracking-tight">
+          Three faculties essential for the next generation
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Pillar 1 -->
+        <div class="p-8 rounded-2xl bg-brand-cream border border-brand-border space-y-4 hover:border-brand-ochre/40 transition">
+          <div class="w-8 h-8 rounded-lg bg-brand-ink text-brand-gold flex items-center justify-center text-xs font-display font-bold">
+            01
+          </div>
+          <h3 class="text-lg font-bold text-brand-ink">Concentration (Dharana)</h3>
+          <p class="text-xs text-brand-muted leading-relaxed">
+            Reversing the neural damage of short-form algorithmic video addiction. Daily Tratak gaze stillness resets dopamine receptors and cultivates 45+ minutes of continuous deep cognitive focus.
+          </p>
+          <div class="pt-2 text-[11px] text-brand-ochre font-semibold">
+            Result: Deep study without restlessness
+          </div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="p-8 rounded-2xl bg-brand-cream border border-brand-border space-y-4 hover:border-brand-ochre/40 transition">
+          <div class="w-8 h-8 rounded-lg bg-brand-ink text-brand-gold flex items-center justify-center text-xs font-display font-bold">
+            02
+          </div>
+          <h3 class="text-lg font-bold text-brand-ink">Vedic Mathematical Logic</h3>
+          <p class="text-xs text-brand-muted leading-relaxed">
+            Transforming numbers from an anxiety trigger into joyful visual pattern puzzles. 16 ancient Sutras teach children to calculate multi-digit multiplication and roots entirely in their mind.
+          </p>
+          <div class="pt-2 text-[11px] text-brand-ochre font-semibold">
+            Result: 10x speed & zero exam fear
+          </div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="p-8 rounded-2xl bg-brand-cream border border-brand-border space-y-4 hover:border-brand-ochre/40 transition">
+          <div class="w-8 h-8 rounded-lg bg-brand-ink text-brand-gold flex items-center justify-center text-xs font-display font-bold">
+            03
+          </div>
+          <h3 class="text-lg font-bold text-brand-ink">Character & Sanskar</h3>
+          <p class="text-xs text-brand-muted leading-relaxed">
+            Intelligence without ethical roots creates chaos. Daily lessons from the Ramayana, Upanishads, and Panchatatva instill profound respect for parents, humility, courage, and lifelong discipline.
+          </p>
+          <div class="pt-2 text-[11px] text-brand-ochre font-semibold">
+            Result: Grounded, respectful future leaders
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DAILY 1-HOUR PROTOCOL (Harmonious Interactive Scrubber) -->
+  <section id="system" class="py-24 bg-brand-cream border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Precision Engineering</span>
+          <h2 class="mt-2 text-3xl sm:text-4xl font-light text-brand-ink tracking-tight">
+            The Daily 60-Minute Architecture
+          </h2>
+          <p class="text-xs text-brand-muted mt-2 max-w-xl">
+            Standardized word-for-word across 10 years. Five calibrated micro-segments designed to prime, focus, educate, drill, and anchor.
+          </p>
+        </div>
+        <div class="text-xs text-brand-muted">
+          Click any segment to view the exact classroom protocol:
+        </div>
+      </div>
+
+      <!-- Scrubber Segment Selector -->
+      <div class="grid grid-cols-5 gap-2 p-1.5 rounded-2xl bg-brand-surface border border-brand-border mb-8" id="segmentScrubber">
+        <button onclick="activateSegment(0)" class="segment-btn py-3 px-2 rounded-xl text-center transition bg-brand-ink text-white" id="segBtn0">
+          <span class="block text-[10px] font-mono text-brand-gold uppercase">10 Min</span>
+          <span class="block text-xs font-bold mt-0.5 truncate">01. Prana</span>
+        </button>
+        <button onclick="activateSegment(1)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn1">
+          <span class="block text-[10px] font-mono uppercase">10 Min</span>
+          <span class="block text-xs font-bold mt-0.5 truncate">02. Tratak</span>
+        </button>
+        <button onclick="activateSegment(2)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn2">
+          <span class="block text-[10px] font-mono uppercase">15 Min</span>
+          <span class="block text-xs font-bold mt-0.5 truncate">03. Science</span>
+        </button>
+        <button onclick="activateSegment(3)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn3">
+          <span class="block text-[10px] font-mono uppercase">15 Min</span>
+          <span class="block text-xs font-bold mt-0.5 truncate">04. Vedic Math</span>
+        </button>
+        <button onclick="activateSegment(4)" class="segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle" id="segBtn4">
+          <span class="block text-[10px] font-mono uppercase">10 Min</span>
+          <span class="block text-xs font-bold mt-0.5 truncate">05. Sanskar</span>
+        </button>
+      </div>
+
+      <!-- Segment Dynamic Detail Box -->
+      <div id="segmentDetailContainer" class="p-8 sm:p-10 rounded-2xl bg-brand-surface border border-brand-border shadow-subtle">
+        <!-- Injected by JavaScript -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 10-YEAR MASTER ROADMAP (Minimalist Stage Switcher) -->
+  <section id="curriculum" class="py-24 bg-brand-ink text-white border-b border-brand-borderDark relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-gold">3650 Days of Growth</span>
+        <h2 class="mt-2 text-3xl sm:text-5xl font-light tracking-tight font-serif italic text-white">
+          The 10-Year Progression Framework
+        </h2>
+        <p class="mt-3 text-xs sm:text-sm text-brand-faint max-w-xl mx-auto">
+          A continuous, cyclical education system spanning three development loops. 52 Weekly Themes and 365 Micro-Lessons per year.
+        </p>
+
+        <!-- Stage Switcher Tabs -->
+        <div class="mt-8 inline-flex p-1 rounded-xl bg-brand-slate border border-brand-borderDark">
+          <button onclick="switchStage('foundation')" id="btnStageFoundation" class="stage-tab px-5 py-2.5 rounded-lg text-xs font-bold bg-brand-ochre text-white transition">
+            Foundation (Ages 5–7)
+          </button>
+          <button onclick="switchStage('development')" id="btnStageDev" class="stage-tab px-5 py-2.5 rounded-lg text-xs font-semibold text-brand-faint hover:text-white transition">
+            Development (Ages 8–11)
+          </button>
+          <button onclick="switchStage('mastery')" id="btnStageMastery" class="stage-tab px-5 py-2.5 rounded-lg text-xs font-semibold text-brand-faint hover:text-white transition">
+            Mastery (Ages 12–15)
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Stage Content -->
+      <div id="stageContentBox" class="p-8 sm:p-12 rounded-2xl bg-brand-slate/60 border border-brand-borderDark shadow-darkCard">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SCRIPT SIMULATOR (Word-to-Word Teacher Reader) -->
+  <section id="scripts" class="py-24 bg-brand-surface border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Complete Teacher Manual</span>
+          <h2 class="mt-2 text-2xl sm:text-3xl font-light text-brand-ink tracking-tight">
+            Word-to-Word Scripted Delivery
+          </h2>
+          <p class="text-xs text-brand-muted mt-1 max-w-lg">
+            Mentors do not improvise. Every lesson is scripted down to the sentence for consistent psychological impact and warmth.
+          </p>
+        </div>
+
+        <!-- Minimal Day Pills -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-2">
+          <button onclick="selectScript(1)" id="sBtn1" class="s-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-ink text-white">Day 1: Surya</button>
+          <button onclick="selectScript(2)" id="sBtn2" class="s-btn px-3 py-1.5 rounded-lg text-xs font-medium text-brand-muted hover:bg-brand-subtle">Day 2: Prana</button>
+          <button onclick="selectScript(3)" id="sBtn3" class="s-btn px-3 py-1.5 rounded-lg text-xs font-medium text-brand-muted hover:bg-brand-subtle">Day 3: Prithvi</button>
+          <button onclick="selectScript(4)" id="sBtn4" class="s-btn px-3 py-1.5 rounded-lg text-xs font-medium text-brand-muted hover:bg-brand-subtle">Day 4: Jal</button>
+          <button onclick="selectScript(8)" id="sBtn8" class="s-btn px-3 py-1.5 rounded-lg text-xs font-medium text-brand-muted hover:bg-brand-subtle">Day 8: Ramayana</button>
+        </div>
+      </div>
+
+      <!-- Script Visual Card -->
+      <div class="rounded-2xl border border-brand-border bg-brand-cream overflow-hidden shadow-subtle">
+        
+        <div class="bg-brand-surface px-6 py-4 border-b border-brand-border flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-brand-ochre"></span>
+            <span id="scriptTitleHeader" class="font-bold text-brand-ink font-mono uppercase tracking-wide">
+              DAY 1 TEACHING FLOW • FOUNDATION STAGE
+            </span>
+          </div>
+          <span class="text-brand-faint">Standardized 60-Minute Script</span>
+        </div>
+
+        <div class="p-6 sm:p-10 space-y-6" id="scriptBody">
+          <!-- Dynamic Script Injected by JS -->
+        </div>
+
+        <div class="p-4 bg-brand-surface border-t border-brand-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <span class="text-brand-muted">Over 365 daily scripted lesson plans included in the Gurukul Curriculum Kit.</span>
+          <button onclick="openDemoModal()" class="font-bold text-brand-ochre hover:text-brand-ochreHover flex items-center gap-1">
+            Experience in Free Demo &rarr;
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PARENT APP & TRACKING DASHBOARD PREVIEW -->
+  <section id="app" class="py-24 bg-brand-cream border-b border-brand-border overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left: Text Specs -->
+        <div class="lg:col-span-6 space-y-6">
+          <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Digital Accompaniment</span>
+          <h2 class="text-3xl sm:text-4xl font-light text-brand-ink tracking-tight">
+            Clear visibility into your child's daily transformation
+          </h2>
+          <p class="text-xs sm:text-sm text-brand-muted leading-relaxed">
+            The VedIQ parent app eliminates guesswork. Track real-time focus stability, daily habit completions, Vedic math test accuracy, and personalized mentor feedback.
+          </p>
+
+          <div class="space-y-4 pt-2">
+            <div class="p-4 rounded-xl bg-brand-surface border border-brand-border flex items-start gap-4">
+              <span class="text-brand-ochre font-display text-sm font-bold">01</span>
+              <div>
+                <h4 class="text-xs font-bold text-brand-ink uppercase tracking-wide">Weekly Focus Analytics</h4>
+                <p class="text-xs text-brand-muted mt-0.5">Tratak stillness duration logged and tracked alongside memory pattern scores.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-brand-surface border border-brand-border flex items-start gap-4">
+              <span class="text-brand-ochre font-display text-sm font-bold">02</span>
+              <div>
+                <h4 class="text-xs font-bold text-brand-ink uppercase tracking-wide">Disciplined Habit Streaks</h4>
+                <p class="text-xs text-brand-muted mt-0.5">Gamified daily rituals: Early rising, respectful greetings, and screen-free reading.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-brand-surface border border-brand-border flex items-start gap-4">
+              <span class="text-brand-ochre font-display text-sm font-bold">03</span>
+              <div>
+                <h4 class="text-xs font-bold text-brand-ink uppercase tracking-wide">Mentor Observations</h4>
+                <p class="text-xs text-brand-muted mt-0.5">Direct audio and text notes from your child's certified Gurukul teacher each week.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Sleek Mobile Preview -->
+        <div class="lg:col-span-6 flex justify-center">
+          <div class="w-full max-w-xs rounded-3xl p-3 bg-brand-ink border border-brand-borderDark shadow-darkCard">
+            <div class="rounded-2xl bg-brand-slate text-white p-5 space-y-5 border border-brand-borderDark font-sans">
+              
+              <!-- App Top -->
+              <div class="flex items-center justify-between text-xs">
+                <div>
+                  <span class="text-[10px] text-brand-faint uppercase">Student</span>
+                  <p class="font-bold text-white">Aarav Sharma</p>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-ochre/20 text-brand-ochre border border-brand-ochre/30">
+                  🔥 28 Days
+                </span>
+              </div>
+
+              <!-- Daily Ring -->
+              <div class="p-4 rounded-xl bg-brand-ink border border-brand-borderDark text-center space-y-2">
+                <span class="text-[10px] font-semibold text-brand-gold uppercase tracking-wider">Today's Session Complete</span>
+                <div class="text-2xl font-display font-bold text-white">100%</div>
+                <p class="text-[10px] text-brand-faint">Focus Score: <span class="text-emerald-400 font-bold">94/100</span> (+18% this month)</p>
+              </div>
+
+              <!-- 4 Habits -->
+              <div class="space-y-1.5 text-[11px]">
+                <div class="flex items-center justify-between p-2 rounded-lg bg-brand-slate border border-brand-borderDark">
+                  <span class="text-brand-faint">10m Surya Pranayama</span>
+                  <span class="text-emerald-400 font-bold">✓</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded-lg bg-brand-slate border border-brand-borderDark">
+                  <span class="text-brand-faint">5m Tratak Focus Gaze</span>
+                  <span class="text-emerald-400 font-bold">✓</span>
+                </div>
+                <div class="flex items-center justify-between p-2 rounded-lg bg-brand-slate border border-brand-borderDark">
+                  <span class="text-brand-faint">5 Mental Math Sutras</span>
+                  <span class="text-emerald-400 font-bold">✓</span>
+                </div>
+              </div>
+
+              <!-- Mentor Note -->
+              <div class="p-3 rounded-lg bg-brand-ink/80 border border-brand-borderDark text-[11px] text-brand-faint italic">
+                <span class="text-brand-gold font-bold not-italic">Mentor Note:</span> "Aarav mastered 2-digit multiplication in 4 seconds today with complete composure."
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FRANCHISE & TEACHER CERTIFICATION (Minimal Financial Modeler) -->
+  <section id="franchise" class="py-24 bg-brand-surface border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="max-w-3xl mb-16">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Scalable Movement</span>
+        <h2 class="mt-2 text-3xl sm:text-4xl font-light text-brand-ink tracking-tight">
+          Teacher Certification & Franchise Centers
+        </h2>
+        <p class="text-xs sm:text-sm text-brand-muted mt-2">
+          A sustainable, high-margin hybrid model pairing centralized curriculum standards with local franchise delivery.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        
+        <!-- Left: 3 Certification Levels -->
+        <div class="lg:col-span-6 space-y-4">
+          <h3 class="text-base font-bold text-brand-ink uppercase tracking-wider text-xs">
+            3-Tier Certified Teacher Progression
+          </h3>
+
+          <div class="p-5 rounded-xl bg-brand-cream border border-brand-border space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-brand-ink">Level 1: Foundation Teacher</span>
+              <span class="text-[10px] text-brand-muted font-mono">30-Day Onboarding</span>
+            </div>
+            <p class="text-xs text-brand-muted">Vedic developmental philosophy, child psychology, scripted lesson mechanics.</p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-brand-cream border-2 border-brand-ochre space-y-1 relative">
+            <span class="absolute top-3 right-3 text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-brand-ochre text-white">Most Enrolled</span>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-brand-ink">Level 2: Advanced Instructor</span>
+              <span class="text-[10px] text-brand-muted font-mono">Live Evaluation</span>
+            </div>
+            <p class="text-xs text-brand-muted">Tratak meditation guidance, Vedic Maths Sutras 1–3, parent communication mastery.</p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-brand-cream border border-brand-border space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-brand-ink">Level 3: Master Trainer</span>
+              <span class="text-[10px] text-brand-muted font-mono">Center Director</span>
+            </div>
+            <p class="text-xs text-brand-muted">Trainer of Trainers (ToT), center operational audits, advanced Upanishadic philosophy.</p>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Center Profitability Modeler -->
+        <div class="lg:col-span-6 p-6 sm:p-8 rounded-2xl bg-brand-ink text-white border border-brand-borderDark space-y-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-brand-borderDark">
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-gold">Center Profitability Model</span>
+              <span class="text-[10px] text-brand-faint">Interactive Projection</span>
+            </div>
+
+            <div class="space-y-4 mt-4">
+              <!-- Slider 1 -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-brand-faint">Enrolled Students:</span>
+                  <span class="font-bold text-white" id="valStudents">100 Students</span>
+                </div>
+                <input type="range" id="inputStudents" min="20" max="300" step="10" value="100" oninput="updateROI()" class="w-full accent-brand-ochre cursor-pointer">
+              </div>
+
+              <!-- Slider 2 -->
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-brand-faint">Monthly Fee:</span>
+                  <span class="font-bold text-white" id="valFee">₹1,000 / mo</span>
+                </div>
+                <input type="range" id="inputFee" min="800" max="2500" step="100" value="1000" oninput="updateROI()" class="w-full accent-brand-ochre cursor-pointer">
+              </div>
+
+              <!-- Output Box -->
+              <div class="p-4 rounded-xl bg-brand-slate border border-brand-borderDark space-y-2 text-xs">
+                <div class="flex justify-between text-brand-faint">
+                  <span>Monthly Gross Revenue:</span>
+                  <span class="font-bold text-white" id="outGross">₹1,00,000</span>
+                </div>
+                <div class="flex justify-between text-brand-faint">
+                  <span>Operating Costs (Rent + Staff):</span>
+                  <span id="outCosts">₹60,000</span>
+                </div>
+                <div class="pt-2 border-t border-brand-borderDark flex justify-between text-sm font-bold">
+                  <span class="text-brand-gold">Estimated Net Profit / Month:</span>
+                  <span class="text-emerald-400 font-display" id="outProfit">₹40,000 / mo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="openDemoModal('Franchise Deck Inquiry')" class="w-full py-3 rounded-lg text-xs font-bold tracking-wider uppercase text-brand-ink bg-brand-surface hover:bg-brand-ochre hover:text-white transition">
+            Request Franchise Unit Economics Deck
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TUITION PLANS (Minimalist Harmonious Cards) -->
+  <section id="plans" class="py-24 bg-brand-cream border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Investment in Character</span>
+        <h2 class="mt-2 text-3xl font-light text-brand-ink tracking-tight">
+          Simple, Transparent Plans
+        </h2>
+        <p class="text-xs text-brand-muted mt-2">
+          Less than ₹50 a day to establish unbroken focus and emotional resilience.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
+        
+        <!-- Basic -->
+        <div class="p-8 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between hover:shadow-subtle transition">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Foundation Tier</span>
+            <h3 class="text-lg font-bold text-brand-ink mt-2">Basic Plan</h3>
+            <div class="mt-4 flex items-baseline gap-1">
+              <span class="text-3xl font-display font-bold text-brand-ink">₹999</span>
+              <span class="text-xs text-brand-muted">/ month</span>
+            </div>
+            <p class="text-[11px] text-brand-faint mt-0.5">Approx. ₹33 per day</p>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-brand-muted">
+              <li class="flex items-center gap-2 text-brand-ink">✓ Daily 1-Hour Live Gurukul Session</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Guided Surya Namaskar & Breath</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Tratak Concentration Drills</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Student Daily App Access</li>
+              <li class="flex items-center gap-2 text-brand-faint">✕ Physical Premium Workbook Kit</li>
+            </ul>
+          </div>
+          <button onclick="openDemoModal('Basic Plan')" class="mt-8 w-full py-2.5 rounded-lg text-xs font-bold border border-brand-border hover:bg-brand-subtle transition">
+            Book Free Demo
+          </button>
+        </div>
+
+        <!-- Standard (Highlighted) -->
+        <div class="p-8 rounded-2xl bg-brand-ink text-white border-2 border-brand-ochre flex flex-col justify-between shadow-darkCard relative">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-brand-ochre text-white text-[9px] font-bold uppercase tracking-widest">
+            Recommended • 82% Enrolled
+          </span>
+
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-gold">Complete System</span>
+            <h3 class="text-lg font-bold text-white mt-2">Standard Plan</h3>
+            <div class="mt-4 flex items-baseline gap-1">
+              <span class="text-3xl font-display font-bold text-white">₹1,499</span>
+              <span class="text-xs text-brand-faint">/ month</span>
+            </div>
+            <p class="text-[11px] text-brand-gold mt-0.5">Approx. ₹50 per day</p>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-brand-faint">
+              <li class="flex items-center gap-2 text-white">✓ Everything in Basic Tier</li>
+              <li class="flex items-center gap-2 text-white">✓ Full Vedic Maths Sutras (1–3)</li>
+              <li class="flex items-center gap-2 text-white">✓ Micro-Batch: Max 8 Students</li>
+              <li class="flex items-center gap-2 text-white">✓ Physical Activity Workbook Sent Home</li>
+              <li class="flex items-center gap-2 text-white">✓ Weekly Parent Progress Reports</li>
+            </ul>
+          </div>
+
+          <button onclick="openDemoModal('Standard Plan')" class="mt-8 w-full py-2.5 rounded-lg text-xs font-bold bg-brand-ochre text-white hover:bg-brand-ochreHover shadow-ochre transition">
+            Claim 3-Day Free Demo
+          </button>
+        </div>
+
+        <!-- Premium -->
+        <div class="p-8 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between hover:shadow-subtle transition">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Leadership Tier</span>
+            <h3 class="text-lg font-bold text-brand-ink mt-2">Premium Immersion</h3>
+            <div class="mt-4 flex items-baseline gap-1">
+              <span class="text-3xl font-display font-bold text-brand-ink">₹2,499</span>
+              <span class="text-xs text-brand-muted">/ month</span>
+            </div>
+            <p class="text-[11px] text-brand-faint mt-0.5">Approx. ₹83 per day</p>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-brand-muted">
+              <li class="flex items-center gap-2 text-brand-ink">✓ Everything in Standard Tier</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Weekend Leadership Bootcamps</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ 1-on-1 Master Trainer Mentorship</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Shloka Chanting & Public Speech Drills</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Annual Certification & Medals</li>
+            </ul>
+          </div>
+          <button onclick="openDemoModal('Premium Plan')" class="mt-8 w-full py-2.5 rounded-lg text-xs font-bold border border-brand-border hover:bg-brand-subtle transition">
+            Book Free Demo
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MINIMALIST FAQ ACCORDION -->
+  <section class="py-24 bg-brand-surface border-b border-brand-border">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center mb-16">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Parent Inquiries</span>
+        <h2 class="mt-2 text-3xl font-light text-brand-ink tracking-tight">
+          Common Questions
+        </h2>
+      </div>
+
+      <div class="space-y-3" id="accordionContainer">
+        
+        <div class="p-5 rounded-xl border border-brand-border bg-brand-cream cursor-pointer" onclick="toggleFaq(1)">
+          <div class="flex justify-between items-center text-xs font-bold text-brand-ink">
+            <span>My child already has heavy school homework. Will 1 hour add stress?</span>
+            <span id="faqPlus1" class="text-brand-muted font-light text-base">+</span>
+          </div>
+          <p id="faqText1" class="hidden text-xs text-brand-muted mt-3 pt-3 border-t border-brand-border leading-relaxed">
+            On the contrary, it saves time! Distracted homework takes 2 to 3 hours because the mind wanders. Daily 10-minute Tratak and Pranayama doubles working concentration—allowing homework to finish in 45 minutes with greater accuracy.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl border border-brand-border bg-brand-cream cursor-pointer" onclick="toggleFaq(2)">
+          <div class="flex justify-between items-center text-xs font-bold text-brand-ink">
+            <span>Is this religious or scientific?</span>
+            <span id="faqPlus2" class="text-brand-muted font-light text-base">+</span>
+          </div>
+          <p id="faqText2" class="hidden text-xs text-brand-muted mt-3 pt-3 border-t border-brand-border leading-relaxed">
+            VedIQ Academy is a strictly scientific + Vedic cognitive framework. We explain meditation through prefrontal cortex brainwave stabilization, Surya Namaskar through posture and oxygenation, and Vedic Maths as pattern arithmetic.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-xl border border-brand-border bg-brand-cream cursor-pointer" onclick="toggleFaq(3)">
+          <div class="flex justify-between items-center text-xs font-bold text-brand-ink">
+            <span>What if my child cannot sit still for even 10 minutes right now?</span>
+            <span id="faqPlus3" class="text-brand-muted font-light text-base">+</span>
+          </div>
+          <p id="faqText3" class="hidden text-xs text-brand-muted mt-3 pt-3 border-t border-brand-border leading-relaxed">
+            We never force stillness. We begin Day 1 with dynamic, playful exercises like balloon breathing and drawing the Sun, progressing gradually to sustained focus over 30 days without tension.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CLOSING FOUNDER STATEMENT -->
+  <section class="py-24 bg-brand-ink text-white text-center relative overflow-hidden">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <span class="text-[10px] font-bold uppercase tracking-widest text-brand-gold">The Decisive Choice</span>
+      <h2 class="mt-4 text-3xl sm:text-5xl font-light font-serif italic text-white leading-tight">
+        "Do you want your child ahead of the crowd, or average?"
+      </h2>
+      <p class="mt-6 text-xs sm:text-sm text-brand-faint max-w-xl mx-auto leading-relaxed">
+        In an automated world, textbook knowledge is common. What will distinguish your child is unwavering self-discipline, deep focus, and ethical fortitude.
+      </p>
+
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <button onclick="openDemoModal()" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white bg-brand-ochre hover:bg-brand-ochreHover shadow-ochre transition">
+          Book Free 3-Day Demo Class
+        </button>
+        <a href="https://wa.me/?text=Namaste!%20I%20want%20to%20enroll%20my%20child%20in%20the%20VedIQ%20Academy%20demo." target="_blank" class="w-full sm:w-auto px-6 py-3.5 rounded-xl font-semibold text-xs uppercase tracking-wider text-brand-faint hover:text-white border border-brand-borderDark hover:bg-brand-slate transition">
+          Inquire on WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MINIMALIST FOOTER -->
+  <footer class="bg-brand-slate text-brand-faint text-[11px] py-12 border-t border-brand-borderDark">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2 text-white">
+        <span class="font-display font-bold tracking-wider">VEDIQ ACADEMY</span>
+        <span class="text-brand-borderDark">•</span>
+        <span class="text-brand-faint">Bharatiya Integral Gurukul System (BIGS)</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="#system" class="hover:text-white transition">60-Min Ritual</a>
+        <a href="#curriculum" class="hover:text-white transition">Roadmap</a>
+        <a href="#franchise" class="hover:text-white transition">Franchise</a>
+        <a href="#plans" class="hover:text-white transition">Tuition</a>
+      </div>
+      <div>
+        &copy; 2026 VedIQ Academy. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- DEMO BOOKING MODAL -->
+  <div id="demoModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-brand-surface rounded-2xl max-w-md w-full p-6 sm:p-8 relative border border-brand-border shadow-2xl">
+      <button onclick="closeDemoModal()" class="absolute top-5 right-5 text-brand-muted hover:text-brand-ink text-sm p-1">✕</button>
+
+      <div class="text-center mb-6">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-brand-ochre px-2 py-0.5 rounded bg-brand-ochreLight">Free Experience</span>
+        <h3 class="text-xl font-bold text-brand-ink mt-2" id="modalHeading">Book Free 3-Day Demo</h3>
+        <p class="text-xs text-brand-muted mt-1">Experience 1 hour of life-transforming focus & mental mathematics.</p>
+      </div>
+
+      <form onsubmit="submitDemoForm(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-bold text-brand-ink mb-1">Parent's Name *</label>
+          <input type="text" required placeholder="e.g. Rajesh Kumar" class="w-full px-3.5 py-2 rounded-lg border border-brand-border focus:outline-none focus:border-brand-ochre bg-brand-cream" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-brand-ink mb-1">WhatsApp Mobile *</label>
+            <input type="tel" required placeholder="+91 98765 43210" class="w-full px-3.5 py-2 rounded-lg border border-brand-border focus:outline-none focus:border-brand-ochre bg-brand-cream" />
+          </div>
+          <div>
+            <label class="block font-bold text-brand-ink mb-1">Child's Age *</label>
+            <select required class="w-full px-3.5 py-2 rounded-lg border border-brand-border focus:outline-none focus:border-brand-ochre bg-brand-cream">
+              <option value="">Select Age</option>
+              <option>5–7 Years (Foundation)</option>
+              <option>8–11 Years (Development)</option>
+              <option>12–15 Years (Mastery)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-brand-ink mb-1">City *</label>
+          <input type="text" required placeholder="e.g. Bengaluru / Pune / Delhi" class="w-full px-3.5 py-2 rounded-lg border border-brand-border focus:outline-none focus:border-brand-ochre bg-brand-cream" />
+        </div>
+        <div>
+          <label class="block font-bold text-brand-ink mb-1">Primary Challenge</label>
+          <select class="w-full px-3.5 py-2 rounded-lg border border-brand-border focus:outline-none focus:border-brand-ochre bg-brand-cream">
+            <option>Mobile / Screen Addiction</option>
+            <option>Low Attention Span & Concentration</option>
+            <option>Fear of Mathematics</option>
+            <option>Restlessness / Disobedience</option>
+            <option>Franchise / Teacher Inquiry</option>
+          </select>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-brand-ink hover:bg-brand-ochre transition mt-2">
+          Confirm Free Demo Slot
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    // 1-Hour Protocol Data
+    const segmentData = [
+      {
+        num: "01",
+        time: "10 Minutes",
+        title: "Yoga & Pranayama (Prana & Cellular Energy)",
+        neuro: "Stimulates the vagus nerve and lowers cortisol, resetting physical restlessness.",
+        script: "“Stand tall like a mountain. Air is not mere oxygen—it is Prana, the cosmic vital force. As we breathe in unison, our mind becomes still.”",
+        activity: "5 guided Surya Namaskars + 3-minute diaphragmatic balloon breath game."
+      },
+      {
+        num: "02",
+        time: "10 Minutes",
+        title: "Tratak & Dharana (Ocular Stillness & Focus)",
+        neuro: "Stabilizes ocular-motor micro-saccades, strengthening sustained prefrontal focus.",
+        script: "“Fix your gentle gaze on the golden center flame. As your eyes become motionless, the wandering waves of thought naturally subside.”",
+        activity: "1 to 3 minutes candle / geometric symbol gazing followed by gentle palm cupping."
+      },
+      {
+        num: "03",
+        time: "15 Minutes",
+        title: "Vedic & Modern Science Integration (Panchatatva)",
+        neuro: "Bridges observational physics, biology, and ancient cosmic principles.",
+        script: "“Everything in the universe is composed of five elements: Earth (solids), Water (liquids), Fire (plasma), Air (gas), and Space (quantum field).”",
+        activity: "Tangible tactile experiments (soil texture, breath moisture, thermal awareness)."
+      },
+      {
+        num: "04",
+        time: "15 Minutes",
+        title: "Vedic Mathematical Sutras (Spatial Agility)",
+        neuro: "Activates both left (linear) and right (spatial) cerebral hemispheres.",
+        script: "“Using the ‘Nikhilam’ sutra, calculate 98 × 97 mentally in under three seconds. Look for the symmetry, not mechanical vertical lines.”",
+        activity: "5 rapid mental arithmetic drills + clapping pattern recognition games."
+      },
+      {
+        num: "05",
+        time: "10 Minutes",
+        title: "Sanskar, Gratitude & Reflection (Character Anchor)",
+        neuro: "Engrains ethical behavioral neural pathways and familial bonding.",
+        script: "“Close your eyes and repeat: ‘I am focused, disciplined, and calm.’ Today, thank your parents and show genuine reverence.”",
+        activity: "Student daily reflection log entry + 2 minutes of silent gratitude."
+      }
+    ];
+
+    function activateSegment(idx) {
+      document.querySelectorAll('.segment-btn').forEach((btn, i) => {
+        if (i === idx) {
+          btn.className = "segment-btn py-3 px-2 rounded-xl text-center transition bg-brand-ink text-white";
+        } else {
+          btn.className = "segment-btn py-3 px-2 rounded-xl text-center transition text-brand-muted hover:text-brand-ink hover:bg-brand-subtle";
+        }
+      });
+
+      const d = segmentData[idx];
+      document.getElementById('segmentDetailContainer').innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <div class="md:col-span-7 space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono text-brand-ochre font-bold">${d.num} / 05</span>
+              <span class="text-brand-border">•</span>
+              <span class="text-xs font-semibold text-brand-muted uppercase">${d.time}</span>
+            </div>
+            <h3 class="text-2xl font-bold text-brand-ink tracking-tight">${d.title}</h3>
+            <div class="p-4 rounded-xl bg-brand-cream border border-brand-border text-xs text-brand-ink italic">
+              ${d.script}
+            </div>
+            <p class="text-xs text-brand-muted"><strong class="text-brand-ink">Class Activity:</strong> ${d.activity}</p>
+          </div>
+          <div class="md:col-span-5 p-6 rounded-xl bg-brand-cream border border-brand-border space-y-2 text-xs">
+            <span class="font-bold text-brand-ink uppercase text-[10px] tracking-wider">Cognitive Mechanism</span>
+            <p class="text-brand-muted leading-relaxed">${d.neuro}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // 10-Year Progression Switcher
+    const stages = {
+      foundation: {
+        badge: "YEARS 1–2 • AGES 5–7",
+        title: "Foundation Loop: Curiosity, Habits & संस्कार",
+        desc: "Establishing foundational neural pathways, joyful physical discipline, and reverence for nature.",
+        themes: [
+          { label: "Q1: Nature & Elements", text: "Earth, Water, Fire, Air & Space observation." },
+          { label: "Q2: Heroic Narratives", text: "Ramayana & Krishna stories highlighting obedience and wit." },
+          { label: "Q3: Pattern Logic", text: "Forward/backward counting games and visual symmetry." },
+          { label: "Q4: Habit Architecture", text: "Morning routine, room tidiness, and respect for elders." }
+        ]
+      },
+      development: {
+        badge: "YEARS 3–5 • AGES 8–11",
+        title: "Development Loop: Critical Logic & Self-Regulation",
+        desc: "Sharpening analytical thinking, rapid mental mathematics, and emotional calm under pressure.",
+        themes: [
+          { label: "Q1: Physiology & Ayurveda", text: "Understanding the human body, diet, and biological clocks." },
+          { label: "Q2: Vedic Maths 1–3", text: "Speed arithmetic, mental squaring, and algebraic shortcuts." },
+          { label: "Q3: Bhagavad Gita Core", text: "Action without anxiety (Karma Yoga) for exam composure." },
+          { label: "Q4: Advanced Logic Matrices", text: "Pattern grids, speed recall, and puzzle reasoning." }
+        ]
+      },
+      mastery: {
+        badge: "YEARS 6–10 • AGES 12–15",
+        title: "Mastery Loop: Leadership, Purpose & Philosophy",
+        desc: "Cultivating visionary thinkers equipped with scientific clarity and deep civilizational identity.",
+        themes: [
+          { label: "Q1: Brain Science & Dhyana", text: "Neuroscience of consciousness and sustained mental focus." },
+          { label: "Q2: Astronomy & Mathematics", text: "Vedic celestial mathematics and advanced problem solving." },
+          { label: "Q3: Upanishadic Ethics", text: "Self-knowledge (Atma-Jnana), moral courage, and worldview." },
+          { label: "Q4: Eloquence & Leadership", text: "Public speaking, articulation, and ethical team leadership." }
+        ]
+      }
+    };
+
+    function switchStage(stg) {
+      ['foundation', 'development', 'mastery'].forEach(s => {
+        const btn = document.getElementById(s === 'foundation' ? 'btnStageFoundation' : (s === 'development' ? 'btnStageDev' : 'btnStageMastery'));
+        if (s === stg) {
+          btn.className = "stage-tab px-5 py-2.5 rounded-lg text-xs font-bold bg-brand-ochre text-white transition";
+        } else {
+          btn.className = "stage-tab px-5 py-2.5 rounded-lg text-xs font-semibold text-brand-faint hover:text-white transition";
+        }
+      });
+
+      const data = stages[stg];
+      let gridHtml = '';
+      data.themes.forEach(t => {
+        gridHtml += `
+          <div class="p-5 rounded-xl bg-brand-ink/90 border border-brand-borderDark space-y-1 text-xs">
+            <span class="text-[10px] font-bold text-brand-gold uppercase tracking-wider">${t.label}</span>
+            <p class="text-brand-faint mt-1">${t.text}</p>
+          </div>
+        `;
+      });
+
+      document.getElementById('stageContentBox').innerHTML = `
+        <div class="space-y-2 mb-8">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-brand-gold">${data.badge}</span>
+          <h3 class="text-2xl font-light text-white font-serif italic">${data.title}</h3>
+          <p class="text-xs text-brand-faint max-w-xl">${data.desc}</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          ${gridHtml}
+        </div>
+      `;
+    }
+
+    // Scripts Database
+    const scripts = {
+      1: [
+        { label: "Teacher Greeting", text: "“Namaste children! Sit tall with your spine erect like a temple pillar. Close your eyes softly. Take a deep breath in through your nose… and slowly release. Today we discover the source of all cosmic light—Surya.”" },
+        { label: "Yoga & Prana Flow", text: "“Stand gracefully. Bring your palms together. We practice 5 Surya Namaskars with reverence: stretch upward to receive energy, fold forward to touch Earth with gratitude.”" },
+        { label: "Core Concept", text: "“Children, who warms the seeds so they sprout? Yes, Surya! In our heritage, the Sun is not a dead ball of gas—it is the vital source that energizes every cell in your brain.”" },
+        { label: "Closing Reflection", text: "“Place your hand over your heart. Whisper: ‘Thank you Surya for today’s warmth and clarity.’ Namaste!”" }
+      ],
+      2: [
+        { label: "Teacher Greeting", text: "“Namaste bright minds! Today we discover the invisible superpower you carry every second—Prana, the vital breath.”" },
+        { label: "Core Teaching", text: "“Feel your chest and abdomen rise and fall. When your mind is angry, your breath is fast. When your breath is deep and slow, your mind becomes an ocean of stillness.”" },
+        { label: "Activity", text: "“Inhale for 4 gentle counts, hold for 2, exhale like blowing a large shimmering balloon across the room.”" }
+      ],
+      3: [
+        { label: "Teacher Greeting", text: "“Touch the ground beneath your seat. This is Earth—Prithvi. The foundation upon which all life rests.”" },
+        { label: "Core Teaching", text: "“Prithvi gives us nourishment, stability, and patience. Today we study the minerals inside soil that also form our bones and teeth.”" }
+      ],
+      4: [
+        { label: "Teacher Greeting", text: "“Hold your cup of fresh water with two hands. This is Jal—the liquid of consciousness.”" },
+        { label: "Core Teaching", text: "“Over 70% of your brain is water. When you drink with calm mindfulness, your memory and neurological speed accelerate.”" }
+      ],
+      8: [
+        { label: "Narrative Teaching", text: "“Let us journey to Ayodhya. Shri Ram was offered royal comfort, yet when asked by his parents to dwell in the forest, he accepted with a serene smile.”" },
+        { label: "Moral Discussion", text: "“True strength is not arrogance; it is unwavering obedience and love for those who gave us life. Today, thank your mother and father warmly.”" }
+      ]
+    };
+
+    function selectScript(day) {
+      document.querySelectorAll('.s-btn').forEach((b, i) => {
+        b.className = "s-btn px-3 py-1.5 rounded-lg text-xs font-medium text-brand-muted hover:bg-brand-subtle";
+      });
+      const activeBtn = document.getElementById('sBtn' + day);
+      if (activeBtn) activeBtn.className = "s-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-ink text-white";
+
+      const lines = scripts[day] || scripts[1];
+      document.getElementById('scriptTitleHeader').innerText = `DAY ${day} SCRIPT • GURUKUL ARCHIVE`;
+
+      let html = '';
+      lines.forEach(l => {
+        html += `
+          <div class="border-l-2 border-brand-ochre pl-4 space-y-1">
+            <span class="text-[10px] font-bold text-brand-ochre uppercase tracking-wider">${l.label}</span>
+            <p class="text-xs text-brand-ink leading-relaxed">${l.text}</p>
+          </div>
+        `;
+      });
+      document.getElementById('scriptBody').innerHTML = html;
+    }
+
+    // ROI Calculator
+    function updateROI() {
+      const students = parseInt(document.getElementById('inputStudents').value);
+      const fee = parseInt(document.getElementById('inputFee').value);
+
+      document.getElementById('valStudents').innerText = `${students} Students`;
+      document.getElementById('valFee').innerText = `₹${fee.toLocaleString()} / mo`;
+
+      const gross = students * fee;
+      const rent = 20000;
+      const staff = students > 140 ? 50000 : 30000;
+      const misc = 10000;
+      const costs = rent + staff + misc;
+      const net = Math.max(0, gross - costs);
+
+      document.getElementById('outGross').innerText = `₹${gross.toLocaleString()}`;
+      document.getElementById('outCosts').innerText = `₹${costs.toLocaleString()}`;
+      document.getElementById('outProfit').innerText = `₹${net.toLocaleString()} / mo`;
+    }
+
+    // FAQ Accordion
+    function toggleFaq(n) {
+      const el = document.getElementById(`faqText${n}`);
+      const plus = document.getElementById(`faqPlus${n}`);
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        plus.innerText = '−';
+      } else {
+        el.classList.add('hidden');
+        plus.innerText = '+';
+      }
+    }
+
+    // Modal
+    function openDemoModal(title = 'Book Free 3-Day Demo') {
+      document.getElementById('modalHeading').innerText = title;
+      document.getElementById('demoModal').classList.remove('hidden');
+    }
+    function closeDemoModal() {
+      document.getElementById('demoModal').classList.add('hidden');
+    }
+    function submitDemoForm(e) {
+      e.preventDefault();
+      alert("Namaste! Your demo slot is reserved. A certified head mentor will message you on WhatsApp with your session link.");
+      closeDemoModal();
+    }
+
+    // Mobile Nav
+    function toggleMobileNav() {
+      document.getElementById('mobileDrawer').classList.toggle('hidden');
+    }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      activateSegment(0);
+      switchStage('foundation');
+      selectScript(1);
+      updateROI();
+    });
+  </script>
+
+</body>
+</html>
