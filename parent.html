@@ -1307,21 +1307,6 @@
 
       loadDashboardForStudent(match);
     }
-          childGrade: "Ages 8-11 • Pravesh",
-          batch: "Daily 5:00 PM – 6:00 PM IST",
-          phone: "9766772819",
-          email: email,
-          studentId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-          focusScore: "88",
-          streak: "18",
-          habits: [true, true, true, false],
-          photoUrl: photo || null
-        };
-        saveStudentToDatabase(match);
-      }
-
-      loadDashboardForStudent(match);
-    }
 
     // Handle Login Form Submit (GitHub style Image 2 + Firebase Email/Password Auth)
     async function handleLoginSubmit(e) {
@@ -1415,28 +1400,6 @@
 
       document.getElementById('otpRecipientLabel').innerText = displayRecipient || recipient;
       document.getElementById('activeOtpDisplay').innerText = code;
-      const err = document.getElementById('otpErrorText');
-      if (err) err.classList.add('hidden');
-
-      for (let i = 1; i <= 6; i++) {
-        const box = document.getElementById('otp-' + i);
-        if (box) {
-          box.value = '';
-          box.classList.remove('border-red-500');
-        }
-      }
-
-      const modal = document.getElementById('otpVerificationModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-
-      setTimeout(() => {
-        const first = document.getElementById('otp-1');
-        if (first) first.focus();
-      }, 150);
-
-      startOtpTimer();
-    }
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
 
