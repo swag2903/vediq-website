@@ -1685,6 +1685,11 @@
           <span>Complete Setup &amp; Enter Gurukul Dashboard</span>
           <span aria-hidden="true">&rarr;</span>
         </button>
+
+        <button type="button" onclick="closeFirstTimeOnboardingModal()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs uppercase tracking-wider rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5">
+          <span>✕</span>
+          <span>Close &amp; Return to Sign In</span>
+        </button>
       </form>
 
     </div>
@@ -3684,7 +3689,7 @@
       // Check if user is returning from Google OAuth Redirect
       if (typeof firebase !== 'undefined' && firebase.auth) {
         firebase.auth().getRedirectResult().then(result => {
-          if (result && result.user) {
+          if (result && result.user && window.userClickedGoogleAuth) {
             handleSuccessfulGoogleLogin(result.user);
           }
         }).catch(err => {
@@ -3693,6 +3698,9 @@
           }
         });
       }
+
+      // Explicitly ensure onboarding modal is closed on page load
+      closeFirstTimeOnboardingModal();
 
       // Wire up 6-digit OTP input mechanics (auto-advance & backspace)
       setupOtpInputs();
