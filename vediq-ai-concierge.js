@@ -1,6 +1,7 @@
-﻿/**
+/**
  * VedIQ Academy — Universal 24/7 AI Concierge & Smart Support Desk Engine
  * High-Performance, Apple iOS Spring Fluid Animated Floating Widget
+ * Multi-turn Conversation Context + Live Google Gemini 1.5 Flash Integration
  * Deployed universally across index.html, parent.html & teacher.html
  */
 
@@ -11,37 +12,38 @@
   if (window.__VEDIQ_AI_CONCIERGE_LOADED__) return;
   window.__VEDIQ_AI_CONCIERGE_LOADED__ = true;
 
-  // Gurukul Knowledge Prompt for Gemini
-  const GURUKUL_AI_SYSTEM_PROMPT = `You are the official 24/7 VedIQ Gurukul AI Academic Advisor for VedIQ Academy (co-founded by Dr. Ujwal Vyas, Mr. Atish Gulhane, Mr. Swagatam Shukla).
-VedIQ Academy is India's premier Bharatiya Integral Gurukul System for children aged 5–15.
-Key Facts:
-- 60-Minute Daily Routine: 10m Pranayama (vagus nerve calming), 10m Tratak steady-gaze flame fixation (reverses screen & dopamine addiction, expands deep focus from 10 to 45+ min), 15m Panchatatva Vedic physics & astronomy, 15m Vedic Mental Math (16 sutras for 3-sec mental calculations), 10m Bhagavad Gita sanskar, sleep & gratitude journal.
-- Micro-Batch Mentorship: Strict 1:8 student-to-mentor ratio.
-- Age Cohorts: Ages 5–7 (Foundation), Ages 8–11 (Pravesh), Ages 12–15 (Daksha).
-- Tuition: Basic ₹999/mo, Standard ₹1,499/mo (includes workbook), Premium ₹2,499/mo. 14-day 100% money-back guarantee.
-- Free 3-Day Demo: Live classes with Master Mentor Dr. Ujwal Vyas at zero cost.
-- Parent Portal: Available at parent.html with Tratak gaze timers, math velocity analytics, and voice mentor feedback.
-- Teacher Console: Available at teacher.html.
-- Official Email: myvediqacademy@gmail.com.
-Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, inspiring paragraphs. Reply in English or Hinglish matching the user's prompt.`;
+  // Multi-Turn Conversation History (Maintains context across follow-up questions)
+  const conversationHistory = [];
 
-  // Comprehensive Conversational Intelligence Matrix (Zero-Failure Fallback)
+  // Comprehensive Conversational Intelligence Matrix (Zero-Failure Verified Knowledge)
   const CONVERSATIONAL_BRAIN = [
+    {
+      keywords: [
+        'sign in', 'signin', 'sign-in', 'login', 'log in', 'log-in',
+        'no sign-in', 'no sign in', 'dont have sign in', "don't have a sign-in",
+        'cannot sign in', 'cant sign in', 'unable to sign in',
+        'where to login', 'how to login', 'where is login', 'portal link',
+        'parent login', 'open portal', 'dashboard access', 'login option', 'account open',
+        'login nahi', 'khul nahi raha', 'sign in option'
+      ],
+      answer: `🛡️ <strong>Parent Portal Sign-In &amp; Access Guide:</strong><br><br>
+        You can access the official Parent Portal directly at <a href="parent.html" class="text-brand-ochre font-bold underline">vediqacademy.com/parent.html</a>.<br><br>
+        <strong>Available Sign-In Options:</strong><br>
+        • <strong>⚡ 1-Click Google Sign-In (Recommended):</strong> Click <em>"Continue with Google"</em> for instant login without needing any password or waiting for an OTP.<br>
+        • <strong>🔑 Password Login:</strong> Enter your registered email or phone and password.<br>
+        • <strong>✉️ Email OTP:</strong> Request an instant 6-digit verification code sent directly to your inbox.<br>
+        • <strong>📝 New to VedIQ?</strong> Click the <strong>"Sign Up / Register"</strong> tab on <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a> to create your parent account in 30 seconds.<br><br>
+        <a href="parent.html" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-ochre text-white font-bold text-xs shadow-xs hover:bg-brand-ochreHover transition">
+          🚀 Open Parent Portal Sign-In Screen &rarr;
+        </a>`
+    },
     {
       keywords: ['otp nahi', 'otp not', 'no otp', 'receive otp', 'get otp', 'code not', 'waiting for otp', 'resend code', 'otp error', 'sms not'],
       answer: `🔐 <strong>Troubleshooting OTP Delivery:</strong><br><br>
         1. <strong>Email OTP:</strong> Please check your <em>Spam / Junk</em> or <em>Promotions</em> folder for an email from <strong>VedIQ Academy</strong>. The 6-digit code expires in 2 minutes.<br>
         2. <strong>Mobile OTP:</strong> Ensure you entered your 10-digit Indian mobile number without +91 or 0.<br>
         3. <strong>Instant 1-Click Alternative (No Waiting):</strong> On <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>, click <strong>"Continue with Google"</strong> to log into your child's dashboard immediately without waiting for an OTP!<br><br>
-        Need immediate help? Click <a href="https://wa.me/918390332500?text=Namaste%20VedIQ!%20I%20am%20facing%20an%20OTP%20issue." target="_blank" class="text-emerald-700 font-bold underline">WhatsApp Tech Support</a>.`
-    },
-    {
-      keywords: ['cannot login', 'cant login', 'unable to login', 'login issue', 'login error', 'sign in problem', 'login nahi', 'khul nahi raha'],
-      answer: `🛡️ <strong>Parent Portal Login Assistance:</strong><br><br>
-        • <strong>Fastest Login:</strong> Use <strong>Google 1-Click Sign In</strong> on <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>.<br>
-        • <strong>Password Login:</strong> Enter your registered email or phone and password.<br>
-        • <strong>Forgot Password?</strong> Click the "Forgot password?" link on the sign-in screen to receive an instant reset link.<br>
-        • <strong>New Parent?</strong> Click the <strong>"Sign Up / Register"</strong> tab on the login box to create your parent profile and enroll your child.`
+        Need immediate mentor assistance? Click <a href="https://wa.me/918390332500?text=Namaste%20VedIQ!%20I%20am%20facing%20an%20OTP%20issue." target="_blank" class="text-emerald-700 font-bold underline">WhatsApp Support Desk (+91 8390332500)</a>.`
     },
     {
       keywords: ['forgot password', 'reset password', 'change password', 'wrong password', 'incorrect password', 'password bhul gaya'],
@@ -52,40 +54,40 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
         4. Alternatively, you can always sign in instantly using <strong>"Continue with Google"</strong> with zero password required.`
     },
     {
-      keywords: ['register', 'sign up', 'create account', 'new parent', 'first time', 'enroll child', 'kaise register'],
-      answer: `📝 <strong>How to Create a Parent Account:</strong><br><br>
-        1. Open <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>.<br>
-        2. Click the <strong>"Sign Up / Register"</strong> tab at the top of the white box.<br>
-        3. Enter Parent Name, Child's Name, Grade cohort, Mobile number, and a Password.<br>
-        4. Click "Create Account" — your child will be assigned their unique Student ID and your dashboard will open immediately!`
+      keywords: ['register', 'registration', 'sign up', 'signup', 'create account', 'enroll', 'enrol', 'enrollment', 'admit', 'admission', 'admission process', 'how to register', 'register child', 'join gurukul', 'kaise register'],
+      answer: `📝 <strong>How to Register &amp; Enroll Your Child:</strong><br><br>
+        1. <strong>Book a Free 3-Day Live Demo:</strong> Experience 3 live interactive sessions with Head Master Mentor Dr. Ujwal Vyas at zero payment by clicking <a href="/#plans" class="text-brand-ochre font-bold underline">Book Free Demo</a>.<br><br>
+        2. <strong>Direct Parent Portal Registration:</strong> Go to <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a> and click the <strong>"Sign Up / Register"</strong> tab at the top. Enter Parent Name, Child's Name, Age Cohort, Mobile number, and a Password.<br><br>
+        3. <strong>Instant Student ID Activation:</strong> Your child is assigned their unique Student ID and your dashboard opens immediately!<br><br>
+        For direct guidance, chat with our admissions desk on <a href="https://wa.me/918390332500?text=Namaste%20VedIQ!%20I%20want%20to%20register%20my%20child." target="_blank" class="text-emerald-700 font-bold underline">WhatsApp (+91 8390332500)</a>.`
     },
     {
-      keywords: ['hello', 'hi', 'hey', 'namaste', 'pranam', 'pranaam', 'good morning', 'good evening', 'good afternoon', 'hola', 'radhe', 'ram ram', 'namaskar', 'halo', 'helo'],
-      answer: "🙏 <strong>Namaste! Welcome to VedIQ Academy.</strong><br><br>I am your 24/7 Gurukul AI Concierge. How can I help you and your child today?<br><br>Feel free to ask about our <strong>Free 3-Day Live Demo</strong>, the <strong>60-Minute Daily Routine</strong>, how <strong>Tratak</strong> eliminates mobile screen addiction, <strong>Vedic Maths</strong>, <strong>Tuition Fees</strong>, or the <strong>Parent Portal</strong>."
+      keywords: ['hello', 'hi', 'hey', 'namaste', 'pranam', 'pranaam', 'good morning', 'good evening', 'good afternoon', 'hola', 'radhe', 'ram ram', 'namaskar', 'halo', 'helo', 'greetings'],
+      answer: "🙏 <strong>Namaste! Warm welcome to VedIQ Academy.</strong><br><br>I am your 24/7 Gurukul AI Concierge. How may I assist you and your child today?<br><br>Feel free to ask about our <strong>Free 3-Day Live Demo</strong>, the <strong>60-Minute Daily Routine</strong>, how <strong>Tratak</strong> eliminates mobile screen addiction, <strong>Vedic Maths</strong>, <strong>Tuition Fees</strong>, or the <strong>Parent Portal</strong>."
     },
     {
-      keywords: ['who are you', 'koun ho', 'kya ho', 'what is this', 'about', 'vediq kya hai', 'vediq academy kya hai', 'what is vediq'],
-      answer: "🪔 <strong>VedIQ Academy (Bharatiya Integral Gurukul System):</strong><br>VedIQ Academy is India's premier scientific + Vedic brain development system for children aged 5 to 15, founded by Dr. Ujwal Vyas, Mr. Atish Gulhane, and Mr. Swagatam Shukla.<br><br>In just <strong>1 hour daily</strong>, we replace screen addiction, distraction, and math fear with unbroken focus, memory mastery, and cultural sanskar through live micro-batches (1:8 mentor ratio)."
+      keywords: ['who are you', 'koun ho', 'kya ho', 'what is this', 'about', 'vediq kya hai', 'vediq academy kya hai', 'what is vediq', 'founders', 'founder', 'who founded'],
+      answer: "🪔 <strong>VedIQ Academy (Bharatiya Integral Gurukul System):</strong><br>VedIQ Academy is India's premier scientific + Vedic brain development system for children aged 5 to 15, founded by <strong>Dr. Ujwal Vyas</strong> (Head Master Mentor), <strong>Mr. Atish Gulhane</strong> (Admissions & Ops), and <strong>Mr. Swagatam Shukla</strong>.<br><br>In just <strong>1 hour daily</strong>, we replace screen addiction, distraction, and math fear with unbroken focus, memory mastery, and cultural sanskar through live micro-batches (strict 1:8 mentor ratio)."
     },
     {
       keywords: ['tratak', 'focus', 'concentration', 'screen', 'phone', 'mobile', 'addiction', 'distract', 'attention', 'dhyan', 'padhai', 'padhta nahi', 'bhatakta'],
-      answer: "🎯 <strong>Tratak Neuro-Science & Screen Detox:</strong><br>Modern short videos and reels flood children's brains with dopamine spikes every 4 seconds, causing micro-saccadic eye jitter that fragments their prefrontal cortex attention span.<br><br>During our daily 10-minute steady-gaze Tratak practice, optical nerves are stabilized, activating alpha brainwaves (8–12 Hz). Within 30 days, parents observe their child's continuous deep study span expanding from 10 minutes to <strong>45+ minutes</strong> with natural calm."
+      answer: "🎯 <strong>Tratak Neuro-Science &amp; Screen Detox:</strong><br>Modern short-form videos flood children's developing brains with dopamine spikes every 4 seconds, causing micro-saccadic eye jitter that fragments their prefrontal cortex attention span.<br><br>During our daily 10-minute steady-gaze Tratak practice, optical nerves are stabilized, activating alpha brainwaves (8–12 Hz). Within 30 days, parents observe their child's continuous deep study span expanding from 10 minutes to <strong>45+ minutes</strong> with natural calm."
     },
     {
       keywords: ['routine', '60 min', '1 hour', 'schedule', 'kya sikhate', 'daily', 'protocol', 'stages'],
-      answer: "⏰ <strong>The Calibrated 60-Minute Daily Gurukul Routine:</strong><br>• <strong>00–10m (Pranayama & Breathwork):</strong> Vagus nerve reset to eliminate physical restlessness.<br>• <strong>10–20m (Tratak Flame Fixation):</strong> Reverses digital screen fatigue & doubles focus.<br>• <strong>20–35m (Vedic Physics & Panchatatva):</strong> Experiential understanding of nature, elements & astronomy.<br>• <strong>35–50m (Vedic Mental Math):</strong> 16 sutras for 3-second lightning calculations.<br>• <strong>50–60m (Gita Sanskar & Gratitude Journal):</strong> Character fortitude & emotional grounding."
+      answer: "⏰ <strong>The Calibrated 60-Minute Daily Gurukul Routine:</strong><br>• <strong>00–10m (Pranayama &amp; Breathwork):</strong> Vagus nerve reset to eliminate physical restlessness.<br>• <strong>10–20m (Tratak Flame Fixation):</strong> Reverses digital screen fatigue &amp; doubles deep focus.<br>• <strong>20–35m (Vedic Physics &amp; Panchatatva):</strong> Experiential understanding of nature, elements &amp; astronomy.<br>• <strong>35–50m (Vedic Mental Math):</strong> 16 sutras for 3-second lightning mental calculations.<br>• <strong>50–60m (Gita Sanskar &amp; Gratitude Journal):</strong> Character fortitude &amp; emotional grounding."
     },
     {
       keywords: ['fee', 'fees', 'cost', 'price', 'plan', 'tuition', 'kitna', 'charge', 'rate', 'payment'],
-      answer: "💳 <strong>Simple, Transparent Tuition Plans:</strong><br>• <strong>Basic Plan:</strong> ₹999 / month (Daily 1-hour live sessions + app)<br>• <strong>Standard Plan (Recommended):</strong> ₹1,499 / month (Includes physical workbook kit sent home + micro-batch of max 8 students)<br>• <strong>Premium Immersion:</strong> ₹2,499 / month (1-on-1 mentorship & leadership bootcamps)<br><br>🛡️ <strong>14-Day 100% Money-Back Guarantee:</strong> Try live classes with zero risk. All UPI, cards, and netbanking accepted."
+      answer: "💳 <strong>Simple, Transparent Tuition Plans (No Hidden Fees):</strong><br>• <strong>Basic Plan:</strong> ₹999 / month (Daily 1-hour live sessions + app portal)<br>• <strong>Standard Plan (Recommended):</strong> ₹1,499 / month (Includes physical workbook kit sent home + micro-batch of max 8 students)<br>• <strong>Premium Immersion:</strong> ₹2,499 / month (1-on-1 mentorship &amp; leadership bootcamps)<br><br>🛡️ <strong>14-Day 100% Money-Back Guarantee:</strong> Try live classes with zero risk. All UPI, cards, and netbanking accepted."
     },
     {
       keywords: ['demo', 'free class', 'trial', 'book', '3 day', 'experience', 'slot'],
-      answer: "🌟 <strong>Free 3-Day Live Gurukul Demo:</strong><br>You can experience 3 full days of live 1-hour Gurukul sessions with Master Mentor Dr. Ujwal Vyas with zero payment! Simply click <button onclick='window.openDemoModal ? window.openDemoModal() : window.location.href=\"/#plans\"' class='text-brand-ochre font-bold underline cursor-pointer'>Book Free 3-Day Demo</button> to reserve your child's micro-batch slot."
+      answer: "🌟 <strong>Free 3-Day Live Gurukul Demo:</strong><br>Experience 3 full days of live 1-hour Gurukul sessions with Master Mentor Dr. Ujwal Vyas with zero payment! Simply click <button onclick='window.openDemoModal ? window.openDemoModal() : window.location.href=\"/#plans\"' class='text-brand-ochre font-bold underline cursor-pointer'>Book Free 3-Day Demo</button> to reserve your child's micro-batch slot."
     },
     {
       keywords: ['parent', 'portal', 'dashboard', 'report', 'student id', 'app', 'attendance', 'tratak timer'],
-      answer: "👨‍👩‍👧 <strong>Parent Progress Portal (24/7 Live):</strong><br>Track your child's Tratak gaze seconds, daily habit streaks, mental math velocity, and weekly mentor remarks from Dr. Ujwal Vyas.<br><br>Visit <a href='parent.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/parent.html</a> to sign in with Google 1-Click, Email OTP, or password."
+      answer: "👨‍👩‍👧 <strong>Parent Progress Portal (24/7 Live):</strong><br>Track your child's Tratak gaze seconds, daily habit streaks, mental math velocity, certified report cards, and recorded course videos.<br><br>Visit <a href='parent.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/parent.html</a> to sign in with Google 1-Click, Email OTP, or password."
     },
     {
       keywords: ['math', 'vedic math', 'calculation', 'speed', 'formula', 'sutra', 'hisab'],
@@ -93,49 +95,86 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     },
     {
       keywords: ['age', 'cohort', '5-7', '8-11', '12-15', 'batch', 'time', 'timing', 'foundation', 'pravesh', 'daksha'],
-      answer: "📅 <strong>Age Cohorts & Live Batch Timings (Mon–Fri, 1:8 Ratio):</strong><br>• <strong>Foundation (Ages 5–7):</strong> 4:00 PM – 5:00 PM IST<br>• <strong>Pravesh (Ages 8–11):</strong> 5:00 PM – 6:00 PM IST<br>• <strong>Daksha (Ages 12–15):</strong> 6:00 PM – 7:00 PM IST<br><br>All classes are live interactive on Zoom with personalized attention."
+      answer: "📅 <strong>Age Cohorts &amp; Live Batch Timings (Mon–Fri, Strict 1:8 Ratio):</strong><br>• <strong>Foundation (Ages 5–7):</strong> 4:00 PM – 5:00 PM IST<br>• <strong>Pravesh (Ages 8–11):</strong> 5:00 PM – 6:00 PM IST<br>• <strong>Daksha (Ages 12–15):</strong> 6:00 PM – 7:00 PM IST<br><br>All classes are live interactive on Zoom with personalized attention."
     },
     {
       keywords: ['teacher', 'mentor console', 'faculty', 'login teacher', 'teacher login', 'teacher portal', 'staff login', 'faculty login'],
-      answer: "🔐 <strong>Teacher & Master Mentor Console:</strong><br>Mentors can securely access student progress dashboards, Tratak calibration, and class evaluations at <a href='teacher.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/teacher.html</a> using verified faculty credentials."
+      answer: "🔐 <strong>Teacher &amp; Master Mentor Console:</strong><br>Mentors can securely access student progress dashboards, Tratak calibration, video CMS, and class evaluations at <a href='teacher.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/teacher.html</a> using verified faculty credentials."
     }
   ];
 
-  // Configurable backend endpoint for Serverless Functions (Vercel / Netlify)
+  // Configurable backend endpoint for Serverless Functions (Vercel)
   const VEDIQ_BACKEND_URL = (window.location.hostname.includes("vediqacademy.com") || window.location.hostname.includes("github.io"))
     ? "https://vediq-website-three.vercel.app"
     : "";
 
+  /**
+   * Live Gemini AI Query with Multi-Turn Context
+   */
   async function queryLiveGeminiAi(prompt) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
-      const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/gemini-chat', {
+      const timeoutId = setTimeout(() => controller.abort(), 12000); // 12-second timeout for reliable AI generation
+      
+      const resp = await fetch(VEDIQ_BACKEND_URL + '/api/gemini-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,
-        body: JSON.stringify({ query: prompt })
+        body: JSON.stringify({
+          query: prompt,
+          history: conversationHistory.slice(-8)
+        })
       });
       clearTimeout(timeoutId);
+
       if (resp.ok) {
-        const data = await resp.json();
-        if (data && data.answer) {
-          return data.answer;
+        const data = await resp.json().catch(() => ({}));
+        if (data && data.ok && data.answer) {
+          // Record successful turn in conversation history for multi-turn follow-ups!
+          conversationHistory.push({ role: 'user', text: prompt });
+          conversationHistory.push({ role: 'model', text: data.rawText || data.answer });
+          return {
+            isLiveAi: true,
+            answer: data.answer
+          };
+        } else if (data && data.error === 'GEMINI_API_KEY_NOT_CONFIGURED') {
+          return {
+            isLiveAi: false,
+            errorType: 'KEY_NOT_CONFIGURED',
+            message: data.message
+          };
+        } else if (data && data.error) {
+          return {
+            isLiveAi: false,
+            errorType: data.error,
+            message: data.message
+          };
         }
       }
     } catch (e) {
-      console.warn("Live AI serverless response notice, using Gurukul brain:", e);
+      console.warn("Live Gemini function notice:", e);
+      return {
+        isLiveAi: false,
+        errorType: 'NETWORK_TIMEOUT',
+        message: e.message
+      };
     }
-    return null;
+    return { isLiveAi: false, errorType: 'UNKNOWN' };
   }
 
-  // Answer matching engine
+  /**
+   * Intelligent Answer Engine:
+   * Prioritizes live Gemini with multi-turn conversation memory.
+   * If Gemini API Key is missing or unavailable, shows clear notice and exact verified knowledge.
+   */
   async function generateAiResponse(query) {
     const clean = query.trim().toLowerCase();
 
-    // 1. Try Gemini first
+// 1. Query Live Gemini First with multi-turn history
     const geminiResult = await queryLiveGeminiAi(query);
-    if (geminiResult) return geminiResult;
+    if (geminiResult && geminiResult.isLiveAi) {
+      return geminiResult.answer;
+    }
 
     // 2. Fallback to comprehensive conversational brain
     let best = null;
@@ -151,12 +190,23 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
       }
     }
 
-    if (best && maxMatches > 0) {
-      return best.answer;
+    const verifiedAnswer = (best && maxMatches > 0)
+      ? best.answer
+      : `🙏 Regarding <strong>"${query}"</strong>:<br><br>At VedIQ Academy, our core mission is developing lifelong focus, speed calculation, and emotional resilience in children (ages 5–15) through our calibrated 60-Minute Daily Gurukul routine.<br><br>• <strong>Free 3-Day Live Demo:</strong> Experience 3 live interactive sessions with Head Master Mentor Dr. Ujwal Vyas by clicking <a href="/#plans" class="text-brand-ochre font-bold underline">Book Free Demo</a>.<br>• <strong>Parent Portal:</strong> Access child scores, Tratak timers, and reports at <a href="parent.html" class="text-brand-ochre font-bold underline">vediqacademy.com/parent.html</a>.<br>• <strong>Mentor Desk:</strong> For immediate personal assistance, message our team on <a href="https://wa.me/918390332500" target="_blank" class="text-emerald-700 font-bold underline">WhatsApp (+91 8390332500)</a>.`;
+
+    // 3. Meaningful Error Transparency (Requirement 9)
+    if (geminiResult && geminiResult.errorType === 'KEY_NOT_CONFIGURED') {
+      return `
+        <div class="space-y-2.5">
+          <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[11px] text-amber-900 leading-snug">
+            <strong>⚙️ Live Gemini AI Notice:</strong> The Academic Advisor engine is currently waiting for <code>GEMINI_API_KEY</code> in Vercel environment variables. Verified knowledge answered below:
+          </div>
+          <div>${verifiedAnswer}</div>
+        </div>
+      `;
     }
 
-    // 3. Empathetic default answer
-    return `Namaste! 🙏 Regarding <strong>"${query}"</strong>: At VedIQ Academy, our core focus is developing lifelong concentration, memory speed, and emotional resilience in children (ages 5–15) through our calibrated 60-Minute Daily Gurukul ritual.<br><br>We invite you to experience this in our <strong>Free 3-Day Live Demo</strong> with Master Mentor Dr. Ujwal Vyas, or message our admissions desk directly for personalized cohort guidance.`;
+    return verifiedAnswer;
   }
 
   // Inject Styles for iOS Fluid Spring Animation & Floating Elements
@@ -248,49 +298,48 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
             </div>
           </div>
           <div class="flex items-center gap-1.5">
-            <button type="button" onclick="window.triggerVediqEscalation()" class="px-2.5 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[10px] font-bold transition flex items-center gap-1 cursor-pointer whitespace-nowrap" title="Directly escalate to Support Desk">
-              <span>🚨 Escalate to Support Desk</span>
+            <button type="button" onclick="window.triggerVediqEscalation()" title="Escalate to Support Desk" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-rose-500/30 text-slate-300 hover:text-white text-[10px] font-bold transition cursor-pointer">
+              🚨 Escalate
             </button>
-            <button type="button" onclick="window.toggleVediqAiChat(false)" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center transition cursor-pointer" title="Close Chat">
+            <button type="button" onclick="window.toggleVediqAiChat(false)" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white text-xs font-bold flex items-center justify-center transition cursor-pointer">
               ✕
             </button>
           </div>
         </div>
 
-        <!-- Quick Suggestion Topic Chips -->
-        <div class="px-3 py-2 bg-brand-cream/80 border-b border-brand-border flex items-center gap-1.5 overflow-x-auto text-xs shrink-0 no-scrollbar">
-          <button type="button" onclick="window.askVediqAiFromWidget('What is the 60-minute daily Gurukul routine?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 cursor-pointer shadow-2xs">
-            ⏰ 60-Min Routine
-          </button>
-          <button type="button" onclick="window.askVediqAiFromWidget('How does Tratak reduce screen addiction?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 cursor-pointer shadow-2xs">
-            🎯 Tratak Focus
-          </button>
-          <button type="button" onclick="window.askVediqAiFromWidget('What are the tuition fees and demo class details?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 cursor-pointer shadow-2xs">
-            💳 Fees &amp; Demo
-          </button>
-          <button type="button" onclick="window.askVediqAiFromWidget('How do I log into the Parent Portal?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 cursor-pointer shadow-2xs">
-            👨‍👩‍👧 Parent Portal
-          </button>
-        </div>
-
-        <!-- Chat Conversation Scroll Area -->
-        <div id="vediqWidgetChatLog" class="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-white to-brand-cream/30 text-xs">
+        <!-- Chat History Log -->
+        <div id="vediqWidgetChatLog" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-white to-brand-cream/30 text-xs">
           <!-- Initial Welcome Message -->
-          <div class="flex items-start gap-2">
+          <div class="flex items-start gap-2 ai-chat-bubble">
             <div class="w-6 h-6 rounded-lg bg-brand-ochre text-white flex items-center justify-center text-xs shrink-0 font-bold">🪔</div>
-            <div class="max-w-[88%] p-3 rounded-2xl rounded-tl-xs bg-brand-cream border border-brand-border text-brand-ink text-xs space-y-1.5 leading-relaxed shadow-2xs">
-              <p class="font-bold text-brand-ochre text-[11px]">Namaste! Welcome to VedIQ Support Desk.</p>
-              <p>I am your 24/7 Gurukul AI Concierge. Ask me anything about our 3-Day Demo, 60-minute daily routine, Tratak focus drills, or parent portal.</p>
+            <div class="max-w-[88%] p-3 rounded-2xl rounded-tl-xs bg-brand-cream border border-brand-border text-brand-ink text-xs space-y-2 leading-relaxed shadow-2xs">
+              <p>🙏 <strong>Namaste! Welcome to VedIQ Gurukul Support Desk.</strong></p>
+              <p class="text-brand-muted text-[11px]">I am your 24/7 Academic AI Advisor. Ask me anything about our 60-Minute routine, Tratak focus science, Vedic Math, Parent Portal sign-in, or admission fees.</p>
+              
+              <!-- Quick Pill Shortcuts -->
+              <div class="pt-1.5 flex flex-wrap gap-1.5">
+                <button type="button" onclick="window.askVediqAiFromWidget('I cannot sign in')" class="px-2.5 py-1 rounded-full bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[10px] font-bold text-brand-ochre transition shadow-2xs cursor-pointer">
+                  🔑 Parent Sign-In Help
+                </button>
+                <button type="button" onclick="window.askVediqAiFromWidget('How to register child')" class="px-2.5 py-1 rounded-full bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[10px] font-bold text-brand-ochre transition shadow-2xs cursor-pointer">
+                  📝 Enroll / Register
+                </button>
+                <button type="button" onclick="window.askVediqAiFromWidget('What is the daily routine?')" class="px-2.5 py-1 rounded-full bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[10px] font-bold text-brand-ink transition shadow-2xs cursor-pointer">
+                  ⏰ 60-Min Routine
+                </button>
+                <button type="button" onclick="window.askVediqAiFromWidget('What are the tuition fees?')" class="px-2.5 py-1 rounded-full bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[10px] font-bold text-brand-ink transition shadow-2xs cursor-pointer">
+                  💳 Tuition Fees
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Chat Input Form -->
-        <form onsubmit="window.handleVediqWidgetSubmit(event)" class="p-2.5 bg-white border-t border-brand-border flex items-center gap-2 shrink-0">
-          <input type="text" id="vediqWidgetInput" placeholder="Type your doubt or question..." class="flex-1 px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
-          <button type="submit" class="px-3.5 py-2 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1 shrink-0 cursor-pointer">
-            <span>Send</span>
-            <span>&rarr;</span>
+        <form onsubmit="window.handleVediqWidgetSubmit(event)" class="p-2.5 sm:p-3 bg-white border-t border-brand-border flex items-center gap-2 shrink-0">
+          <input type="text" id="vediqWidgetInput" placeholder="Ask about login, fees, routines..." class="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" />
+          <button type="submit" class="w-10 h-10 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white flex items-center justify-center text-sm font-bold transition shadow-xs cursor-pointer shrink-0">
+            ➤
           </button>
         </form>
 
@@ -299,7 +348,7 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     document.body.appendChild(container);
   }
 
-  // Toggle Window
+  // Toggle Chat Window
   window.toggleVediqAiChat = function (open) {
     const win = document.getElementById('vediqAiChatWindow');
     const badge = document.getElementById('vediqAiFloatingBadge');
@@ -308,7 +357,7 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     if (open) {
       win.classList.remove('chat-closed');
       win.classList.add('chat-open');
-      if (badge) badge.classList.add('opacity-0', 'pointer-events-none');
+      if (badge) badge.style.opacity = '0';
       setTimeout(() => {
         const inp = document.getElementById('vediqWidgetInput');
         if (inp) inp.focus();
@@ -316,7 +365,7 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     } else {
       win.classList.remove('chat-open');
       win.classList.add('chat-closed');
-      if (badge) badge.classList.remove('opacity-0', 'pointer-events-none');
+      if (badge) badge.style.opacity = '1';
     }
   };
 
