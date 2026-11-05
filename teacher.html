@@ -240,6 +240,19 @@
   <!-- ========================================================================= -->
   <main id="view-teacher-dashboard" class="hidden flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 space-y-5">
     
+    <!-- Top Navigation Switcher: Roster vs Curriculum Studio -->
+    <div class="flex items-center gap-2 p-1 bg-brand-surface rounded-2xl border border-brand-border shadow-xs">
+      <button type="button" id="tabBtnRoster" onclick="switchTeacherTab('roster')" class="flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2">
+        <span>👥 Student Daily Progress Roster</span>
+      </button>
+      <button type="button" id="tabBtnCms" onclick="switchTeacherTab('cms')" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer flex items-center justify-center gap-2">
+        <span>🎬 Gurukul Video &amp; Notes Studio (CMS)</span>
+        <span class="px-1.5 py-0.5 rounded-full bg-brand-ochre text-white text-[9px] font-extrabold uppercase">New</span>
+      </button>
+    </div>
+
+    <!-- VIEW A: STUDENT PROGRESS ROSTER -->
+    <div id="teacherViewRoster" class="space-y-5">
     <!-- Top Summary Banner & Quick Stats -->
     <div class="bg-brand-ink text-white rounded-3xl p-5 sm:p-7 border border-brand-borderDark shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
       <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-brand-gold/10 rounded-full pointer-events-none"></div>
@@ -328,18 +341,86 @@
     <div id="studentsCardsContainer" class="space-y-4">
       <!-- Dynamic Student Cards Rendered via JS -->
     </div>
+    <!-- END VIEW A: STUDENT PROGRESS ROSTER -->
 
-    <!-- Empty State (When no students match search or batch) -->
-    <div id="emptyStudentsState" class="hidden bg-white rounded-3xl p-10 border border-brand-border text-center space-y-3">
-      <div class="text-4xl">🧘</div>
-      <h3 class="font-bold text-base text-brand-ink">No Students Found</h3>
-      <p class="text-xs text-brand-muted max-w-sm mx-auto">
-        No students found matching your search or selected batch filter.
-      </p>
-      <button type="button" onclick="openEnrollStudentModal()" class="px-4 py-2 bg-brand-ochre text-white text-xs font-bold rounded-xl shadow-sm">
-        Enroll New Student
-      </button>
+    <!-- ========================================================================= -->
+    <!-- VIEW B: GURUKUL VIDEO & STUDY MATERIALS STUDIO (CMS) -->
+    <!-- ========================================================================= -->
+    <div id="teacherViewCms" class="hidden space-y-5">
+      
+      <!-- Studio Header Banner -->
+      <div class="bg-brand-ink text-white rounded-3xl p-5 sm:p-7 border border-brand-borderDark shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-brand-gold/10 rounded-full pointer-events-none"></div>
+
+        <div class="z-10 space-y-1">
+          <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-brand-ochre/20 text-amber-300 text-[11px] font-bold border border-brand-ochre/40">
+            <span>🎬 Course &amp; Video CMS</span>
+            <span class="text-white">•</span>
+            <span class="text-white">Zero Technical Setup</span>
+          </div>
+          <h2 class="font-display font-bold text-xl sm:text-2xl text-white">
+            Gurukul Video Classes &amp; Study Notes Studio
+          </h2>
+          <p class="text-xs text-slate-300 max-w-xl">
+            Upload educational videos and PDF notes. Content automatically syncs to students' dashboards on mobile and laptop with smooth streaming.
+          </p>
+        </div>
+
+        <!-- Add New Lesson CTA -->
+        <button type="button" onclick="openAddLessonModal()" class="z-10 px-4 py-3 rounded-2xl bg-brand-ochre hover:bg-brand-ochreHover text-white text-xs font-bold transition shadow-lg flex items-center justify-center gap-2 cursor-pointer shrink-0">
+          <span>➕</span>
+          <span>Add New Class Video / Lesson</span>
+        </button>
+      </div>
+
+      <!-- CMS Filter Controls & Summary -->
+      <div class="bg-white rounded-2xl border border-brand-border p-3 sm:p-4 shadow-sm space-y-3">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <!-- Subject Filter Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1 w-full sm:w-auto" id="cmsSubjectFilterContainer">
+            <button type="button" onclick="filterCmsSubject('all')" id="btnCms-all" class="cms-filter-btn px-3.5 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs whitespace-nowrap cursor-pointer">
+              All Subjects
+            </button>
+            <button type="button" onclick="filterCmsSubject('Tratak Focus')" id="btnCms-tratak" class="cms-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+              🎯 Tratak Focus
+            </button>
+            <button type="button" onclick="filterCmsSubject('Vedic Maths')" id="btnCms-math" class="cms-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+              🔢 Vedic Maths
+            </button>
+            <button type="button" onclick="filterCmsSubject('Panchatatva Science')" id="btnCms-science" class="cms-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+              🌿 Science &amp; Physics
+            </button>
+            <button type="button" onclick="filterCmsSubject('Yoga & Pranayama')" id="btnCms-yoga" class="cms-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+              🧘 Yoga &amp; Pranayama
+            </button>
+          </div>
+
+          <!-- Total Count Badge -->
+          <div class="text-xs text-brand-muted font-semibold">
+            <span id="statTotalLessons">0 Lessons Published</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video & Notes Cards Grid -->
+      <div id="curriculumCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically via JS -->
+      </div>
+
+      <!-- Empty State for CMS -->
+      <div id="emptyCmsState" class="hidden bg-white rounded-3xl p-10 border border-brand-border text-center space-y-3">
+        <div class="text-4xl">🎬</div>
+        <h3 class="font-bold text-base text-brand-ink">No Lessons Added Yet</h3>
+        <p class="text-xs text-brand-muted max-w-sm mx-auto">
+          Add your first class video or chapter study material to make it visible to enrolled students.
+        </p>
+        <button type="button" onclick="openAddLessonModal()" class="px-4 py-2 bg-brand-ochre text-white text-xs font-bold rounded-xl shadow-sm">
+          ➕ Add First Video Lesson
+        </button>
+      </div>
+
     </div>
+    <!-- END VIEW B: GURUKUL VIDEO CMS -->
 
   </main>
 
@@ -417,7 +498,132 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- TEACHER PORTAL LOGIC & SECURE AUTHENTICATION ENGINE -->
+  <!-- MODAL: ADD / EDIT VIDEO LESSON & STUDY NOTES (CMS) -->
+  <!-- ========================================================================= -->
+  <div id="addEditLessonModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn max-h-[92vh] overflow-y-auto">
+      
+      <!-- Close button -->
+      <button type="button" onclick="closeAddLessonModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted hover:text-brand-ink text-xs font-bold flex items-center justify-center transition cursor-pointer">✕</button>
+
+      <!-- Header -->
+      <div class="space-y-1">
+        <span class="text-[10px] uppercase font-bold tracking-widest text-brand-ochre">GURUKUL CMS STUDIO</span>
+        <h3 id="lessonModalTitle" class="font-display font-bold text-lg text-brand-ink">Add New Class Video / Lesson</h3>
+        <p class="text-xs text-brand-muted">Publish educational video lessons and PDF notes for students.</p>
+      </div>
+
+      <form onsubmit="handleSaveLessonSubmit(event)" class="space-y-3.5">
+        <input type="hidden" id="editLessonId" value="" />
+
+        <div>
+          <label class="block text-xs font-bold text-brand-ink mb-1">Lesson Title *</label>
+          <input type="text" id="lessonTitleInput" required placeholder="e.g. Lesson 1: Tratak Steady Flame Fixation Routine" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-brand-ink mb-1">Subject *</label>
+            <select id="lessonSubjectInput" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre">
+              <option value="Tratak Focus">🎯 Tratak Steady Gaze Focus</option>
+              <option value="Vedic Maths">🔢 Vedic Mental Mathematics</option>
+              <option value="Panchatatva Science">🌿 Panchatatva Vedic Physics</option>
+              <option value="Yoga & Pranayama">🧘 Yoga &amp; Pranayama Breath</option>
+              <option value="Gita Sanskar">📜 Bhagavad Gita Sanskar</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-brand-ink mb-1">Chapter / Subtitle</label>
+            <input type="text" id="lessonChapterInput" placeholder="e.g. Chapter 1: Optical Alpha Waves" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-brand-ink mb-1">Target Age Cohort</label>
+            <select id="lessonCohortInput" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre">
+              <option value="All Cohorts (Ages 5–15)">All Cohorts (Ages 5–15)</option>
+              <option value="Foundation (Ages 5–7)">Foundation (Ages 5–7)</option>
+              <option value="Pravesh (Ages 8–11)">Pravesh (Ages 8–11)</option>
+              <option value="Daksha (Ages 12–15)">Daksha (Ages 12–15)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-brand-ink mb-1">Estimated Duration</label>
+            <input type="text" id="lessonDurationInput" placeholder="e.g. 18 mins" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-brand-ink mb-1">Video Streaming URL (YouTube Unlisted, Vimeo, or MP4) *</label>
+          <input type="url" id="lessonVideoUrlInput" required placeholder="https://www.youtube.com/watch?v=... or Google Drive / Vimeo link" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+          <p class="text-[10px] text-amber-800 bg-amber-50 p-2 rounded-lg mt-1 border border-amber-200">
+            💡 <strong>Zero Hosting Cost Tip:</strong> Upload your video to YouTube as <em>"Unlisted"</em> and paste the link here. YouTube streams it with unlimited bandwidth, and students can only watch it inside your academy portal.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-brand-ink mb-1">PDF Study Notes / Worksheet URL (Google Drive / PDF link)</label>
+          <input type="url" id="lessonPdfUrlInput" placeholder="https://drive.google.com/file/d/... or PDF link" class="w-full px-3 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-brand-ink mb-1">Brief Description / Mentor Advice</label>
+          <textarea id="lessonDescInput" rows="2" placeholder="Explain what the student will learn and how to practice at home..." class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label class="block text-xs font-bold text-brand-ink mb-1">Access Level</label>
+            <select id="lessonAccessInput" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre">
+              <option value="enrolled">🔒 Enrolled Gurukul Students Only</option>
+              <option value="free">🌟 Free Demo Preview (Open to All)</option>
+            </select>
+          </div>
+          <div class="flex items-center pt-5">
+            <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-brand-ink select-none">
+              <input type="checkbox" id="lessonPublishedCheck" checked class="w-4 h-4 rounded accent-emerald-600" />
+              <span>Publish Live to Student Dashboard</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer mt-2">
+          <span id="saveLessonBtnText">Publish Lesson &amp; Sync to Students</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: VIDEO PREVIEW THEATER PLAYER -->
+  <!-- ========================================================================= -->
+  <div id="videoPreviewModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-brand-ink text-white rounded-3xl max-w-3xl w-full border border-brand-borderDark shadow-2xl relative overflow-hidden flex flex-col animate-fadeIn">
+      
+      <!-- Header -->
+      <div class="p-4 bg-brand-slate flex items-center justify-between border-b border-white/10">
+        <div>
+          <h4 id="previewVideoTitle" class="text-sm font-bold text-white">Lesson Video</h4>
+          <p id="previewVideoSub" class="text-[11px] text-brand-gold">Gurukul Student Video Player</p>
+        </div>
+        <button type="button" onclick="closeVideoPreviewModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center justify-center transition cursor-pointer">✕</button>
+      </div>
+
+      <!-- 16:9 Video Container -->
+      <div class="relative w-full aspect-video bg-black flex items-center justify-center" id="previewPlayerContainer">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="p-4 bg-brand-slate flex items-center justify-between gap-3 text-xs">
+        <p id="previewVideoDesc" class="text-slate-300 text-[11px] leading-relaxed truncate max-w-lg"></p>
+        <button type="button" onclick="closeVideoPreviewModal()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-xs transition cursor-pointer shrink-0">Close Player</button>
+      </div>
+
+    </div>
+  </div>
   <!-- ========================================================================= -->
   <script>
     // Configurable backend endpoint for Serverless Functions (Vercel / Netlify)
@@ -1245,6 +1451,385 @@
       closeEnrollStudentModal();
       renderStudentsList();
       pushStudentsToCloud();
+    }
+
+    // ==========================================
+    // GURUKUL CURRICULUM & VIDEO STUDIO (CMS) ENGINE
+    // ==========================================
+    let currentCmsSubject = 'all';
+
+    const DEFAULT_CURRICULUM = [
+      {
+        id: "LES-101",
+        title: "Lesson 1: Tratak Steady Flame Fixation Routine",
+        subject: "Tratak Focus",
+        chapter: "Chapter 1: Prefrontal Cortex Stillness",
+        cohort: "All Cohorts (Ages 5–15)",
+        duration: "15 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Practice along with Dr. Ujwal Vyas. Maintain steady gaze without blinking for 60 seconds to calm micro-saccadic eye jitter.",
+        access: "free",
+        published: true,
+        createdAt: "2026-11-04"
+      },
+      {
+        id: "LES-102",
+        title: "Lesson 2: Ekadhikena Purvena — 3-Second Mental Multiplication",
+        subject: "Vedic Maths",
+        chapter: "Sutra 1: By One More than the One Before",
+        cohort: "Pravesh (Ages 8–11)",
+        duration: "18 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Learn how to instantly square numbers ending in 5 (e.g. 75x75, 85x85) mentally in 3 seconds without pen or paper.",
+        access: "enrolled",
+        published: true,
+        createdAt: "2026-11-04"
+      },
+      {
+        id: "LES-103",
+        title: "Lesson 3: Panchatatva & Solar Astronomy — The Science of Surya",
+        subject: "Panchatatva Science",
+        chapter: "Chapter 1: Solar Electromagnetic Waves & Prana",
+        cohort: "All Cohorts (Ages 5–15)",
+        duration: "20 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Understanding the ancient physics of the five primordial elements and solar radiation on cellular vitality.",
+        access: "enrolled",
+        published: true,
+        createdAt: "2026-11-04"
+      },
+      {
+        id: "LES-104",
+        title: "Lesson 4: Calming the Restless Mind — Balloon Breath & Vagus Reset",
+        subject: "Yoga & Pranayama",
+        chapter: "Pranayama 1: Vagus Nerve Stimulation",
+        cohort: "Foundation (Ages 5–7)",
+        duration: "12 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Gentle diaphragmatic balloon breathing for 10 minutes to eliminate hyperactivity and prepare for deep study.",
+        access: "free",
+        published: true,
+        createdAt: "2026-11-04"
+      }
+    ];
+
+    function getCurriculumDatabase() {
+      const stored = localStorage.getItem('vediq_curriculum_db');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {}
+      }
+      localStorage.setItem('vediq_curriculum_db', JSON.stringify(DEFAULT_CURRICULUM));
+      return DEFAULT_CURRICULUM;
+    }
+
+    function saveCurriculumToDatabase(db) {
+      localStorage.setItem('vediq_curriculum_db', JSON.stringify(db));
+      renderCurriculumList();
+    }
+
+    function switchTeacherTab(tab) {
+      const viewRoster = document.getElementById('teacherViewRoster');
+      const viewCms = document.getElementById('teacherViewCms');
+      const btnRoster = document.getElementById('tabBtnRoster');
+      const btnCms = document.getElementById('tabBtnCms');
+
+      if (tab === 'cms') {
+        if (viewRoster) viewRoster.classList.add('hidden');
+        if (viewCms) viewCms.classList.remove('hidden');
+        if (btnCms) {
+          btnCms.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2";
+        }
+        if (btnRoster) {
+          btnRoster.className = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer flex items-center justify-center gap-2";
+        }
+        renderCurriculumList();
+      } else {
+        if (viewRoster) viewRoster.classList.remove('hidden');
+        if (viewCms) viewCms.classList.add('hidden');
+        if (btnRoster) {
+          btnRoster.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2";
+        }
+        if (btnCms) {
+          btnCms.className = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer flex items-center justify-center gap-2";
+        }
+        renderStudentsList();
+      }
+    }
+
+    function filterCmsSubject(subjKey) {
+      currentCmsSubject = subjKey;
+      document.querySelectorAll('.cms-filter-btn').forEach(btn => {
+        btn.className = "cms-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer";
+      });
+      const activeBtn = document.getElementById(
+        subjKey === 'all' ? 'btnCms-all' :
+        subjKey.includes('Tratak') ? 'btnCms-tratak' :
+        subjKey.includes('Math') ? 'btnCms-math' :
+        subjKey.includes('Science') ? 'btnCms-science' : 'btnCms-yoga'
+      );
+      if (activeBtn) {
+        activeBtn.className = "cms-filter-btn px-3.5 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs whitespace-nowrap cursor-pointer";
+      }
+      renderCurriculumList();
+    }
+
+    function formatVideoEmbed(url) {
+      if (!url) return '';
+      // YouTube
+      const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      if (ytMatch) {
+        return `<iframe class="w-full h-full rounded-2xl" src="https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0&modestbranding=1" title="VedIQ Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      }
+      // Google Drive
+      const driveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (driveMatch) {
+        return `<iframe class="w-full h-full rounded-2xl" src="https://drive.google.com/file/d/${driveMatch[1]}/preview" frameborder="0" allow="autoplay" allowfullscreen></iframe>`;
+      }
+      // Direct MP4
+      if (url.endsWith('.mp4')) {
+        return `<video class="w-full h-full rounded-2xl" controls src="${url}"></video>`;
+      }
+      // Fallback iframe
+      return `<iframe class="w-full h-full rounded-2xl" src="${url}" frameborder="0" allowfullscreen></iframe>`;
+    }
+
+    function renderCurriculumList() {
+      const container = document.getElementById('curriculumCardsContainer');
+      const emptyState = document.getElementById('emptyCmsState');
+      const statTotal = document.getElementById('statTotalLessons');
+      if (!container) return;
+
+      const db = getCurriculumDatabase();
+      const filtered = db.filter(item => {
+        if (currentCmsSubject === 'all') return true;
+        return (item.subject || '').toLowerCase().includes(currentCmsSubject.toLowerCase());
+      });
+
+      if (statTotal) {
+        const pubCount = db.filter(i => i.published).length;
+        statTotal.innerText = `${pubCount} Active Lessons Live`;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+      container.innerHTML = '';
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-3xl border border-brand-border p-5 shadow-xs space-y-4 transition hover:border-brand-ochre flex flex-col justify-between";
+        card.innerHTML = `
+          <div class="space-y-3">
+            <!-- Top Badges -->
+            <div class="flex items-center justify-between gap-2 flex-wrap text-[11px]">
+              <span class="px-2.5 py-1 rounded-full font-bold bg-amber-50 text-brand-ochre border border-amber-200">${item.subject || 'Curriculum'}</span>
+              <div class="flex items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${item.access === 'free' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-700 border border-slate-300'}">
+                  ${item.access === 'free' ? '🌟 Free Demo' : '🔒 Enrolled Only'}
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${item.published ? 'bg-emerald-600 text-white' : 'bg-slate-400 text-white'}">
+                  ${item.published ? 'Published' : 'Draft'}
+                </span>
+              </div>
+            </div>
+
+            <!-- Title & Chapter -->
+            <div>
+              <h3 class="font-bold text-sm text-brand-ink leading-snug line-clamp-2">${item.title}</h3>
+              <p class="text-[11px] text-brand-muted font-medium mt-1 truncate">${item.chapter || item.cohort || ''}</p>
+            </div>
+
+            <!-- Video Thumbnail / Play Box -->
+            <div onclick="openVideoPreviewModal('${item.videoUrl}', '${encodeURIComponent(item.title)}', '${encodeURIComponent(item.description || '')}')" class="relative aspect-video rounded-2xl bg-brand-slate text-white flex items-center justify-center cursor-pointer group overflow-hidden border border-brand-borderDark shadow-inner">
+              <div class="w-12 h-12 rounded-full bg-brand-ochre/90 group-hover:bg-brand-ochre group-hover:scale-110 text-white flex items-center justify-center text-lg shadow-md transition">
+                ▶
+              </div>
+              <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-mono font-bold">
+                ${item.duration || 'Video'}
+              </span>
+            </div>
+
+            <!-- Description -->
+            <p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">
+              ${item.description || 'Watch chapter video and complete home practice.'}
+            </p>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="pt-3 border-t border-brand-border flex items-center justify-between gap-2 text-xs">
+            ${item.pdfUrl ? `
+              <a href="${item.pdfUrl}" target="_blank" class="px-2.5 py-1.5 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink font-semibold border border-brand-border flex items-center gap-1 text-[11px]" title="Download Attached PDF">
+                <span>📄 PDF Notes</span>
+              </a>
+            ` : `
+              <span class="text-[10px] text-slate-400 italic">No PDF attached</span>
+            `}
+
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="openAddLessonModal('${item.id}')" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] cursor-pointer" title="Edit lesson details">
+                ✏️ Edit
+              </button>
+              <button type="button" onclick="toggleLessonPublish('${item.id}')" class="px-2.5 py-1.5 rounded-xl ${item.published ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300'} font-bold text-[11px] cursor-pointer" title="Publish or Unpublish">
+                ${item.published ? 'Unpublish' : 'Publish'}
+              </button>
+              <button type="button" onclick="deleteLesson('${item.id}')" class="px-2 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-[11px] cursor-pointer" title="Delete Lesson">
+                🗑️
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openAddLessonModal(lessonId = null) {
+      const modal = document.getElementById('addEditLessonModal');
+      const titleEl = document.getElementById('lessonModalTitle');
+      const btnEl = document.getElementById('saveLessonBtnText');
+      const idInp = document.getElementById('editLessonId');
+
+      if (lessonId) {
+        const db = getCurriculumDatabase();
+        const item = db.find(i => i.id === lessonId);
+        if (item) {
+          if (idInp) idInp.value = item.id;
+          if (titleEl) titleEl.innerText = "Edit Video Lesson";
+          if (btnEl) btnEl.innerText = "Save Changes & Update Lesson";
+          document.getElementById('lessonTitleInput').value = item.title || '';
+          document.getElementById('lessonSubjectInput').value = item.subject || 'Tratak Focus';
+          document.getElementById('lessonChapterInput').value = item.chapter || '';
+          document.getElementById('lessonCohortInput').value = item.cohort || 'All Cohorts (Ages 5–15)';
+          document.getElementById('lessonDurationInput').value = item.duration || '';
+          document.getElementById('lessonVideoUrlInput').value = item.videoUrl || '';
+          document.getElementById('lessonPdfUrlInput').value = item.pdfUrl || '';
+          document.getElementById('lessonDescInput').value = item.description || '';
+          document.getElementById('lessonAccessInput').value = item.access || 'enrolled';
+          document.getElementById('lessonPublishedCheck').checked = !!item.published;
+        }
+      } else {
+        if (idInp) idInp.value = '';
+        if (titleEl) titleEl.innerText = "Add New Class Video / Lesson";
+        if (btnEl) btnEl.innerText = "Publish Lesson & Sync to Students";
+        document.getElementById('lessonTitleInput').value = '';
+        document.getElementById('lessonChapterInput').value = '';
+        document.getElementById('lessonDurationInput').value = '15 mins';
+        document.getElementById('lessonVideoUrlInput').value = '';
+        document.getElementById('lessonPdfUrlInput').value = '';
+        document.getElementById('lessonDescInput').value = '';
+        document.getElementById('lessonAccessInput').value = 'enrolled';
+        document.getElementById('lessonPublishedCheck').checked = true;
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeAddLessonModal() {
+      const modal = document.getElementById('addEditLessonModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function handleSaveLessonSubmit(e) {
+      e.preventDefault();
+      const idInp = document.getElementById('editLessonId').value;
+      const title = document.getElementById('lessonTitleInput').value.trim();
+      const subject = document.getElementById('lessonSubjectInput').value;
+      const chapter = document.getElementById('lessonChapterInput').value.trim();
+      const cohort = document.getElementById('lessonCohortInput').value;
+      const duration = document.getElementById('lessonDurationInput').value.trim() || '15 mins';
+      const videoUrl = document.getElementById('lessonVideoUrlInput').value.trim();
+      const pdfUrl = document.getElementById('lessonPdfUrlInput').value.trim();
+      const description = document.getElementById('lessonDescInput').value.trim();
+      const access = document.getElementById('lessonAccessInput').value;
+      const published = document.getElementById('lessonPublishedCheck').checked;
+
+      if (!title || !videoUrl) {
+        alert("Please enter both the Lesson Title and Video Streaming URL.");
+        return;
+      }
+
+      const db = getCurriculumDatabase();
+      if (idInp) {
+        const idx = db.findIndex(i => i.id === idInp);
+        if (idx >= 0) {
+          db[idx] = Object.assign(db[idx], {
+            title, subject, chapter, cohort, duration, videoUrl, pdfUrl, description, access, published
+          });
+        }
+      } else {
+        const newLesson = {
+          id: "LES-" + Math.floor(100 + Math.random() * 900),
+          title, subject, chapter, cohort, duration, videoUrl, pdfUrl, description, access, published,
+          createdAt: new Date().toISOString().split('T')[0]
+        };
+        db.unshift(newLesson);
+      }
+
+      saveCurriculumToDatabase(db);
+      closeAddLessonModal();
+      alert(`🎉 Lesson "${title}" published successfully! It will now appear on enrolled students' dashboards.`);
+    }
+
+    function deleteLesson(lessonId) {
+      if (confirm("Are you sure you want to delete this lesson?")) {
+        let db = getCurriculumDatabase();
+        db = db.filter(i => i.id !== lessonId);
+        saveCurriculumToDatabase(db);
+      }
+    }
+
+    function toggleLessonPublish(lessonId) {
+      const db = getCurriculumDatabase();
+      const item = db.find(i => i.id === lessonId);
+      if (item) {
+        item.published = !item.published;
+        saveCurriculumToDatabase(db);
+      }
+    }
+
+    function openVideoPreviewModal(url, encodedTitle, encodedDesc) {
+      const modal = document.getElementById('videoPreviewModal');
+      const playerBox = document.getElementById('previewPlayerContainer');
+      const titleEl = document.getElementById('previewVideoTitle');
+      const descEl = document.getElementById('previewVideoDesc');
+
+      if (titleEl) titleEl.innerText = decodeURIComponent(encodedTitle || 'Gurukul Video Lesson');
+      if (descEl) descEl.innerText = decodeURIComponent(encodedDesc || '');
+
+      if (playerBox) {
+        playerBox.innerHTML = formatVideoEmbed(url);
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeVideoPreviewModal() {
+      const modal = document.getElementById('videoPreviewModal');
+      const playerBox = document.getElementById('previewPlayerContainer');
+      if (playerBox) playerBox.innerHTML = ''; // Stop video playback
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
     }
 
     // ==========================================

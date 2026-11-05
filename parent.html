@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
@@ -832,6 +832,16 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
           <span>Tuition & GST Invoices</span>
         </button>
+        <button onclick="switchDashTab('videos')" id="mob-videos" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs flex items-center gap-1.5">
+          <span>ðŸ“š</span>
+          <span>Videos &amp; Notes</span>
+        </button>
+
+        <button onclick="switchDashTab('videos')" id="side-videos" class="sidebar-btn w-full py-3 px-4 rounded-xl text-left text-xs font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition flex items-center gap-3">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          <span class="flex-1">Course Videos &amp; PDF Notes</span>
+          <span class="px-1.5 py-0.5 rounded-full bg-brand-ochre text-white text-[9px] font-extrabold uppercase">New</span>
+        </button>
 
         <!-- Direct WhatsApp Concierge Card in Sidebar -->
         <div class="pt-4 mt-4 border-t border-brand-border">
@@ -1257,6 +1267,86 @@
                 </button>
               </div>
             </div>
+          </div>
+
+        </section>
+
+        
+        <!-- ================= TAB 6: GURUKUL COURSE VIDEOS & PDF STUDY MATERIALS ================= -->
+        <section id="dashTab-videos" class="tab-content space-y-6">
+          
+          <!-- Banner Card -->
+          <div class="bg-brand-ink text-white rounded-3xl p-6 sm:p-8 border border-brand-borderDark shadow-xl relative overflow-hidden">
+            <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-brand-gold/10 rounded-full pointer-events-none"></div>
+
+            <div class="relative z-10 space-y-3">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-ochre/20 text-amber-300 text-xs font-bold border border-brand-ochre/40">
+                <span>ðŸŽ¬ Gurukul Digital Classroom</span>
+                <span>â€¢</span>
+                <span>Recorded Classes &amp; Study Notes</span>
+              </div>
+              <h3 class="font-display font-bold text-xl sm:text-2xl text-white">
+                Course Videos &amp; Revision Notes
+              </h3>
+              <p class="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                Watch high-definition lessons, master Tratak &amp; Vedic Math mental models, and download comprehensive PDF study material for your child's daily practice.
+              </p>
+
+              <!-- Progress Bar -->
+              <div class="pt-3 border-t border-white/10 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-200">Curriculum Completion Progress:</span>
+                  <span id="studentCurriculumProgressText" class="font-extrabold text-amber-300">0 of 0 Completed (0%)</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-white/10">
+                  <div id="studentCurriculumProgressBar" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter Pills & Search -->
+          <div class="bg-white rounded-2xl border border-brand-border p-3 sm:p-4 shadow-sm space-y-3">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1 w-full sm:w-auto" id="studentSubjectFilterContainer">
+                <button type="button" onclick="filterStudentCurriculum('all')" id="btnStudentSub-all" class="student-filter-btn px-3.5 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs whitespace-nowrap cursor-pointer">
+                  All Subjects
+                </button>
+                <button type="button" onclick="filterStudentCurriculum('Tratak Focus')" id="btnStudentSub-tratak" class="student-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+                  ðŸŽ¯ Tratak Focus
+                </button>
+                <button type="button" onclick="filterStudentCurriculum('Vedic Math')" id="btnStudentSub-math" class="student-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+                  ðŸ”¢ Vedic Math
+                </button>
+                <button type="button" onclick="filterStudentCurriculum('Science & Biology')" id="btnStudentSub-science" class="student-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+                  ðŸŒ¿ Science
+                </button>
+                <button type="button" onclick="filterStudentCurriculum('Yoga & Pranayama')" id="btnStudentSub-yoga" class="student-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer">
+                  ðŸ§˜ Yoga &amp; Pranayama
+                </button>
+              </div>
+
+              <div class="text-xs text-brand-muted font-medium ml-auto">
+                Showing: <span id="studentLessonCountBadge" class="font-bold text-brand-ink">0 lessons</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Video Lessons Grid -->
+          <div id="studentLessonsCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Rendered dynamically via JavaScript -->
+          </div>
+
+          <!-- Empty State -->
+          <div id="studentLessonsEmptyState" class="hidden bg-white rounded-3xl p-8 border border-brand-border text-center space-y-3">
+            <div class="text-4xl">ðŸŽ¬</div>
+            <h4 class="font-bold text-sm text-brand-ink">No Lessons Available for this Subject</h4>
+            <p class="text-xs text-brand-muted max-w-md mx-auto">
+              Your mentors will publish new recorded classes and notes shortly. Choose "All Subjects" to see other active classes.
+            </p>
+            <button type="button" onclick="filterStudentCurriculum('all')" class="px-4 py-2 bg-brand-ochre text-white text-xs font-bold rounded-xl shadow-xs">
+              View All Lessons
+            </button>
           </div>
 
         </section>
@@ -3495,6 +3585,7 @@
 
       // Render Dynamic Multi-Child Family Selector Bar
       renderChildSelector();
+      renderStudentCurriculum();
 
       // Show Dashboard View
       document.getElementById('view-auth').classList.add('hidden');
@@ -3640,6 +3731,7 @@
       if (activeStudent.children.length >= 4) {
         alert("Maximum limit of 4 children reached for this account.");
         closeAddChildModal();
+          closeStudentVideoPlayer();
         return;
       }
 
@@ -3828,6 +3920,7 @@
 
       const targetTab = document.getElementById('dashTab-' + tabId);
       if (targetTab) targetTab.classList.add('active');
+      if (tabId === 'videos') { renderStudentCurriculum(); }
 
       const sideBtn = document.getElementById('side-' + tabId);
       if (sideBtn) {
@@ -4096,7 +4189,350 @@
         input.value = rememberedId;
       }
 
-      // Close modals on Escape key
+          // ==========================================
+    // GURUKUL COURSE VIDEOS & STUDY NOTES ENGINE
+    // ==========================================
+    const DEFAULT_STUDENT_CURRICULUM = [
+      {
+        id: "LES-101",
+        title: "Candle Gazing & Dharana Fundamentals",
+        subject: "Tratak Focus",
+        chapter: "Chapter 1 â€¢ Foundation",
+        cohort: "All Cohorts",
+        duration: "14 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Foundational steady-gaze dharana practice to eliminate screen fatigue, activate optic stillness, and sharpen laser cognitive focus.",
+        access: "enrolled",
+        published: true
+      },
+      {
+        id: "LES-102",
+        title: "Ekadhikena Purvena (Instant Multiplication of 9s)",
+        subject: "Vedic Math",
+        chapter: "Chapter 1 â€¢ Speed Sutras",
+        cohort: "All Cohorts",
+        duration: "18 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Ancient Vedic sutra for solving massive 3-digit and 4-digit arithmetic products 5x faster in pure mental memory without pen-and-paper.",
+        access: "enrolled",
+        published: true
+      },
+      {
+        id: "LES-103",
+        title: "Cell Dynamics & The Biology of Focus",
+        subject: "Science & Biology",
+        chapter: "Chapter 1 â€¢ Cognitive Science",
+        cohort: "All Cohorts",
+        duration: "16 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Explore the neurobiology of the human brain, mitochondrial energy, and how conscious breathing improves oxygen delivery to cortex cells.",
+        access: "enrolled",
+        published: true
+      },
+      {
+        id: "LES-104",
+        title: "Nadi Shodhana Pranayama & Mind Grounding",
+        subject: "Yoga & Pranayama",
+        chapter: "Chapter 1 â€¢ Breath Mastery",
+        cohort: "All Cohorts",
+        duration: "12 mins",
+        videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        pdfUrl: "https://drive.google.com",
+        description: "Alternate nostril rhythmic breathing to rebalance the sympathetic and parasympathetic nervous systems prior to evening study sessions.",
+        access: "enrolled",
+        published: true
+      }
+    ];
+
+    let currentStudentFilterSubject = 'all';
+    let currentPlayingLessonId = null;
+
+    function getStudentCurriculum() {
+      try {
+        const stored = localStorage.getItem('vediq_curriculum_db');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.warn("Curriculum DB read error:", e);
+      }
+      return DEFAULT_STUDENT_CURRICULUM;
+    }
+
+    function getStudentWatchedList() {
+      const activeChild = activeStudent ? getActiveChild(activeStudent) : null;
+      const childKey = activeChild && activeChild.childId ? activeChild.childId : 'default';
+      try {
+        const stored = localStorage.getItem('vediq_watched_' + childKey);
+        if (stored) return JSON.parse(stored);
+      } catch (e) {}
+      return [];
+    }
+
+    function saveStudentWatchedList(list) {
+      const activeChild = activeStudent ? getActiveChild(activeStudent) : null;
+      const childKey = activeChild && activeChild.childId ? activeChild.childId : 'default';
+      try {
+        localStorage.setItem('vediq_watched_' + childKey, JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function toggleLessonWatched(lessonId) {
+      let watched = getStudentWatchedList();
+      if (watched.includes(lessonId)) {
+        watched = watched.filter(id => id !== lessonId);
+      } else {
+        watched.push(lessonId);
+      }
+      saveStudentWatchedList(watched);
+      renderStudentCurriculum(currentStudentFilterSubject);
+
+      // If playing inside modal, update modal button too
+      if (currentPlayingLessonId === lessonId) {
+        updateModalWatchedState(watched.includes(lessonId));
+      }
+    }
+
+    function toggleCurrentPlayingLessonWatched() {
+      if (currentPlayingLessonId) {
+        toggleLessonWatched(currentPlayingLessonId);
+      }
+    }
+
+    function updateModalWatchedState(isWatched) {
+      const btn = document.getElementById('playerWatchedBtn');
+      const text = document.getElementById('playerWatchedBtnText');
+      if (isWatched) {
+        btn.className = "px-4 py-2.5 rounded-xl bg-emerald-700 text-white font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer";
+        text.innerText = "Completed âœ“";
+      } else {
+        btn.className = "px-4 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-brand-ink font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer";
+        text.innerText = "Mark as Watched";
+      }
+    }
+
+    function formatStudentVideoEmbed(url) {
+      if (!url) return '<div class="p-8 text-white text-center">Video streaming source not configured.</div>';
+      
+      // YouTube Embed Transformation
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        let videoId = '';
+        if (url.includes('youtu.be/')) {
+          videoId = url.split('youtu.be/')[1].split('?')[0].split('&')[0];
+        } else if (url.includes('watch?v=')) {
+          videoId = url.split('watch?v=')[1].split('&')[0];
+        } else if (url.includes('/embed/')) {
+          videoId = url.split('/embed/')[1].split('?')[0];
+        }
+        if (videoId) {
+          return `<iframe class="w-full h-full border-0" src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1" title="Gurukul Video Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        }
+      }
+
+      // Google Drive Video Embed
+      if (url.includes('drive.google.com')) {
+        let driveUrl = url;
+        if (url.includes('/view')) {
+          driveUrl = url.replace('/view', '/preview');
+        } else if (!url.includes('/preview')) {
+          driveUrl = url + '/preview';
+        }
+        return `<iframe class="w-full h-full border-0" src="${driveUrl}" allow="autoplay" allowfullscreen></iframe>`;
+      }
+
+      // Vimeo Embed
+      if (url.includes('vimeo.com')) {
+        const vimeoId = url.split('/').filter(Boolean).pop();
+        return `<iframe class="w-full h-full border-0" src="https://player.vimeo.com/video/${vimeoId}?autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+      }
+
+      // Direct MP4 / WebM Video
+      if (url.endsWith('.mp4') || url.endsWith('.webm') || url.includes('.mp4?') || url.includes('.webm?')) {
+        return `<video controls autoplay class="w-full h-full"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+      }
+
+      // Generic Fallback
+      return `<iframe class="w-full h-full border-0" src="${url}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+    }
+
+    function filterStudentCurriculum(subject) {
+      currentStudentFilterSubject = subject;
+      
+      // Update filter button styling
+      document.querySelectorAll('.student-filter-btn').forEach(btn => {
+        btn.className = "student-filter-btn px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-subtle text-brand-ink text-xs font-semibold border border-brand-border transition whitespace-nowrap cursor-pointer";
+      });
+      const activeMap = {
+        'all': 'btnStudentSub-all',
+        'Tratak Focus': 'btnStudentSub-tratak',
+        'Vedic Math': 'btnStudentSub-math',
+        'Science & Biology': 'btnStudentSub-science',
+        'Yoga & Pranayama': 'btnStudentSub-yoga'
+      };
+      const activeBtnId = activeMap[subject];
+      if (activeBtnId && document.getElementById(activeBtnId)) {
+        document.getElementById(activeBtnId).className = "student-filter-btn px-3.5 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs whitespace-nowrap cursor-pointer";
+      }
+
+      renderStudentCurriculum(subject);
+    }
+
+    function renderStudentCurriculum(subjectFilter) {
+      if (!subjectFilter) subjectFilter = currentStudentFilterSubject;
+      const allLessons = getStudentCurriculum();
+      const watched = getStudentWatchedList();
+
+      // Filter only published lessons (and optional subject filter)
+      const publishedLessons = allLessons.filter(l => l.published !== false);
+      const filtered = subjectFilter === 'all' 
+        ? publishedLessons 
+        : publishedLessons.filter(l => l.subject === subjectFilter);
+
+      // Progress Calculation across all published lessons
+      const totalCount = publishedLessons.length;
+      const completedCount = publishedLessons.filter(l => watched.includes(l.id)).length;
+      const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+      const progText = document.getElementById('studentCurriculumProgressText');
+      const progBar = document.getElementById('studentCurriculumProgressBar');
+      if (progText) progText.innerText = `${completedCount} of ${totalCount} Completed (${pct}%)`;
+      if (progBar) progBar.style.width = pct + "%";
+
+      const countBadge = document.getElementById('studentLessonCountBadge');
+      if (countBadge) countBadge.innerText = `${filtered.length} lesson${filtered.length === 1 ? '' : 's'}`;
+
+      const container = document.getElementById('studentLessonsCardsContainer');
+      const emptyState = document.getElementById('studentLessonsEmptyState');
+
+      if (!container) return;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+
+      const subjectBadges = {
+        'Tratak Focus': 'bg-amber-100 text-amber-800 border-amber-300',
+        'Vedic Math': 'bg-blue-100 text-blue-800 border-blue-300',
+        'Science & Biology': 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        'Yoga & Pranayama': 'bg-purple-100 text-purple-800 border-purple-300'
+      };
+
+      container.innerHTML = filtered.map(lesson => {
+        const isWatched = watched.includes(lesson.id);
+        const badgeColor = subjectBadges[lesson.subject] || 'bg-brand-cream text-brand-ink border-brand-border';
+
+        return `
+          <div class="bg-white rounded-3xl p-5 border ${isWatched ? 'border-emerald-300 ring-1 ring-emerald-200' : 'border-brand-border'} shadow-sm hover:shadow-md transition flex flex-col justify-between gap-4">
+            <div class="space-y-3">
+              <!-- Top Metadata Row -->
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeColor}">
+                  ${lesson.subject}
+                </span>
+                <div class="flex items-center gap-2 text-[11px] text-brand-muted">
+                  <span>â± ${lesson.duration || '15 mins'}</span>
+                  ${isWatched ? '<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 text-[10px]">âœ“ Watched</span>' : ''}
+                </div>
+              </div>
+
+              <!-- Title & Chapter -->
+              <div>
+                <div class="text-[11px] font-bold text-brand-ochre uppercase tracking-wider">${lesson.chapter || 'Gurukul Class'}</div>
+                <h4 class="font-bold text-sm sm:text-base text-brand-ink mt-0.5">${lesson.title}</h4>
+              </div>
+
+              <!-- Description -->
+              <p class="text-xs text-brand-muted leading-relaxed line-clamp-2">
+                ${lesson.description || 'Master this Gurukul concept with daily practice.'}
+              </p>
+            </div>
+
+            <!-- Action Buttons Row -->
+            <div class="pt-3 border-t border-brand-border flex items-center justify-between gap-2 flex-wrap">
+              <button type="button" onclick="openStudentVideoPlayer('${lesson.id}')" class="flex-1 py-2.5 px-3 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>â–¶</span>
+                <span>Watch Lesson</span>
+              </button>
+
+              ${lesson.pdfUrl ? `
+                <a href="${lesson.pdfUrl}" target="_blank" class="py-2.5 px-3 rounded-xl border border-brand-border bg-brand-cream hover:bg-brand-subtle text-brand-ink font-bold text-xs transition flex items-center justify-center gap-1" title="Download PDF Study Notes">
+                  <span>ðŸ“„</span>
+                  <span class="hidden sm:inline">Notes</span>
+                </a>
+              ` : ''}
+
+              <button type="button" onclick="toggleLessonWatched('${lesson.id}')" class="py-2.5 px-3 rounded-xl border ${isWatched ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-white text-brand-muted border-brand-border hover:bg-brand-subtle'} font-bold text-xs transition cursor-pointer" title="${isWatched ? 'Mark as Unwatched' : 'Mark as Watched'}">
+                ${isWatched ? 'âœ“ Done' : 'â—‹ Mark Done'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openStudentVideoPlayer(lessonId) {
+      const lessons = getStudentCurriculum();
+      const lesson = lessons.find(l => l.id === lessonId);
+      if (!lesson) return;
+
+      currentPlayingLessonId = lessonId;
+      const watched = getStudentWatchedList();
+      const isWatched = watched.includes(lessonId);
+
+      const modal = document.getElementById('studentVideoPlayerModal');
+      const playerBox = document.getElementById('studentPlayerBox');
+      const titleEl = document.getElementById('playerLessonTitle');
+      const subjectBadge = document.getElementById('playerSubjectBadge');
+      const chapterBadge = document.getElementById('playerChapterBadge');
+      const descEl = document.getElementById('playerLessonDesc');
+      const pdfLink = document.getElementById('playerPdfLink');
+
+      if (titleEl) titleEl.innerText = lesson.title;
+      if (subjectBadge) subjectBadge.innerText = lesson.subject;
+      if (chapterBadge) chapterBadge.innerText = `â€¢ ${lesson.chapter || 'Chapter 1'}`;
+      if (descEl) descEl.innerText = lesson.description || '';
+
+      if (pdfLink) {
+        if (lesson.pdfUrl) {
+          pdfLink.href = lesson.pdfUrl;
+          pdfLink.classList.remove('hidden');
+        } else {
+          pdfLink.classList.add('hidden');
+        }
+      }
+
+      updateModalWatchedState(isWatched);
+
+      if (playerBox) {
+        playerBox.innerHTML = formatStudentVideoEmbed(lesson.videoUrl);
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeStudentVideoPlayer() {
+      currentPlayingLessonId = null;
+      const modal = document.getElementById('studentVideoPlayerModal');
+      const playerBox = document.getElementById('studentPlayerBox');
+      if (playerBox) playerBox.innerHTML = ''; // Stop video playback instantly
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    // Close modals on Escape key
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           closeFirstTimeOnboardingModal();
@@ -4112,6 +4548,57 @@
   <!-- Google Translate Backend Container & Script (Async Non-Blocking) -->
   <div id="google_translate_element" style="display:none !important;"></div>
   <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+
+    <!-- ========================================================================= -->
+  <!-- STUDENT VIDEO THEATER & STUDY NOTES MODAL -->
+  <!-- ========================================================================= -->
+  <div id="studentVideoPlayerModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6">
+    <div class="bg-brand-surface rounded-3xl max-w-4xl w-full border border-brand-border shadow-2xl relative animate-fadeIn flex flex-col overflow-hidden max-h-[95vh]">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 bg-white border-b border-brand-border flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <span id="playerSubjectBadge" class="px-2.5 py-0.5 rounded-full bg-brand-ochre/15 text-brand-ochre text-[10px] font-bold uppercase tracking-wider">Tratak Focus</span>
+            <span id="playerChapterBadge" class="text-xs text-brand-muted font-medium">â€¢ Chapter 1</span>
+          </div>
+          <h3 id="playerLessonTitle" class="text-base sm:text-lg font-bold text-brand-ink truncate mt-0.5">Gurukul Class Video</h3>
+        </div>
+        <button type="button" onclick="closeStudentVideoPlayer()" class="w-8 h-8 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted hover:text-brand-ink text-sm font-bold flex items-center justify-center transition cursor-pointer shrink-0">âœ•</button>
+      </div>
+
+      <!-- 16:9 Cinema Player Container -->
+      <div class="bg-black relative w-full aspect-video flex items-center justify-center overflow-hidden">
+        <div id="studentPlayerBox" class="w-full h-full flex items-center justify-center">
+          <!-- Video iframe or html5 video injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="p-4 sm:p-5 bg-white border-t border-brand-border flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+        <p id="playerLessonDesc" class="text-brand-muted text-xs line-clamp-2 max-w-lg">
+          Master this concept through daily repetition and focused observation.
+        </p>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <a id="playerPdfLink" href="#" target="_blank" class="hidden px-4 py-2.5 rounded-xl border border-brand-ochre/40 bg-amber-50 hover:bg-amber-100 text-brand-ochre font-bold transition flex items-center gap-1.5 shadow-xs">
+            <span>ðŸ“„</span>
+            <span>Download PDF Notes</span>
+          </a>
+
+          <button type="button" id="playerWatchedBtn" onclick="toggleCurrentPlayingLessonWatched()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+            <span>âœ“</span>
+            <span id="playerWatchedBtnText">Mark as Watched</span>
+          </button>
+
+          <button type="button" onclick="closeStudentVideoPlayer()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-ink font-bold transition cursor-pointer">
+            Close
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Universal 24/7 VedIQ AI Concierge & Support Desk Floating Engine -->
   <script src="vediq-ai-concierge.js"></script>

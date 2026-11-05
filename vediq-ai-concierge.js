@@ -28,6 +28,38 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
   // Comprehensive Conversational Intelligence Matrix (Zero-Failure Fallback)
   const CONVERSATIONAL_BRAIN = [
     {
+      keywords: ['otp nahi', 'otp not', 'no otp', 'receive otp', 'get otp', 'code not', 'waiting for otp', 'resend code', 'otp error', 'sms not'],
+      answer: `🔐 <strong>Troubleshooting OTP Delivery:</strong><br><br>
+        1. <strong>Email OTP:</strong> Please check your <em>Spam / Junk</em> or <em>Promotions</em> folder for an email from <strong>VedIQ Academy</strong>. The 6-digit code expires in 2 minutes.<br>
+        2. <strong>Mobile OTP:</strong> Ensure you entered your 10-digit Indian mobile number without +91 or 0.<br>
+        3. <strong>Instant 1-Click Alternative (No Waiting):</strong> On <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>, click <strong>"Continue with Google"</strong> to log into your child's dashboard immediately without waiting for an OTP!<br><br>
+        Need immediate help? Click <a href="https://wa.me/918390332500?text=Namaste%20VedIQ!%20I%20am%20facing%20an%20OTP%20issue." target="_blank" class="text-emerald-700 font-bold underline">WhatsApp Tech Support</a>.`
+    },
+    {
+      keywords: ['cannot login', 'cant login', 'unable to login', 'login issue', 'login error', 'sign in problem', 'login nahi', 'khul nahi raha'],
+      answer: `🛡️ <strong>Parent Portal Login Assistance:</strong><br><br>
+        • <strong>Fastest Login:</strong> Use <strong>Google 1-Click Sign In</strong> on <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>.<br>
+        • <strong>Password Login:</strong> Enter your registered email or phone and password.<br>
+        • <strong>Forgot Password?</strong> Click the "Forgot password?" link on the sign-in screen to receive an instant reset link.<br>
+        • <strong>New Parent?</strong> Click the <strong>"Sign Up / Register"</strong> tab on the login box to create your parent profile and enroll your child.`
+    },
+    {
+      keywords: ['forgot password', 'reset password', 'change password', 'wrong password', 'incorrect password', 'password bhul gaya'],
+      answer: `🔑 <strong>How to Reset Your Password:</strong><br><br>
+        1. Go to <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>.<br>
+        2. Click <button type="button" onclick="window.openForgotPasswordModal ? window.openForgotPasswordModal() : (window.location.href='parent.html')" class="text-brand-ochre font-bold underline cursor-pointer">Forgot password?</button> just below the password box.<br>
+        3. Enter your registered email address to receive an official Google Firebase password reset link.<br>
+        4. Alternatively, you can always sign in instantly using <strong>"Continue with Google"</strong> with zero password required.`
+    },
+    {
+      keywords: ['register', 'sign up', 'create account', 'new parent', 'first time', 'enroll child', 'kaise register'],
+      answer: `📝 <strong>How to Create a Parent Account:</strong><br><br>
+        1. Open <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>.<br>
+        2. Click the <strong>"Sign Up / Register"</strong> tab at the top of the white box.<br>
+        3. Enter Parent Name, Child's Name, Grade cohort, Mobile number, and a Password.<br>
+        4. Click "Create Account" — your child will be assigned their unique Student ID and your dashboard will open immediately!`
+    },
+    {
       keywords: ['hello', 'hi', 'hey', 'namaste', 'pranam', 'pranaam', 'good morning', 'good evening', 'good afternoon', 'hola', 'radhe', 'ram ram', 'namaskar', 'halo', 'helo'],
       answer: "🙏 <strong>Namaste! Welcome to VedIQ Academy.</strong><br><br>I am your 24/7 Gurukul AI Concierge. How can I help you and your child today?<br><br>Feel free to ask about our <strong>Free 3-Day Live Demo</strong>, the <strong>60-Minute Daily Routine</strong>, how <strong>Tratak</strong> eliminates mobile screen addiction, <strong>Vedic Maths</strong>, <strong>Tuition Fees</strong>, or the <strong>Parent Portal</strong>."
     },
@@ -52,7 +84,7 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
       answer: "🌟 <strong>Free 3-Day Live Gurukul Demo:</strong><br>You can experience 3 full days of live 1-hour Gurukul sessions with Master Mentor Dr. Ujwal Vyas with zero payment! Simply click <button onclick='window.openDemoModal ? window.openDemoModal() : window.location.href=\"/#plans\"' class='text-brand-ochre font-bold underline cursor-pointer'>Book Free 3-Day Demo</button> to reserve your child's micro-batch slot."
     },
     {
-      keywords: ['parent', 'portal', 'login', 'dashboard', 'report', 'password', 'otp', 'sign in', 'app'],
+      keywords: ['parent', 'portal', 'dashboard', 'report', 'student id', 'app', 'attendance', 'tratak timer'],
       answer: "👨‍👩‍👧 <strong>Parent Progress Portal (24/7 Live):</strong><br>Track your child's Tratak gaze seconds, daily habit streaks, mental math velocity, and weekly mentor remarks from Dr. Ujwal Vyas.<br><br>Visit <a href='parent.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/parent.html</a> to sign in with Google 1-Click, Email OTP, or password."
     },
     {
@@ -69,9 +101,9 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     }
   ];
 
-  // Secure Gemini AI Call (Via Netlify Serverless Function — Zero Frontend Key Exposure)
+  // Configurable backend endpoint for Serverless Functions (Vercel / Netlify)
   const VEDIQ_BACKEND_URL = (window.location.hostname.includes("vediqacademy.com") || window.location.hostname.includes("github.io"))
-    ? "https://vediq-academy-backend.netlify.app"
+    ? "https://vediq-website.vercel.app"
     : "";
 
   async function queryLiveGeminiAi(prompt) {
