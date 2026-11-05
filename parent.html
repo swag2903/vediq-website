@@ -1089,6 +1089,25 @@
             </button>
           </div>
 
+          <!-- 24/7 AI Support & Escalation Banner -->
+          <div class="p-5 rounded-3xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+            <div class="space-y-1">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-200/80 text-amber-950 font-bold text-[10px] uppercase tracking-wide">
+                <span>🤖 24/7 AI Gurukul Assistant</span>
+              </div>
+              <h4 class="text-sm font-bold text-brand-ink">Have a Question or Technical Issue?</h4>
+              <p class="text-xs text-brand-muted">Ask our AI chatbot or escalate directly to Dr. Vyas and founders if unresolved.</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+              <a href="index.html#contact" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs transition shadow-sm text-center">
+                <span>💬 Open AI Support Desk &rarr;</span>
+              </a>
+              <a href="mailto:myvediqacademy@gmail.com?subject=Parent%20Portal%20Issue%20Escalation" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow-sm text-center">
+                <span>🚨 Escalate Issue</span>
+              </a>
+            </div>
+          </div>
+
           <!-- Mentors Concierge Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
@@ -1402,11 +1421,29 @@
           </button>
         </div>
 
+        <!-- Email Delay / Direct WhatsApp Backup -->
+        <div class="p-3 bg-emerald-50/80 border border-emerald-200 rounded-2xl text-left space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-emerald-900 flex items-center gap-1">
+              <span>💬</span> <span>Email OTP delayed?</span>
+            </span>
+            <button type="button" onclick="dispatchOtpToWhatsApp()" class="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 underline cursor-pointer">
+              Send OTP to WhatsApp &rarr;
+            </button>
+          </div>
+          <p class="text-[10px] text-emerald-800/80 leading-tight">
+            Check your Spam / Junk folder for email from <strong>myvediqacademy@gmail.com</strong>, or tap above to receive code on WhatsApp.
+          </p>
+        </div>
+
       </div>
 
-      <div class="pt-3 border-t border-brand-border">
+      <div class="pt-3 border-t border-brand-border flex items-center justify-between gap-2">
         <button type="button" onclick="closeOtpModal()" class="text-xs text-brand-muted hover:text-brand-ink cursor-pointer">
-          &larr; Use password or Google sign-in instead
+          &larr; Back to sign-in
+        </button>
+        <button type="button" onclick="closeOtpModal(); const pass = document.getElementById('loginPassword'); if(pass) pass.focus();" class="text-xs font-bold text-brand-ochre hover:underline cursor-pointer">
+          Sign in with Password &rarr;
         </button>
       </div>
 
@@ -1449,7 +1486,7 @@
             <span>📱 Send SMS OTP to Mobile</span>
           </button>
           <button type="button" onclick="handleSendPasswordReset('email')" id="btnForgotEmail" class="w-full py-2.5 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
-            <span>✉️ Send Reset Link / Code to Email</span>
+            <span>✉️ Send 6-Digit Reset Code to Email</span>
           </button>
         </div>
       </div>
@@ -1919,16 +1956,31 @@
     }
 
     function getStudentDatabase() {
+      let db = [];
       const stored = localStorage.getItem('vediq_students_db');
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed.map(p => normalizeParentProfile(p));
+            db = parsed.map(p => normalizeParentProfile(p));
           }
         } catch (e) {}
       }
-      return INITIAL_STUDENTS.map(p => normalizeParentProfile(p));
+      if (db.length === 0) {
+        db = INITIAL_STUDENTS.map(p => normalizeParentProfile(p));
+      } else {
+        // Guarantee all predefined founders & default accounts (Swagatam Shukla, etc.) exist
+        INITIAL_STUDENTS.forEach(initUser => {
+          const found = db.find(s => 
+            (s.email && initUser.email && s.email.toLowerCase() === initUser.email.toLowerCase()) ||
+            (s.phone && initUser.phone && s.phone.replace(/\D/g, '').slice(-10) === initUser.phone.replace(/\D/g, '').slice(-10))
+          );
+          if (!found) {
+            db.unshift(normalizeParentProfile(initUser));
+          }
+        });
+      }
+      return db;
     }
 
     // Comprehensive identifier matcher (Email, Phone last 10 digits, Child Student ID, or Firebase UID)
@@ -2243,31 +2295,28 @@
       const phoneDigits = match.phone ? match.phone.replace(/\D/g, '').slice(-10) : "";
       const emailAddr = match.email || (isEmail ? val : "");
 
-      // If user chose Email method
-      if (preferredMethod === 'email' || isEmail) {
-        if (emailAddr && typeof firebase !== 'undefined' && firebase.auth) {
-          initFirebase();
-          try {
-            await firebase.auth().sendPasswordResetEmail(emailAddr);
-            alert(`✉️ Official Password Reset Email dispatched from myvediqacademy@gmail.com to ${emailAddr}!\n\nPlease check your email inbox (and spam/promotions folder) to reset your password.`);
-            closeForgotPasswordModal();
-            return;
-          } catch (fbErr) {
-            console.warn("Firebase password reset email:", fbErr);
-          }
-        }
-      }
-
-      // Generate secure 6-digit OTP for SMS password reset
+      // Generate secure 6-digit OTP for password reset
       const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const chosenRecipient = (preferredMethod === 'email' || isEmail) ? emailAddr : (phoneDigits ? ("+91 " + phoneDigits) : emailAddr);
+
       forgotResetSession = {
         user: match,
         code: resetCode,
-        recipient: phoneDigits ? ("+91 " + phoneDigits) : emailAddr
+        recipient: chosenRecipient
       };
 
-      // Dispatch carrier SMS via Firebase Phone Auth if phone exists
-      if (phoneDigits && phoneDigits.length >= 10 && typeof firebase !== 'undefined' && firebase.auth) {
+      // 1. If user chose Email method: dispatch branded Gurukul email from VedIQ Academy
+      if (preferredMethod === 'email' || isEmail) {
+        sendBrandedGurukulEmail({
+          recipient: emailAddr,
+          recipientName: match.parentName || "Gurukul Parent",
+          subject: `VedIQ Academy • Your Password Reset Code is ${resetCode}`,
+          code: resetCode
+        });
+      }
+
+      // 2. If user chose SMS method: dispatch carrier SMS via Firebase Phone Auth
+      if (preferredMethod === 'sms' && phoneDigits && phoneDigits.length >= 10 && typeof firebase !== 'undefined' && firebase.auth) {
         initFirebase();
         try {
           if (!window.recaptchaVerifier) {
@@ -2280,7 +2329,7 @@
         }
       }
 
-      // Show Step 2
+      // Show Step 2 in-modal (Enter 6-digit code & set new password)
       const step1 = document.getElementById('forgotStep1');
       const step2 = document.getElementById('forgotStep2');
       const recipientLabel = document.getElementById('forgotRecipientLabel');
@@ -2292,6 +2341,33 @@
         const otpInp = document.getElementById('forgotOtpInput');
         if (otpInp) otpInp.focus();
       }, 150);
+    }
+
+    // Branded Vedic Gurukul Email Dispatcher (Sender: VedIQ Academy <myvediqacademy@gmail.com>)
+    async function sendBrandedGurukulEmail({ recipient, recipientName, subject, code }) {
+      console.log("Dispatching official VedIQ Academy branded email to:", recipient);
+      try {
+        await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(recipient), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            _subject: subject || `VedIQ Academy • Your Password Reset Code is ${code}`,
+            _template: "table",
+            sender: "VedIQ Academy",
+            official_email: "myvediqacademy@gmail.com",
+            parent_name: recipientName || "Respected Gurukul Parent",
+            verification_code: code,
+            validity: "15 Minutes",
+            instructions: `Namaste! Enter the 6-digit code (${code}) on the VedIQ Gurukul parent portal to reset your password and sign in securely.`
+          })
+        });
+      } catch (err) {
+        console.warn("Branded email dispatch notice:", err);
+      }
+    }
     }
 
     async function handleCompletePasswordReset() {
@@ -2833,6 +2909,15 @@
       } catch (err) {
         console.warn("Direct email dispatch notice:", err);
       }
+    }
+
+    // Dispatch OTP directly to WhatsApp Desk / Parent WhatsApp
+    function dispatchOtpToWhatsApp() {
+      if (!currentOtpSession) return;
+      const code = currentOtpSession.code;
+      const target = currentOtpSession.targetIdentifier || currentOtpSession.recipient || "My Account";
+      const msg = encodeURIComponent(`Namaste VedIQ Academy! My login OTP verification code is ${code} for account (${target}). Please verify my session.`);
+      window.open(`https://wa.me/918390332500?text=${msg}`, '_blank');
     }
 
     function startOtpTimer(durationSeconds = 120) {
