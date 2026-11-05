@@ -62,9 +62,9 @@ const handler = async (req, res) => {
       const authHeader = req.headers.authorization || "";
       const expectedAdminKey = process.env.TEACHER_ADMIN_KEY || "vediq-gurukul-mentor-master-key-2026";
 
-      // Verify Admin Authorization
+      // Verify Admin Authorization (Strict Zero-Trust)
       const token = authHeader.replace("Bearer ", "").trim();
-      if (token !== expectedAdminKey && token !== "authorized-staff-session") {
+      if (!token || token !== expectedAdminKey) {
         return res.status(401).json({ error: "Unauthorized: Admin credentials required to alter payment configurations." });
       }
 

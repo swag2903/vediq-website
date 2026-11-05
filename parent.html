@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
@@ -830,7 +830,7 @@
 
         <button onclick="switchDashTab('fees')" id="side-fees" class="sidebar-btn w-full py-3 px-4 rounded-xl text-left text-xs font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition flex items-center gap-3">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-          <span>Tuition & GST Invoices</span>
+          <span>Tuition &amp; Fee Receipts</span>
         </button>
         <button onclick="switchDashTab('videos')" id="mob-videos" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs flex items-center gap-1.5">
           <span>ðŸ“š</span>
@@ -1250,7 +1250,7 @@
                 <span id="pendingUtrTimestamp" class="text-[10px] text-amber-800 font-semibold">Today</span>
               </div>
               <p class="text-xs leading-relaxed">
-                You have submitted UPI Reference (UTR) <strong id="pendingUtrDisplay" class="font-mono bg-white/70 px-1.5 py-0.5 rounded border border-amber-300"></strong> for <strong>â‚¹1,499</strong>. Master Mentors verify submissions against bank credits within 2 to 4 hours. Your official GST receipt will appear below upon approval.
+                You have submitted UPI Reference (UTR) <strong id="pendingUtrDisplay" class="font-mono bg-white/70 px-1.5 py-0.5 rounded border border-amber-300"></strong> for <strong>₹1,499</strong>. Master Mentors verify submissions against bank credits within 2 to 4 hours. Your official tuition fee receipt will appear below upon approval.
               </p>
             </div>
 
@@ -1315,8 +1315,8 @@
           <div class="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-2 border-b border-brand-border flex-wrap gap-2">
               <div>
-                <h4 class="font-bold text-sm uppercase tracking-wider text-brand-ink">Official GST Tax Invoices &amp; Receipts</h4>
-                <p class="text-xs text-brand-muted">Permanent, tamper-evident digital records for educational allowance &amp; tax filing</p>
+                <h4 class="font-bold text-sm uppercase tracking-wider text-brand-ink">Official Tuition Receipts &amp; Invoices</h4>
+                <p class="text-xs text-brand-muted">Verified digital records for educational fee payment &amp; fee acknowledgment</p>
               </div>
               <button type="button" onclick="refreshParentPaymentHistory()" class="text-xs text-brand-ochre font-bold hover:underline cursor-pointer">
                 â†» Refresh Status
@@ -4766,7 +4766,7 @@
         const data = await resp.json().catch(() => ({}));
 
         if (resp.ok && data.success) {
-          alert(`ðŸŽ‰ Payment submitted successfully!\n\nUTR: ${rawUtr}\nAmount: â‚¹${currentFeeTier.price}\n\nOur Master Mentors will verify bank credits and issue your official GST receipt within 2 to 4 hours.`);
+          alert(`Payment submitted successfully!\n\nUTR: ${rawUtr}\nAmount: ₹${currentFeeTier.price}\n\nOur Master Mentors will verify bank credits and issue your official tuition fee receipt within 2 to 4 hours.`);
           closeUpiPaymentModal();
           utrInput.value = '';
           if (notesInput) notesInput.value = '';
@@ -5053,16 +5053,16 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- OFFICIAL GST RECEIPT & CERTIFICATE MODAL -->
+  <!-- OFFICIAL TUITION RECEIPT & CERTIFICATE MODAL -->
   <!-- ========================================================================= -->
   <div id="receiptViewerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
     <div class="bg-white rounded-3xl max-w-2xl w-full border border-brand-border shadow-2xl relative animate-fadeIn flex flex-col max-h-[92vh] overflow-hidden">
       
       <div class="p-4 bg-brand-ink text-white flex items-center justify-between border-b border-brand-borderDark shrink-0">
         <div class="flex items-center gap-2">
-          <span class="text-lg">ðŸ“„</span>
+          <span class="text-lg">📄</span>
           <div>
-            <h4 class="font-bold text-xs uppercase tracking-wider text-white">Official Tax Invoice &amp; Gurukul Receipt</h4>
+            <h4 class="font-bold text-xs uppercase tracking-wider text-white">Official Tuition Receipt &amp; Acknowledgment</h4>
             <p class="text-[10px] text-brand-gold">Tamper-evident â€¢ Master Mentor Verified</p>
           </div>
         </div>

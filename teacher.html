@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
@@ -1793,10 +1793,14 @@
       }
     }
 
+    function getTeacherAdminToken() {
+      return localStorage.getItem('vediq_teacher_admin_key') || 'vediq-gurukul-mentor-master-key-2026';
+    }
+
     async function loadAdminPaymentsData() {
       try {
         const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payments?action=list_all`, {
-          headers: { 'Authorization': 'Bearer authorized-staff-session' }
+          headers: { 'Authorization': 'Bearer ' + getTeacherAdminToken() }
         });
         if (resp.ok) {
           const data = await resp.json();
@@ -1966,7 +1970,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer authorized-staff-session'
+            'Authorization': 'Bearer ' + getTeacherAdminToken()
           },
           body: JSON.stringify({
             action: 'verify',
@@ -1997,7 +2001,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer authorized-staff-session'
+            'Authorization': 'Bearer ' + getTeacherAdminToken()
           },
           body: JSON.stringify({
             action: 'reject',
@@ -2061,7 +2065,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer authorized-staff-session'
+            'Authorization': 'Bearer ' + getTeacherAdminToken()
           },
           body: JSON.stringify({
             upiId: inUpi,

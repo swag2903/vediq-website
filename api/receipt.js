@@ -1,7 +1,7 @@
 /**
- * Serverless Function: VedIQ Official GST Tax Receipt Generator
+ * Serverless Function: VedIQ Official Tuition Fee Receipt Generator
  * Renders high-fidelity, printable, verifiable receipts with official
- * digital Gurukul seal, student credentials, and GST breakdown.
+ * digital Gurukul acknowledgment, student credentials, and fee breakdown.
  */
 
 const DEFAULT_SAMPLE_RECEIPT = {
@@ -64,7 +64,7 @@ const handler = async (req, res) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tax Invoice &amp; Official Receipt — #${payment.receiptNumber || 'REC-2026-108'}</title>
+  <title>Official Tuition Fee Receipt — #${payment.receiptNumber || 'REC-2026-108'}</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -283,10 +283,10 @@ const handler = async (req, res) => {
           </tr>
           <tr>
             <td>
-              <span>Educational Services (Recognized Gurukul System)</span>
+              <span>Tuition &amp; Academic Mentorship Fee</span>
             </td>
-            <td>GST Exemption</td>
-            <td style="text-align: right; font-weight: 600; color: #059669;">₹0.00</td>
+            <td>Educational Mentorship</td>
+            <td style="text-align: right; font-weight: 600; color: #64748B;">Included</td>
           </tr>
           <tr class="total-row">
             <td colspan="2"><strong>Total Amount Paid</strong></td>
@@ -298,14 +298,14 @@ const handler = async (req, res) => {
 
     <div class="footer-seal">
       <div>
-        <div style="font-weight: 700; color: #0F172A;">VedIQ Academy Admissions &amp; Finance Desk</div>
-        <div>System Verified • Zero Discrepancy • Non-Transferable</div>
-        <div>Support: WhatsApp +91 8390332500</div>
+        <div style="font-weight: 700; color: #0F172A;">VedIQ Academy Accounts &amp; Admissions Desk</div>
+        <div>Electronically Generated Receipt • Valid Without Physical Seal</div>
+        <div>Support: WhatsApp +91 8390332500 • myvediqacademy@gmail.com</div>
       </div>
       <div class="signature-box">
         <div style="font-size: 24px; line-height: 1;">🪔</div>
-        <div class="signature-line">Dr. Ujwal Vyas</div>
-        <div style="font-size: 10px; color: #64748B;">Head Master Mentor, VedIQ Academy</div>
+        <div class="signature-line">VedIQ Academy Admissions Desk</div>
+        <div style="font-size: 10px; color: #64748B;">Authorized Digital Acknowledgment</div>
       </div>
     </div>
 
