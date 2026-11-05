@@ -2,10 +2,14 @@
  * Netlify Serverless Function: Production-Ready Secure OTP & Session Engine
  * Cryptographically issues, rate-limits, and verifies OTP sessions server-side.
  * Issues 30-day cryptographically signed Bearer Session Tokens for verified parents.
- * Delivers 6-digit OTP codes via Resend API (process.env.RESEND_API_KEY).
+ * Delivers 6-digit OTP codes via:
+ * 1. Official Gmail SMTP (Direct from myvediqacademy@gmail.com via TLS)
+ * 2. Resend API (Official Domain)
+ * 3. Fast2SMS / MSG91 / Twilio (Indian +91 SMS)
  */
 
 const crypto = require("crypto");
+const tls = require("tls");
 
 const OTP_TTL_SECONDS = 120; // 2 minutes validity for 6-digit code
 const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60; // 30-day validity for persistent login session
@@ -57,9 +61,6 @@ function checkRateLimit(recipient) {
   return { allowed: true };
 }
 
-/**
- * Generate full-payload HMAC-SHA256 signature for 6-digit OTP challenges
- */
 function generateChallengeHash(nonce, code, recipient, timestamp, expiresAt) {
   return crypto
     .createHmac("sha256", OTP_SECRET)
@@ -67,9 +68,6 @@ function generateChallengeHash(nonce, code, recipient, timestamp, expiresAt) {
     .digest("hex");
 }
 
-/**
- * Generate a cryptographically signed 30-day Session Token for an authenticated parent
- */
 function createSessionToken(recipient) {
   const nonce = crypto.randomUUID();
   const timestamp = Date.now();
@@ -89,73 +87,146 @@ function createSessionToken(recipient) {
   })).toString("base64");
 }
 
-/**
- * Dispatch transactional email via Resend API
- */
+function getEmailHtml(otpCode) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>VedIQ Academy Login Code</title>
+</head>
+<body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FAF8F5; color: #0C111D;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #FFFFFF; border: 1px solid #E8E2D8; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+    <tr>
+      <td style="padding: 28px 32px 20px 32px; background: linear-gradient(135deg, #0C111D 0%, #1A2234 100%); text-align: center;">
+        <div style="font-size: 28px; line-height: 1;">🪔</div>
+        <h1 style="margin: 8px 0 2px 0; color: #FFFFFF; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">VEDIQ ACADEMY</h1>
+        <p style="margin: 0; color: #C59A51; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Bharatiya Integral Gurukul System</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 32px 32px 24px 32px; text-align: center;">
+        <div style="display: inline-block; padding: 6px 14px; background-color: #FDF7EC; border: 1px solid #E8E2D8; border-radius: 50px; font-size: 11px; font-weight: 700; color: #C86D24; margin-bottom: 16px;">
+          🛡️ OFFICIAL SECURITY VERIFICATION
+        </div>
+        
+        <h2 style="margin: 0 0 8px 0; font-size: 18px; color: #0C111D; font-weight: 700;">Parent Portal Sign-In Code</h2>
+        <p style="margin: 0 0 24px 0; font-size: 13px; color: #667085; line-height: 1.5;">
+          Enter this 6-digit verification code to securely access your child's cognitive dashboard and Gurukul progress reports:
+        </p>
+
+        <div style="background-color: #FAF8F5; border: 2px dashed #C86D24; border-radius: 14px; padding: 18px 24px; margin: 0 auto 20px auto; display: inline-block;">
+          <span style="font-family: 'Courier New', Courier, monospace; font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #C86D24;">
+            ${otpCode}
+          </span>
+        </div>
+
+        <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #B05917;">
+          ⏱️ This code is valid for exactly 2 minutes (120 seconds).
+        </p>
+        <p style="margin: 0; font-size: 11px; color: #98A2B3; line-height: 1.4;">
+          If you did not request this login code, you can safely ignore this email. Never share your verification code with anyone.
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 20px 32px; background-color: #FAF8F5; border-top: 1px solid #E8E2D8; text-align: center;">
+        <p style="margin: 0 0 4px 0; font-size: 11px; color: #667085;">
+          VedIQ Academy • Co-founded by Dr. Ujwal Vyas, Mr. Atish Gulhane &amp; Mr. Swagatam Shukla
+        </p>
+        <p style="margin: 0; font-size: 10px; color: #98A2B3;">
+          Official Support Desk: <a href="mailto:myvediqacademy@gmail.com" style="color: #C86D24; text-decoration: none;">myvediqacademy@gmail.com</a>
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+function sendEmailViaGmailSmtp(toEmail, otpCode, gmailUser, gmailAppPassword) {
+  return new Promise((resolve) => {
+    const user = gmailUser.trim();
+    const pass = gmailAppPassword.replace(/\s+/g, "");
+    const emailSubject = `VedIQ Academy • Your Login Code is ${otpCode}`;
+    const rawEmail = [
+      `From: "VedIQ Academy" <${user}>`,
+      `To: <${toEmail}>`,
+      `Subject: ${emailSubject}`,
+      `Reply-To: myvediqacademy@gmail.com`,
+      `MIME-Version: 1.0`,
+      `Content-Type: text/html; charset=UTF-8`,
+      ``,
+      getEmailHtml(otpCode),
+      `.`
+    ].join("\r\n");
+
+    const socket = tls.connect({ host: "smtp.gmail.com", port: 465, timeout: 10000 }, () => {});
+
+    let step = 0;
+    let authUserSent = false;
+    let authPassSent = false;
+    let isDone = false;
+
+    socket.setTimeout(10000);
+    socket.setEncoding("utf-8");
+
+    function finish(res) {
+      if (!isDone) {
+        isDone = true;
+        try { socket.end(); } catch (e) {}
+        resolve(res);
+      }
+    }
+
+    socket.on("error", (err) => finish({ success: false, error: "Gmail SMTP socket error: " + err.message }));
+    socket.on("timeout", () => finish({ success: false, error: "Gmail SMTP connection timed out" }));
+
+    socket.on("data", (data) => {
+      const msg = data.toString();
+      const code = parseInt(msg.substring(0, 3), 10);
+
+      if (step === 0 && code === 220) {
+        step = 1;
+        socket.write("EHLO vediqacademy.com\r\n");
+      } else if (step === 1 && code === 250) {
+        step = 2;
+        socket.write("AUTH LOGIN\r\n");
+      } else if (step === 2 && code === 334 && !authUserSent) {
+        authUserSent = true;
+        socket.write(Buffer.from(user).toString("base64") + "\r\n");
+      } else if (step === 2 && code === 334 && authUserSent && !authPassSent) {
+        authPassSent = true;
+        socket.write(Buffer.from(pass).toString("base64") + "\r\n");
+      } else if (step === 2 && code === 235) {
+        step = 3;
+        socket.write(`MAIL FROM:<${user}>\r\n`);
+      } else if (step === 3 && code === 250) {
+        step = 4;
+        socket.write(`RCPT TO:<${toEmail}>\r\n`);
+      } else if (step === 4 && code === 250) {
+        step = 5;
+        socket.write("DATA\r\n");
+      } else if (step === 5 && code === 354) {
+        step = 6;
+        socket.write(rawEmail + "\r\n");
+      } else if (step === 6 && code === 250) {
+        step = 7;
+        socket.write("QUIT\r\n");
+        finish({ success: true, provider: `Gmail SMTP (${user})` });
+      } else if (code >= 400) {
+        finish({ success: false, error: `Gmail SMTP error (${code}): ${msg.trim()}` });
+      }
+    });
+  });
+}
+
 async function sendEmailViaResend(toEmail, otpCode, apiKey) {
   if (!apiKey) {
-    return {
-      success: false,
-      error: "RESEND_API_KEY is not configured in Netlify Environment Variables. Please set your Resend API key to enable live email delivery."
-    };
+    return { success: false, error: "RESEND_API_KEY is not configured in Environment Variables." };
   }
 
   const emailSubject = `VedIQ Academy • Your Login Code is ${otpCode}`;
-  const emailHtml = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <title>VedIQ Academy Login Code</title>
-    </head>
-    <body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FAF8F5; color: #0C111D;">
-      <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #FFFFFF; border: 1px solid #E8E2D8; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-        <tr>
-          <td style="padding: 28px 32px 20px 32px; background: linear-gradient(135deg, #0C111D 0%, #1A2234 100%); text-align: center;">
-            <div style="font-size: 28px; line-height: 1;">🪔</div>
-            <h1 style="margin: 8px 0 2px 0; color: #FFFFFF; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">VEDIQ ACADEMY</h1>
-            <p style="margin: 0; color: #C59A51; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Bharatiya Integral Gurukul System</p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 32px 32px 24px 32px; text-align: center;">
-            <div style="display: inline-block; padding: 6px 14px; background-color: #FDF7EC; border: 1px solid #E8E2D8; border-radius: 50px; font-size: 11px; font-weight: 700; color: #C86D24; margin-bottom: 16px;">
-              🛡️ OFFICIAL SECURITY VERIFICATION
-            </div>
-            
-            <h2 style="margin: 0 0 8px 0; font-size: 18px; color: #0C111D; font-weight: 700;">Parent Portal Sign-In Code</h2>
-            <p style="margin: 0 0 24px 0; font-size: 13px; color: #667085; line-height: 1.5;">
-              Enter this 6-digit verification code to securely access your child's cognitive dashboard and Gurukul progress reports:
-            </p>
-
-            <div style="background-color: #FAF8F5; border: 2px dashed #C86D24; border-radius: 14px; padding: 18px 24px; margin: 0 auto 20px auto; display: inline-block;">
-              <span style="font-family: 'Courier New', Courier, monospace; font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #C86D24;">
-                ${otpCode}
-              </span>
-            </div>
-
-            <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #B05917;">
-              ⏱️ This code is valid for exactly 2 minutes (120 seconds).
-            </p>
-            <p style="margin: 0; font-size: 11px; color: #98A2B3; line-height: 1.4;">
-              If you did not request this login code, you can safely ignore this email. Never share your verification code with anyone.
-            </p>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 20px 32px; background-color: #FAF8F5; border-top: 1px solid #E8E2D8; text-align: center;">
-            <p style="margin: 0 0 4px 0; font-size: 11px; color: #667085;">
-              VedIQ Academy • Co-founded by Dr. Ujwal Vyas, Mr. Atish Gulhane &amp; Mr. Swagatam Shukla
-            </p>
-            <p style="margin: 0; font-size: 10px; color: #98A2B3;">
-              Official Support Desk: <a href="mailto:myvediqacademy@gmail.com" style="color: #C86D24; text-decoration: none;">myvediqacademy@gmail.com</a>
-            </p>
-          </td>
-        </tr>
-      </table>
-    </body>
-    </html>
-  `;
+  const emailHtml = getEmailHtml(otpCode);
 
   let sender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
   if (!sender.includes("<") && sender.includes("@")) {
@@ -182,9 +253,12 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
     const data = await resp.json().catch(() => ({}));
 
     if (resp.ok && data && data.id) {
-      return { success: true, messageId: data.id };
+      return { success: true, messageId: data.id, provider: "Resend" };
     } else {
-      const errorMsg = data && data.message ? data.message : `HTTP status ${resp.status}`;
+      let errorMsg = data && data.message ? data.message : `HTTP status ${resp.status}`;
+      if (errorMsg.includes("domain") || errorMsg.includes("verify") || resp.status === 403) {
+        errorMsg = `${errorMsg}. (Tip: Add vediqacademy.com at resend.com/domains or configure GMAIL_USER & GMAIL_APP_PASSWORD to send directly via official Gmail).`;
+      }
       return { success: false, error: errorMsg };
     }
   } catch (err) {
@@ -192,17 +266,40 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
   }
 }
 
-/**
- * Deliver Mobile SMS OTP via Configured Indian SMS Gateways (Fast2SMS / MSG91 / Twilio)
- */
+async function sendEmailOtp(toEmail, otpCode) {
+  if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+    const gmailRes = await sendEmailViaGmailSmtp(toEmail, otpCode, process.env.GMAIL_USER, process.env.GMAIL_APP_PASSWORD);
+    if (gmailRes.success) return gmailRes;
+    console.warn("Gmail SMTP delivery note:", gmailRes.error);
+  }
+
+  if (process.env.RESEND_API_KEY) {
+    return await sendEmailViaResend(toEmail, otpCode, process.env.RESEND_API_KEY);
+  }
+
+  return {
+    success: false,
+    error: "No email provider configured. Please configure GMAIL_USER & GMAIL_APP_PASSWORD or RESEND_API_KEY in Environment Variables."
+  };
+}
+
 async function sendSmsViaProvider(phoneDigits, otpCode) {
-  // Provider 1: Fast2SMS (Direct Indian Quick OTP API)
   if (process.env.FAST2SMS_API_KEY) {
     try {
       const apiKey = process.env.FAST2SMS_API_KEY.trim();
-      const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=otp&variables_values=${encodeURIComponent(otpCode)}&flash=0&numbers=${encodeURIComponent(phoneDigits)}`;
-      const resp = await fetch(url, { headers: { "cache-control": "no-cache" } });
-      const data = await resp.json().catch(() => ({}));
+      const customMsg = `VedIQ Academy: Your login verification code is ${otpCode}. Valid for 2 minutes. Do not share this code.`;
+      const senderParam = process.env.FAST2SMS_SENDER_ID ? `&sender_id=${encodeURIComponent(process.env.FAST2SMS_SENDER_ID.trim())}` : "";
+      
+      let url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=q&message=${encodeURIComponent(customMsg)}&language=english&flash=0&numbers=${encodeURIComponent(phoneDigits)}${senderParam}`;
+      let resp = await fetch(url, { headers: { "cache-control": "no-cache" } });
+      let data = await resp.json().catch(() => ({}));
+
+      if (!resp.ok || (data && data.return === false)) {
+        url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=otp&variables_values=${encodeURIComponent(otpCode)}&flash=0&numbers=${encodeURIComponent(phoneDigits)}${senderParam}`;
+        resp = await fetch(url, { headers: { "cache-control": "no-cache" } });
+        data = await resp.json().catch(() => ({}));
+      }
+
       if (resp.ok && data && (data.return === true || data.status_code === 200)) {
         return { success: true, provider: "Fast2SMS" };
       } else {
@@ -214,7 +311,6 @@ async function sendSmsViaProvider(phoneDigits, otpCode) {
     }
   }
 
-  // Provider 2: MSG91 (DLT Compliant India OTP Route)
   if (process.env.MSG91_AUTH_KEY) {
     try {
       const authKey = process.env.MSG91_AUTH_KEY.trim();
@@ -232,7 +328,6 @@ async function sendSmsViaProvider(phoneDigits, otpCode) {
     }
   }
 
-  // Provider 3: Twilio
   if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
     try {
       const sid = process.env.TWILIO_ACCOUNT_SID.trim();
@@ -263,7 +358,6 @@ async function sendSmsViaProvider(phoneDigits, otpCode) {
     }
   }
 
-  // No carrier SMS provider is configured in environment variables
   return {
     success: false,
     configured: false,
@@ -272,10 +366,8 @@ async function sendSmsViaProvider(phoneDigits, otpCode) {
 }
 
 exports.handler = async (event) => {
-  // Dynamic CORS headers allowing GitHub Pages, Custom Domain, and Localhost
-  const origin = event.headers.origin || "*";
   const headers = {
-    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Content-Type": "application/json"
@@ -286,37 +378,22 @@ exports.handler = async (event) => {
   }
 
   if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: "Method Not Allowed" })
-    };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method Not Allowed" }) };
   }
 
   try {
     const payload = JSON.parse(event.body || "{}");
-    const action = payload.action; // 'send', 'verify', or 'issue-session'
+    const action = payload.action;
     const recipient = (payload.recipient || "").trim().toLowerCase();
 
     if (!recipient) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: "Recipient email or phone is required" })
-      };
+      return { statusCode: 400, headers, body: JSON.stringify({ error: "Recipient email or phone is required" }) };
     }
 
-    // ----------------------------------------------------
-    // ACTION 1: DISPATCH NEW OTP (Server-side Generation)
-    // ----------------------------------------------------
     if (action === "send") {
       const rateCheck = checkRateLimit(recipient);
       if (!rateCheck.allowed) {
-        return {
-          statusCode: 429,
-          headers,
-          body: JSON.stringify({ error: rateCheck.error })
-        };
+        return { statusCode: 429, headers, body: JSON.stringify({ error: rateCheck.error }) };
       }
 
       const code = crypto.randomInt(100000, 1000000).toString();
@@ -324,8 +401,9 @@ exports.handler = async (event) => {
       const timestamp = Date.now();
       const expiresAt = timestamp + (OTP_TTL_SECONDS * 1000);
 
+      // 1. Email OTP via Gmail SMTP or Resend
       if (recipient.includes("@")) {
-        const mailResult = await sendEmailViaResend(recipient, code, process.env.RESEND_API_KEY);
+        const mailResult = await sendEmailOtp(recipient, code);
         if (!mailResult.success) {
           return {
             statusCode: 502,
@@ -338,13 +416,10 @@ exports.handler = async (event) => {
           };
         }
       } else {
+        // 2. Mobile SMS OTP
         const phoneDigits = recipient.replace(/\D/g, '').slice(-10);
         if (phoneDigits.length !== 10) {
-          return {
-            statusCode: 400,
-            headers,
-            body: JSON.stringify({ success: false, error: "Invalid 10-digit Indian mobile number." })
-          };
+          return { statusCode: 400, headers, body: JSON.stringify({ success: false, error: "Invalid 10-digit mobile number." }) };
         }
 
         const smsResult = await sendSmsViaProvider(phoneDigits, code);
@@ -377,96 +452,72 @@ exports.handler = async (event) => {
           success: true,
           token: token,
           expiresAt: expiresAt,
-          ttlSeconds: OTP_TTL_SECONDS,
-          message: `Verification code successfully dispatched to ${recipient}`
+          ttl: OTP_TTL_SECONDS,
+          cooldown: COOLDOWN_SECONDS,
+          provider: recipient.includes("@") ? "Email" : "Mobile SMS"
         })
       };
     }
 
-    // ----------------------------------------------------
-    // ACTION 2: VERIFY OTP (Server-side Cryptographic Validation)
-    // ----------------------------------------------------
     if (action === "verify") {
-      const enteredCode = (payload.code || "").trim();
-      const token = payload.token;
+      const code = (payload.code || "").trim();
+      const tokenStr = payload.token;
 
-      if (!token || !enteredCode) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: "Missing verification code or token" })
-        };
+      if (!tokenStr || !code || code.length !== 6) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: "Token and valid 6-digit code are required", verified: false }) };
       }
 
       let parsedToken;
       try {
-        parsedToken = JSON.parse(Buffer.from(token, "base64").toString("utf-8"));
+        parsedToken = JSON.parse(Buffer.from(tokenStr, "base64").toString("utf8"));
       } catch (e) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: "Invalid verification token format" })
-        };
+        return { statusCode: 400, headers, body: JSON.stringify({ error: "Malformed verification session token", verified: false }) };
       }
 
-      const tokenIdentifier = parsedToken.n || parsedToken.h;
-      if (redeemedTokensStore.has(tokenIdentifier)) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: "This verification code has already been used. Please request a new code." })
-        };
+      const { n: nonce, r: tokenRecipient, t: timestamp, e: expiresAt, h: signature } = parsedToken;
+
+      if (tokenRecipient !== recipient) {
+        return { statusCode: 403, headers, body: JSON.stringify({ error: "Recipient identity mismatch", verified: false }) };
       }
 
-      if (parsedToken.r !== recipient) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: "Recipient mismatch: OTP was not issued for this identifier." })
-        };
+      if (Date.now() > expiresAt) {
+        return { statusCode: 410, headers, body: JSON.stringify({ error: "Verification code has expired. Please request a new code.", verified: false }) };
       }
 
-      if (Date.now() > parsedToken.e) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: "Verification code has expired (valid for 2 minutes). Please tap 'Resend New Code'." })
-        };
+      if (redeemedTokensStore.has(nonce)) {
+        return { statusCode: 409, headers, body: JSON.stringify({ error: "This verification code has already been used. Please request a new code.", verified: false }) };
       }
 
-      const expectedHash = generateChallengeHash(parsedToken.n, enteredCode, parsedToken.r, parsedToken.t, parsedToken.e);
-      const expectedBuf = Buffer.from(expectedHash, "hex");
-      const actualBuf = Buffer.from(parsedToken.h, "hex");
+      const expectedHash = generateChallengeHash(nonce, code, recipient, timestamp, expiresAt);
+      const isValid = crypto.timingSafeEqual(
+        Buffer.from(signature, "hex"),
+        Buffer.from(expectedHash, "hex")
+      );
 
-      if (expectedBuf.length === actualBuf.length && crypto.timingSafeEqual(expectedBuf, actualBuf)) {
-        redeemedTokensStore.add(tokenIdentifier);
-        setTimeout(() => redeemedTokensStore.delete(tokenIdentifier), OTP_TTL_SECONDS * 1000);
-
-        // Issue a cryptographically signed 30-Day Session Token
-        const sessionToken = createSessionToken(recipient);
-
-        return {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({
-            verified: true,
-            sessionToken: sessionToken,
-            recipient: recipient,
-            message: "OTP successfully verified. 30-Day Gurukul session issued."
-          })
-        };
-      } else {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ error: "Incorrect verification code. Please check your inbox and try again." })
-        };
+      if (!isValid) {
+        return { statusCode: 401, headers, body: JSON.stringify({ error: "Invalid verification code. Please check and try again.", verified: false }) };
       }
+
+      redeemedTokensStore.add(nonce);
+      if (redeemedTokensStore.size > 10000) {
+        redeemedTokensStore.clear();
+      }
+
+      const sessionToken = createSessionToken(recipient);
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          success: true,
+          verified: true,
+          recipient: recipient,
+          sessionToken: sessionToken,
+          expiresIn: SESSION_TTL_SECONDS
+        })
+      };
     }
 
-    // ----------------------------------------------------
-    // ACTION 3: ISSUE SESSION TOKEN (For Google OAuth or Verified Password)
-    // ----------------------------------------------------
     if (action === "issue-session") {
       const sessionToken = createSessionToken(recipient);
       return {
@@ -475,22 +526,17 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           success: true,
           sessionToken: sessionToken,
-          recipient: recipient
+          expiresIn: SESSION_TTL_SECONDS
         })
       };
     }
 
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: "Invalid action. Expected 'send', 'verify', or 'issue-session'." })
-    };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid action" }) };
   } catch (err) {
-    console.error("OTP handler error:", err);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "Internal server error processing OTP request" })
+      body: JSON.stringify({ error: "Internal server error in OTP engine", details: err.message })
     };
   }
 };

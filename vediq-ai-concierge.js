@@ -170,7 +170,7 @@
   async function generateAiResponse(query) {
     const clean = query.trim().toLowerCase();
 
-// 1. Query Live Gemini First with multi-turn history
+    // 1. Query Live Gemini First with multi-turn history
     const geminiResult = await queryLiveGeminiAi(query);
     if (geminiResult && geminiResult.isLiveAi) {
       return geminiResult.answer;
@@ -194,7 +194,7 @@
       ? best.answer
       : `🙏 Regarding <strong>"${query}"</strong>:<br><br>At VedIQ Academy, our core mission is developing lifelong focus, speed calculation, and emotional resilience in children (ages 5–15) through our calibrated 60-Minute Daily Gurukul routine.<br><br>• <strong>Free 3-Day Live Demo:</strong> Experience 3 live interactive sessions with Head Master Mentor Dr. Ujwal Vyas by clicking <a href="/#plans" class="text-brand-ochre font-bold underline">Book Free Demo</a>.<br>• <strong>Parent Portal:</strong> Access child scores, Tratak timers, and reports at <a href="parent.html" class="text-brand-ochre font-bold underline">vediqacademy.com/parent.html</a>.<br>• <strong>Mentor Desk:</strong> For immediate personal assistance, message our team on <a href="https://wa.me/918390332500" target="_blank" class="text-emerald-700 font-bold underline">WhatsApp (+91 8390332500)</a>.`;
 
-    // 3. Meaningful Error Transparency (Requirement 9)
+    // 3. Meaningful Error Transparency
     if (geminiResult && geminiResult.errorType === 'KEY_NOT_CONFIGURED') {
       return `
         <div class="space-y-2.5">
@@ -209,7 +209,7 @@
     return verifiedAnswer;
   }
 
-  // Inject Styles for iOS Fluid Spring Animation & Floating Elements
+  // Inject Styles for iOS Fluid Spring Animation & Responsive Modal Elements
   function injectStyles() {
     if (document.getElementById('vediq-ai-concierge-styles')) return;
     const style = document.createElement('style');
@@ -224,14 +224,17 @@
         will-change: transform;
       }
       #vediqAiFloatingBadge:hover {
-        transform: translateY(-5px) scale(1.03);
-        box-shadow: 0 16px 36px -6px rgba(200, 109, 36, 0.35), 0 0 1px 1px rgba(200, 109, 36, 0.3);
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: 0 16px 36px -6px rgba(200, 109, 36, 0.35);
       }
       #vediqAiFloatingBadge:active {
         transform: scale(0.92);
       }
+      #vediqAiChatBackdrop {
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
       #vediqAiChatWindow {
-        transition: transform 0.42s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.28s ease, visibility 0.28s;
+        transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s ease, visibility 0.25s;
         will-change: transform, opacity;
         transform-origin: bottom right;
       }
@@ -242,10 +245,42 @@
         visibility: visible;
       }
       #vediqAiChatWindow.chat-closed {
-        transform: scale(0.12) translate(50px, 50px);
+        transform: scale(0.9) translateY(30px);
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
+      }
+      @media (max-width: 639px) {
+        body.vediq-chat-open {
+          overflow: hidden !important;
+          touch-action: none;
+        }
+        #vediqAiChatWindow {
+          transform-origin: bottom center;
+          border-bottom-left-radius: 0 !important;
+          border-bottom-right-radius: 0 !important;
+        }
+        #vediqAiChatWindow.chat-closed {
+          transform: translateY(100%) !important;
+          opacity: 0;
+          pointer-events: none;
+          visibility: hidden;
+        }
+        #vediqAiChatWindow.chat-open {
+          transform: translateY(0) !important;
+          opacity: 1;
+          pointer-events: auto;
+          visibility: visible;
+        }
+      }
+      #vediqWidgetInput::-webkit-calendar-picker-indicator,
+      #vediqWidgetInput::-webkit-list-button,
+      #aiChatInput::-webkit-calendar-picker-indicator,
+      #aiChatInput::-webkit-list-button {
+        display: none !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
       }
       .ai-chat-bubble {
         animation: iosBubbleIn 0.3s var(--ios-spring) forwards;
@@ -265,50 +300,61 @@
     const container = document.createElement('div');
     container.id = 'vediqAiFloatingContainer';
     container.innerHTML = `
-      <!-- 1. Floating Collapsed Badge (Pulsing Gurukul Lamp + Live Status - Stacked Safely Above Bottom Bars) -->
-      <div id="vediqAiFloatingBadge" onclick="window.toggleVediqAiChat(true)" class="fixed bottom-20 lg:bottom-22 right-4 sm:right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-950 text-white shadow-2xl border border-amber-500/40 cursor-pointer backdrop-blur-md">
-        <div class="relative flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-tr from-brand-ochre to-amber-400 text-white text-sm shadow-sm">
+      <!-- Soft Modal Backdrop (Mobile only) -->
+      <div id="vediqAiChatBackdrop" onclick="window.toggleVediqAiChat(false)" class="hidden opacity-0 fixed inset-0 z-40 bg-black/50 backdrop-blur-xs transition-opacity duration-300"></div>
+
+      <!-- 1. Floating Collapsed Badge (Pulsing Gurukul Lamp + Live Status) -->
+      <div id="vediqAiFloatingBadge" onclick="window.toggleVediqAiChat(true)" class="fixed bottom-20 sm:bottom-6 right-3.5 sm:right-6 z-40 flex items-center gap-2 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-full bg-slate-950/95 text-white shadow-xl border border-amber-500/50 cursor-pointer backdrop-blur-md">
+        <div class="relative flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-tr from-brand-ochre to-amber-400 text-white text-xs sm:text-sm shadow-sm">
           🪔
-          <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-pulse"></span>
+          <span class="absolute -top-0.5 -right-0.5 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-pulse"></span>
         </div>
-        <div class="text-left pr-1">
-          <div class="text-[11px] font-bold text-white flex items-center gap-1.5 leading-none">
+        <div class="text-left pr-0.5 sm:pr-1">
+          <div class="text-[10px] sm:text-[11px] font-bold text-white flex items-center gap-1.5 leading-none">
             <span>VedIQ AI Desk</span>
-            <span class="text-[8px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold uppercase">Live</span>
+            <span class="text-[8px] px-1 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold uppercase">Live</span>
           </div>
-          <div class="text-[9px] text-amber-300 font-medium mt-1 leading-none">Ask doubts &amp; assistance &rarr;</div>
+          <div class="text-[9px] text-amber-300 font-medium mt-1 leading-none hidden xs:block">Ask doubts &amp; assistance &rarr;</div>
         </div>
       </div>
 
-      <!-- 2. Expanded Floating Chat Window (Apple iOS Spring Bubble) -->
-      <div id="vediqAiChatWindow" class="chat-closed fixed bottom-20 lg:bottom-6 right-3 sm:right-6 z-50 w-[94vw] max-w-[390px] h-[550px] max-h-[84vh] bg-white rounded-3xl border border-brand-border shadow-2xl flex flex-col overflow-hidden">
+      <!-- 2. Expanded Floating Chat Window (Apple iOS Spring Modal) -->
+      <div id="vediqAiChatWindow" class="chat-closed fixed inset-x-0 bottom-0 sm:bottom-6 sm:inset-x-auto sm:right-6 z-50 w-full sm:w-[385px] h-[86vh] sm:h-[580px] max-h-[100dvh] sm:max-h-[85vh] bg-white rounded-t-3xl sm:rounded-3xl border border-brand-border shadow-2xl flex flex-col overflow-hidden">
         
         <!-- Header -->
-        <div class="px-4 py-3.5 bg-brand-ink text-white flex items-center justify-between border-b border-brand-borderDark shrink-0">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-brand-ochre text-white flex items-center justify-center text-sm font-bold shadow-xs">
-              🪔
-            </div>
-            <div>
-              <div class="flex items-center gap-1.5">
-                <h3 class="text-xs font-bold text-white uppercase tracking-wider">VedIQ AI Concierge</h3>
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <div class="px-4 py-3 bg-brand-ink text-white flex flex-col border-b border-brand-borderDark shrink-0">
+          <!-- iOS drag indicator on mobile -->
+          <div class="sm:hidden w-12 h-1 rounded-full bg-white/30 mx-auto mb-2 mt-0.5"></div>
+          
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-brand-ochre text-white flex items-center justify-center text-sm font-bold shadow-xs">
+                🪔
               </div>
-              <p class="text-[10px] text-brand-gold">Instant Vedic &amp; Admission Resolution</p>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <h3 class="text-xs font-bold text-white uppercase tracking-wider">VedIQ AI Concierge</h3>
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                </div>
+                <p class="text-[10px] text-brand-gold">Instant Vedic &amp; Admission Resolution</p>
+              </div>
             </div>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <button type="button" onclick="window.triggerVediqEscalation()" title="Escalate to Support Desk" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-rose-500/30 text-slate-300 hover:text-white text-[10px] font-bold transition cursor-pointer">
-              🚨 Escalate
-            </button>
-            <button type="button" onclick="window.toggleVediqAiChat(false)" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white text-xs font-bold flex items-center justify-center transition cursor-pointer">
-              ✕
-            </button>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="window.triggerVediqEscalation()" title="Escalate to Support Desk" class="px-2 py-1 rounded-lg bg-white/10 hover:bg-rose-500/30 text-slate-300 hover:text-white text-[10px] font-bold transition cursor-pointer">
+                🚨 Escalate
+              </button>
+              <button type="button" onclick="window.toggleVediqAiChat(false)" title="Minimize Chat" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white text-xs font-bold flex items-center justify-center transition cursor-pointer">
+                ─
+              </button>
+              <button type="button" onclick="window.toggleVediqAiChat(false)" title="Close Chat" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white text-xs font-bold flex items-center justify-center transition cursor-pointer">
+                ✕
+              </button>
+            </div>
           </div>
         </div>
 
         <!-- Chat History Log -->
-        <div id="vediqWidgetChatLog" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-white to-brand-cream/30 text-xs">
+        <div id="vediqWidgetChatLog" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-white to-brand-cream/30 text-xs overscroll-contain">
           <!-- Initial Welcome Message -->
           <div class="flex items-start gap-2 ai-chat-bubble">
             <div class="w-6 h-6 rounded-lg bg-brand-ochre text-white flex items-center justify-center text-xs shrink-0 font-bold">🪔</div>
@@ -336,9 +382,25 @@
         </div>
 
         <!-- Chat Input Form -->
-        <form onsubmit="window.handleVediqWidgetSubmit(event)" class="p-2.5 sm:p-3 bg-white border-t border-brand-border flex items-center gap-2 shrink-0">
-          <input type="text" id="vediqWidgetInput" placeholder="Ask about login, fees, routines..." class="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" />
-          <button type="submit" class="w-10 h-10 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white flex items-center justify-center text-sm font-bold transition shadow-xs cursor-pointer shrink-0">
+        <form onsubmit="window.handleVediqWidgetSubmit(event); return false;" autocomplete="off" class="p-2.5 sm:p-3 bg-white border-t border-brand-border flex items-center gap-2 shrink-0" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));">
+          <input type="text"
+            id="vediqWidgetInput"
+            name="vediq_ai_query_no_autofill"
+            placeholder="Ask about login, fees, routines..."
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-autocomplete="none"
+            data-lpignore="true"
+            data-form-type="other"
+            data-1p-ignore="true"
+            data-gramm="false"
+            data-gramm_editor="false"
+            data-enable-grammarly="false"
+            onkeydown="if(event.key === 'Enter') { event.preventDefault(); window.handleVediqWidgetSubmit(event); }"
+            class="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs sm:text-sm font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" />
+          <button type="submit" class="w-10 h-10 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white flex items-center justify-center text-sm font-bold transition shadow-xs cursor-pointer shrink-0 active:scale-95">
             ➤
           </button>
         </form>
@@ -348,23 +410,41 @@
     document.body.appendChild(container);
   }
 
-  // Toggle Chat Window
+  // Toggle Chat Window (Guarantees zero page jump or unwanted scroll on mobile/desktop)
   window.toggleVediqAiChat = function (open) {
     const win = document.getElementById('vediqAiChatWindow');
     const badge = document.getElementById('vediqAiFloatingBadge');
+    const backdrop = document.getElementById('vediqAiChatBackdrop');
     if (!win) return;
 
     if (open) {
       win.classList.remove('chat-closed');
       win.classList.add('chat-open');
       if (badge) badge.style.opacity = '0';
-      setTimeout(() => {
-        const inp = document.getElementById('vediqWidgetInput');
-        if (inp) inp.focus();
-      }, 250);
+      if (backdrop) {
+        backdrop.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          backdrop.classList.add('opacity-100');
+        });
+      }
+      if (window.innerWidth < 640) {
+        document.body.classList.add('vediq-chat-open');
+      } else {
+        setTimeout(() => {
+          const inp = document.getElementById('vediqWidgetInput');
+          if (inp) inp.focus({ preventScroll: true });
+        }, 200);
+      }
     } else {
       win.classList.remove('chat-open');
       win.classList.add('chat-closed');
+      if (backdrop) {
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+        setTimeout(() => backdrop.classList.add('hidden'), 300);
+      }
+      document.body.classList.remove('vediq-chat-open');
       if (badge) badge.style.opacity = '1';
     }
   };
@@ -497,6 +577,7 @@
   // Submit Handler for Widget
   window.handleVediqWidgetSubmit = async function (e) {
     if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     const inp = document.getElementById('vediqWidgetInput');
     if (!inp) return;
     const raw = inp.value.trim();

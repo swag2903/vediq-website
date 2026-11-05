@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
@@ -1488,8 +1488,8 @@
           </div>
 
           <!-- Chat Input Area (Fixed Visibility & Clean Touch Alignment) -->
-          <form onsubmit="handleAiChatSubmit(event)" class="p-3 sm:p-3.5 bg-white border-t border-brand-border flex items-center gap-2 shrink-0 relative z-10">
-            <input type="text" id="aiChatInput" placeholder="Type your question or issue here..." class="flex-1 min-w-0 px-4 py-2.5 sm:py-3 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs sm:text-sm font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre transition" />
+          <form onsubmit="handleAiChatSubmit(event); return false;" autocomplete="off" class="p-3 sm:p-3.5 bg-white border-t border-brand-border flex items-center gap-2 shrink-0 relative z-10">
+            <input type="text" id="aiChatInput" name="vediq_ai_home_query_no_autofill" placeholder="Type your question or issue here..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-autocomplete="none" data-lpignore="true" data-form-type="other" data-1p-ignore="true" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" onkeydown="if(event.key === 'Enter') { event.preventDefault(); handleAiChatSubmit(event); }" class="flex-1 min-w-0 px-4 py-2.5 sm:py-3 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs sm:text-sm font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre transition" />
             <button type="submit" class="px-4 sm:px-5 py-2.5 sm:py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer">
               <span>Send</span>
               <span aria-hidden="true">&rarr;</span>
@@ -1802,7 +1802,7 @@
   </div>
 
   <!-- INTELLIGENT FLOATING WHATSAPP BUTTON (Auto-shifts away from Chatbot Input) -->
-  <a id="floatingWhatsAppBtn" href="https://wa.me/919766772819?text=Namaste!%20I%20have%20a%20question%20about%20admissions%20at%20VedIQ%20Academy." target="_blank" class="hidden lg:flex fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-2xl items-center gap-2.5 border border-emerald-400/50 text-xs font-bold tracking-wide cursor-pointer" title="Chat with VedIQ Admissions on WhatsApp">
+  <a id="floatingWhatsAppBtn" href="https://wa.me/919766772819?text=Namaste!%20I%20have%20a%20question%20about%20admissions%20at%20VedIQ%20Academy." target="_blank" class="hidden lg:flex fixed bottom-20 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-2xl items-center gap-2.5 border border-emerald-400/50 text-xs font-bold tracking-wide cursor-pointer" title="Chat with VedIQ Admissions on WhatsApp">
     <span class="relative flex h-2.5 w-2.5">
       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
       <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
