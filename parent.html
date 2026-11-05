@@ -623,7 +623,7 @@
           <!-- Quick OTP Alternative text link -->
           <div class="flex items-center justify-between text-[11px] text-brand-muted px-1">
             <span>Want login without password?</span>
-            <button type="button" onclick="triggerOtpSignIn()" class="text-brand-ochre font-semibold hover:underline cursor-pointer">
+            <button type="button" id="btnQuickOtpText" onclick="triggerOtpSignIn()" class="text-brand-ochre font-semibold hover:underline cursor-pointer">
               Sign in with Email OTP Code
             </button>
           </div>
@@ -647,7 +647,7 @@
           </button>
 
           <!-- Sign in with Email OTP Button -->
-          <button type="button" onclick="triggerOtpSignIn()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-amber-50 hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
+          <button type="button" id="btnMainOtpSignIn" onclick="triggerOtpSignIn()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-amber-50 hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
             <svg class="w-4 h-4 text-brand-ochre shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             <span id="btnPhoneOtpText" class="group-hover:text-brand-ochre transition">Sign in with Email OTP / Verification Code</span>
           </button>
@@ -2217,7 +2217,7 @@
       : "";
 
     // Secure Serverless Student Database Endpoint (Shields datastore from unauthorized direct browser tampering)
-    const CLOUD_API_URL = VEDIQ_BACKEND_URL + "/.netlify/functions/students-sync";
+    const CLOUD_API_URL = VEDIQ_BACKEND_URL + "/api/students-sync";
 
     function setCloudStatus(status, text) {
       const statusEl = document.getElementById('cloudSyncStatus');
@@ -2621,7 +2621,7 @@
       const modal = document.getElementById('firebaseConfigModal');
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
       }
     }
 
@@ -2629,7 +2629,7 @@
       const modal = document.getElementById('firebaseConfigModal');
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
     }
 
@@ -2728,7 +2728,7 @@
     // ==========================================
     let forgotResetSession = null;
 
-    window.openForgotPasswordModal = function() { openForgotPasswordModal(); };
+    // openForgotPasswordModal
     function openForgotPasswordModal() {
       const modal = document.getElementById('forgotPasswordModal');
       const step1 = document.getElementById('forgotStep1');
@@ -2738,8 +2738,8 @@
       const input = document.getElementById('forgotIdentifierInput');
       const currentLoginId = document.getElementById('loginIdentifier');
 
-      if (step1) step1.classList.remove('hidden');
-      if (step2) step2.classList.add('hidden');
+      if (step1) { step1.classList.remove('hidden'); step1.style.setProperty('display', 'block', 'important'); }
+      if (step2) { step2.classList.add('hidden'); step2.style.setProperty('display', 'none', 'important'); }
       if (err1) err1.classList.add('hidden');
       if (err2) err2.classList.add('hidden');
 
@@ -2749,7 +2749,7 @@
 
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
         setTimeout(() => { if (input) input.focus(); }, 150);
       }
     }
@@ -2758,7 +2758,7 @@
       const modal = document.getElementById('forgotPasswordModal');
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
       forgotResetSession = null;
     }
@@ -2766,8 +2766,8 @@
     function backToForgotStep1() {
       const step1 = document.getElementById('forgotStep1');
       const step2 = document.getElementById('forgotStep2');
-      if (step1) step1.classList.remove('hidden');
-      if (step2) step2.classList.add('hidden');
+      if (step1) { step1.classList.remove('hidden'); step1.style.setProperty('display', 'block', 'important'); }
+      if (step2) { step2.classList.add('hidden'); step2.style.setProperty('display', 'none', 'important'); }
     }
 
     async function handleSendPasswordReset(preferredMethod = 'sms') {
@@ -2840,8 +2840,8 @@
           const step2 = document.getElementById('forgotStep2');
           const recipientLabel = document.getElementById('forgotRecipientLabel');
           if (recipientLabel) recipientLabel.innerText = "+91 " + phoneDigits;
-          if (step1) step1.classList.add('hidden');
-          if (step2) step2.classList.remove('hidden');
+          if (step1) { step1.classList.add('hidden'); step1.style.setProperty('display', 'none', 'important'); }
+          if (step2) { step2.classList.remove('hidden'); step2.style.setProperty('display', 'block', 'important'); }
           return;
         } catch (e) {
           console.warn("Firebase carrier SMS for password reset:", e);
@@ -3031,7 +3031,7 @@
       localStorage.setItem('vediq_remembered_identifier', email || (match ? (match.email || match.phone) : '') || '');
       localStorage.setItem('vediq_remember_me', 'true');
       if (email) {
-        fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+        fetch(VEDIQ_BACKEND_URL + '/api/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'issue-session', recipient: email })
@@ -3082,8 +3082,8 @@
     }
 
     // Handle Login Form Submit (Strict Password Verification + Fast Loading Feedback)
-    window.handleLoginSubmit = function(e) { return handleLoginSubmit(e); };
-    window.clearLoginError = function() { clearLoginError(); };
+    // handleLoginSubmit
+    // clearLoginError
     async function handleLoginSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
 
@@ -3209,7 +3209,7 @@
         }
 
         if (match.email || identifier) {
-          fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+          fetch(VEDIQ_BACKEND_URL + '/api/otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'issue-session', recipient: match.email || identifier })
@@ -3227,7 +3227,7 @@
     }
 
     // Trigger OTP Flow for Email & Phone (Official VedIQ Security Engine)
-    window.triggerOtpSignIn = function() { triggerOtpSignIn(); };
+    // triggerOtpSignIn
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       let identifier = idInput ? idInput.value.trim() : "";
@@ -3252,8 +3252,8 @@
       }
       if (err) err.classList.add('hidden');
 
-      if (step1) step1.classList.remove('hidden');
-      if (step2) step2.classList.add('hidden');
+      if (step1) { step1.classList.remove('hidden'); step1.style.setProperty('display', 'block', 'important'); }
+      if (step2) { step2.classList.add('hidden'); step2.style.setProperty('display', 'none', 'important'); }
 
       const heading = document.getElementById('otpModalHeading');
       const sub = document.getElementById('otpModalSubtext');
@@ -3262,7 +3262,7 @@
 
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
         setTimeout(() => {
           if (phoneField) phoneField.focus();
         }, 150);
@@ -3272,8 +3272,8 @@
     function backToOtpStepPhone() {
       const step1 = document.getElementById('otpStepPhoneInput');
       const step2 = document.getElementById('otpStepCodeVerify');
-      if (step1) step1.classList.remove('hidden');
-      if (step2) step2.classList.add('hidden');
+      if (step1) { step1.classList.remove('hidden'); step1.style.setProperty('display', 'block', 'important'); }
+      if (step2) { step2.classList.add('hidden'); step2.style.setProperty('display', 'none', 'important'); }
       const phoneField = document.getElementById('otpPhoneInputField');
       if (phoneField) setTimeout(() => phoneField.focus(), 100);
     }
@@ -3399,7 +3399,21 @@
     async function initiatePhoneOtpDispatch(phoneDigits) {
       const fullPhone = "+91" + phoneDigits;
 
-      // Attempt Firebase Phone Auth if enabled
+      // 1. Direct Server-Side Fast2SMS Route
+      try {
+        const srvRes = await requestOtpFlow({
+          recipient: fullPhone,
+          displayRecipient: fullPhone,
+          targetIdentifier: phoneDigits,
+          type: 'phone',
+          isFirebase: false
+        });
+        if (srvRes && srvRes.success) return srvRes;
+      } catch (srvErr) {
+        console.warn("Direct server SMS dispatch note:", srvErr);
+      }
+
+      // 2. Fallback to Firebase Phone Auth if enabled
       initFirebase();
       if (typeof firebase !== 'undefined' && firebase.auth) {
         try {
@@ -3446,7 +3460,7 @@
 
       if (!isFirebase) {
         try {
-          const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+          const resp = await fetch(VEDIQ_BACKEND_URL + '/api/otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'send', recipient: recipient })
@@ -3483,8 +3497,8 @@
       // Show Step 2 (Code Verification) and hide Step 1 ONLY upon confirmed dispatch
       const step1 = document.getElementById('otpStepPhoneInput');
       const step2 = document.getElementById('otpStepCodeVerify');
-      if (step1) step1.classList.add('hidden');
-      if (step2) step2.classList.remove('hidden');
+      if (step1) { step1.classList.add('hidden'); step1.style.setProperty('display', 'none', 'important'); }
+      if (step2) { step2.classList.remove('hidden'); step2.style.setProperty('display', 'block', 'important'); }
 
       const heading = document.getElementById('otpModalHeading');
       const sub = document.getElementById('otpModalSubtext');
@@ -3517,7 +3531,7 @@
       const modal = document.getElementById('otpVerificationModal');
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
       }
 
       setTimeout(() => {
@@ -3617,7 +3631,7 @@
 
       // Re-dispatch secure serverless OTP
       try {
-        const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+        const resp = await fetch(VEDIQ_BACKEND_URL + '/api/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'send', recipient: currentOtpSession.recipient })
@@ -3680,7 +3694,7 @@
       const modal = document.getElementById('otpVerificationModal');
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
       if (otpCountdownTimer) clearInterval(otpCountdownTimer);
     }
@@ -3798,7 +3812,7 @@
       let serverVerifyError = "Invalid verification code. Please check and try again.";
       let serverSessionToken = null;
       try {
-        const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+        const resp = await fetch(VEDIQ_BACKEND_URL + '/api/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3851,7 +3865,7 @@
       const activeToken = sessionToken || localStorage.getItem('vediq_session_token');
       if (activeToken) {
         try {
-          const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/student-profile', {
+          const resp = await fetch(VEDIQ_BACKEND_URL + '/api/student-profile', {
             method: 'GET',
             headers: {
               'Authorization': 'Bearer ' + activeToken,
@@ -3912,7 +3926,7 @@
     }
 
     // Execute Parent Registration (Supports Dual Login, SHA-256 Hashing & Co-Parent Linking)
-    window.executeParentRegistration = function(e) { return executeParentRegistration(e); };
+    // executeParentRegistration
     async function executeParentRegistration(e) {
       if (e && e.preventDefault) e.preventDefault();
       const regBtn = document.getElementById('btnSubmitRegistration');
@@ -4084,7 +4098,7 @@
       localStorage.setItem('vediq_remember_me', 'true');
 
       try {
-        fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+        fetch(VEDIQ_BACKEND_URL + '/api/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'issue-session', recipient: email })
@@ -4314,7 +4328,7 @@
 
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
         setTimeout(() => {
           const nameInput = document.getElementById('editChildName');
           if (nameInput) nameInput.focus();
@@ -4326,7 +4340,7 @@
       const modal = document.getElementById('childProfileModal');
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
     }
 
@@ -4379,7 +4393,7 @@
       if (nameInput) nameInput.value = '';
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
         setTimeout(() => { if (nameInput) nameInput.focus(); }, 150);
       }
     }
@@ -4388,7 +4402,7 @@
       const modal = document.getElementById('addChildModal');
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
     }
 
@@ -4750,7 +4764,7 @@
       }
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
         setTimeout(() => {
           const cInput = document.getElementById('obChild1Name');
           if (cInput) cInput.focus();
@@ -4762,7 +4776,7 @@
       const modal = document.getElementById('firstTimeOnboardingModal');
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
     }
 
@@ -5118,7 +5132,7 @@
       const sessionToken = localStorage.getItem('vediq_session_token');
       if (sessionToken) {
         setCloudStatus('syncing', 'Restoring Gurukul Session...');
-        fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/student-profile', {
+        fetch(VEDIQ_BACKEND_URL + '/api/student-profile', {
           method: 'GET',
           headers: {
             'Authorization': 'Bearer ' + sessionToken,
@@ -5164,6 +5178,41 @@
       }
     });
     // DOMContentLoaded closed
+
+    // Bind event listeners on DOMContentLoaded
+    window.addEventListener('DOMContentLoaded', () => {
+      const bindClick = (id, fn) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', (e) => { if (e && e.preventDefault) e.preventDefault(); fn(e); });
+      };
+      bindClick('btnMainOtpSignIn', () => triggerOtpSignIn());
+      bindClick('btnQuickOtpText', () => triggerOtpSignIn());
+      bindClick('tabBtnSignIn', () => switchAuthTab('login'));
+      bindClick('tabBtnSignUp', () => switchAuthTab('register'));
+      bindClick('btnHeroCreateAccount', () => switchAuthTab('register'));
+      bindClick('btnRegisterBackToLogin', () => switchAuthTab('login'));
+    });
+
+    // Global Window Function Attachments (Guarantees Universal Availability)
+    window.triggerOtpSignIn = triggerOtpSignIn;
+    window.openOtpPhoneInputModal = openOtpPhoneInputModal;
+    window.closeOtpModal = closeOtpModal;
+    window.dispatchOtpFromPhoneStep = dispatchOtpFromPhoneStep;
+    window.verifyOtpAndProceed = verifyOtpAndProceed;
+    window.resendOtpCode = resendOtpCode;
+    window.backToOtpStepPhone = backToOtpStepPhone;
+    window.dispatchOtpToWhatsApp = dispatchOtpToWhatsApp;
+    window.openForgotPasswordModal = openForgotPasswordModal;
+    window.closeForgotPasswordModal = closeForgotPasswordModal;
+    window.handleSendPasswordReset = handleSendPasswordReset;
+    window.handleCompletePasswordReset = handleCompletePasswordReset;
+    window.backToForgotStep1 = backToForgotStep1;
+    window.startGoogleAuth = startGoogleAuth;
+    window.handleLoginSubmit = handleLoginSubmit;
+    window.executeParentRegistration = executeParentRegistration;
+    window.switchAuthTab = switchAuthTab;
+    window.toggleAuthMode = switchAuthTab;
+    window.clearLoginError = clearLoginError;
     if (true) {
       }
 
@@ -5495,7 +5544,7 @@
 
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
       }
     }
 
@@ -5506,7 +5555,7 @@
       if (playerBox) playerBox.innerHTML = ''; // Stop video playback instantly
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
     }
 
@@ -5598,7 +5647,7 @@
 
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
       }
     }
 
@@ -5606,7 +5655,7 @@
       const modal = document.getElementById('upiPaymentModal');
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
     }
 
@@ -5771,7 +5820,7 @@
       }
       if (modal) {
         modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        modal.classList.add('flex'); modal.style.setProperty('display', 'flex', 'important'); modal.style.zIndex = '99999';
       }
     }
 
@@ -5781,7 +5830,7 @@
       if (box) box.innerHTML = '';
       if (modal) {
         modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        modal.classList.remove('flex'); modal.style.setProperty('display', 'none', 'important');
       }
     }
 

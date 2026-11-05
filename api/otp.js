@@ -311,14 +311,14 @@ async function sendSmsViaProvider(phoneDigits, otpCode) {
       const customMsg = `VedIQ Academy: Your login verification code is ${otpCode}. Valid for 2 minutes. Do not share this code.`;
       const senderParam = process.env.FAST2SMS_SENDER_ID ? `&sender_id=${encodeURIComponent(process.env.FAST2SMS_SENDER_ID.trim())}` : "";
       
-      // Attempt Quick Route with clear brand name in SMS body
-      let url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=q&message=${encodeURIComponent(customMsg)}&language=english&flash=0&numbers=${encodeURIComponent(phoneDigits)}${senderParam}`;
+      // 1. High-priority dedicated Indian OTP route (Fastest, pre-approved transactional route)
+      let url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=otp&variables_values=${encodeURIComponent(otpCode)}&flash=0&numbers=${encodeURIComponent(phoneDigits)}${senderParam}`;
       let resp = await fetch(url, { headers: { "cache-control": "no-cache" } });
       let data = await resp.json().catch(() => ({}));
 
-      // Fallback to high-priority OTP route if route=q is restricted
+      // 2. Fallback to Quick Route with brand name in body if route=otp returns false
       if (!resp.ok || (data && data.return === false)) {
-        url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=otp&variables_values=${encodeURIComponent(otpCode)}&flash=0&numbers=${encodeURIComponent(phoneDigits)}${senderParam}`;
+        url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=q&message=${encodeURIComponent(customMsg)}&language=english&flash=0&numbers=${encodeURIComponent(phoneDigits)}${senderParam}`;
         resp = await fetch(url, { headers: { "cache-control": "no-cache" } });
         data = await resp.json().catch(() => ({}));
       }
