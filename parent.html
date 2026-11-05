@@ -543,15 +543,16 @@
           Sign In
         </button>
         <button type="button" id="tabBtnSignUp" onclick="switchAuthTab('register')" class="flex-1 py-2 rounded-xl font-bold text-xs transition text-brand-ochre hover:text-brand-ochreHover bg-amber-50/70 border border-brand-ochre/30 flex items-center justify-center gap-1 cursor-pointer">
-          <span>Sign Up / Register</span>
-          <span class="px-1.5 py-0.2 rounded-full bg-brand-ochre text-white text-[9px] font-extrabold uppercase">New</span>
+          <span>Create Parent Account</span></button><!--
+
         </button>
 
-        <button style="display:none">
+
 
         </button>
       </div>
 
+--></div>
       <!-- Card Box -->
       <div class="bg-white rounded-3xl border border-brand-border shadow-xl p-6 sm:p-7 space-y-4">
         
@@ -565,12 +566,12 @@
                 <span>✨</span> <span>First Time Parent?</span>
               </span>
               <div class="text-xs sm:text-sm font-extrabold text-brand-ink mt-1 truncate">
-                New to VedIQ? Create Account
+                New to VedIQ Academy?
               </div>
               <div class="text-[11px] text-brand-muted leading-tight">Instant enrollment &amp; child progress tracking</div>
             </div>
-            <button type="button" onclick="switchAuthTab('register')" class="px-3.5 py-2 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white font-extrabold text-xs shadow-xs transition shrink-0 active:scale-95 cursor-pointer flex items-center gap-1">
-              <span>Sign Up</span>
+            <button type="button" id="btnHeroCreateAccount" onclick="switchAuthTab('register')" class="px-4 py-2 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white font-extrabold text-xs shadow-xs transition shrink-0 active:scale-95 cursor-pointer flex items-center gap-1">
+              <span>Create Account</span>
               <span aria-hidden="true">&rarr;</span>
             </button>
           </div>
@@ -578,13 +579,13 @@
           <!-- Username / Email / Phone input -->
           <div>
             <label class="block text-xs font-semibold text-brand-ink mb-1.5">Username, phone or email address</label>
-            <input type="text" id="loginIdentifier" required placeholder="e.g. 98000 00000 or parent@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
+            <input type="text" id="loginIdentifier" required placeholder="e.g. 98000 00000 or parent@gmail.com" oninput="clearLoginError()" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
           </div>
 
           <!-- Password input with Remember Me & Forgot Password -->
           <div>
             <label class="block text-xs font-semibold text-brand-ink mb-1.5">Password</label>
-            <input type="password" id="loginPassword" required placeholder="Enter your account password" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
+            <input type="password" id="loginPassword" required placeholder="Enter your account password" oninput="clearLoginError()" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
             <div class="flex items-center justify-between mt-2 text-xs">
               <label class="flex items-center gap-1.5 cursor-pointer text-brand-ink select-none">
                 <input type="checkbox" id="rememberMeCheck" checked class="w-4 h-4 rounded accent-brand-ochre cursor-pointer" />
@@ -594,7 +595,7 @@
                 Forgot password?
               </button>
             </div>
-            <p id="loginErrorText" class="text-[11px] text-rose-600 font-semibold mt-1.5 hidden"></p>
+            <div id="loginErrorText" class="mt-2 hidden" role="alert"></div>
           </div>
 
           <!-- Primary Sign In Button -->
@@ -645,7 +646,7 @@
               <span class="font-bold text-brand-ink">Already registered?</span>
               <span class="text-[11px] text-brand-muted block">Sign into existing student dashboard</span>
             </div>
-            <button type="button" onclick="switchAuthTab('login')" class="px-3 py-1.5 rounded-xl bg-brand-ink hover:bg-brand-ink/90 text-white font-bold text-xs shadow-xs transition shrink-0 cursor-pointer">
+            <button type="button" id="btnRegisterBackToLogin" onclick="switchAuthTab('login')" class="px-3.5 py-1.5 rounded-xl bg-brand-ink hover:bg-brand-ink/90 text-white font-bold text-xs shadow-xs transition shrink-0 cursor-pointer">
               Sign In &rarr;
             </button>
           </div>
@@ -721,7 +722,7 @@
             <!-- Option A: Enroll New Child (Default) -->
             <div id="regModeNewChild" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div>
-                <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Name *</label>
+                <label class="block text-xs font-semibold text-brand-ink mb-1">Child's Name (Optional)</label>
               <input type="text" id="regChildName" placeholder="e.g. Aarav Sharma" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/60 text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
             </div>
             <div>
@@ -781,7 +782,7 @@
             </label>
           </div>
 
-          <button type="submit" class="w-full mt-2 py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+          <button type="submit" id="btnSubmitRegistration" class="w-full mt-2 py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
             <span>Create Account &amp; Enroll Child</span>
             <span aria-hidden="true">&rarr;</span>
           </button>
@@ -797,7 +798,7 @@
 
       <!-- Subcard: Seamless Switch between Sign In & Sign Up -->
       <!-- Subcard: Seamless Switch between Sign In & Sign Up -->
-      <div id="subcardBox" class="bg-gradient-to-r from-white via-amber-50/40 to-white rounded-2xl border-2 border-brand-ochre/30 p-4 text-center space-y-2 shadow-sm">
+      <div id="subcardBox" class="hidden" style="display:none !important;">
         <div class="text-xs text-brand-ink font-bold flex items-center justify-center gap-1.5">
           <span>🪔</span> <span>New to VedIQ Academy?</span>
         </div>
@@ -2628,6 +2629,25 @@
     }
 
     // Toggle between Sign In mode and Registration mode (Tab-aware)
+    let regChildMode = 'new';
+    window.toggleRegChildMode = function() {
+      const newChildBox = document.getElementById('regModeNewChild');
+      const linkChildBox = document.getElementById('regModeLinkChild');
+      const btn = document.getElementById('regToggleChildModeBtn');
+      if (regChildMode === 'new') {
+        regChildMode = 'link';
+        if (newChildBox) newChildBox.classList.add('hidden');
+        if (linkChildBox) linkChildBox.classList.remove('hidden');
+        if (btn) btn.innerHTML = 'Enroll new child instead &rarr;';
+      } else {
+        regChildMode = 'new';
+        if (newChildBox) newChildBox.classList.remove('hidden');
+        if (linkChildBox) linkChildBox.classList.add('hidden');
+        if (btn) btn.innerHTML = 'Spouse already enrolled? Link child &rarr;';
+      }
+    };
+    window.switchAuthTab = function(tab) { switchAuthTab(tab); };
+
     function switchAuthTab(tab) {
       const formLogin = document.getElementById('formLogin');
       const formRegister = document.getElementById('formRegister');
@@ -2645,11 +2665,11 @@
         if (tabSignIn) {
           tabSignIn.className = "flex-1 py-2 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer";
           tabSignIn.innerHTML = '<span>Sign In</span>';
-          tabSignUp.innerHTML = '<span>Sign Up / Register</span>';
+          tabSignUp.innerHTML = '<span>Create Parent Account</span>';
         }
         if (authTitle) authTitle.innerText = "Create Parent Account";
         if (subcardBox) {
-          subcardBox.innerHTML = `<div class="text-xs text-brand-muted font-medium">Already registered with us?</div><button type="button" onclick="switchAuthTab('login')" class="w-full py-2.5 px-4 rounded-xl bg-brand-ink hover:bg-brand-ink/90 text-white font-bold text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"><span>Sign In to Your Parent Account &rarr;</span></button>`;
+          subcardBox.style.display = 'none';
         }
       } else {
         if (formLogin) formLogin.classList.remove('hidden');
@@ -2659,12 +2679,12 @@
         }
         if (tabSignUp) {
           tabSignUp.className = "flex-1 py-2 rounded-xl font-bold text-xs transition text-brand-ochre hover:text-brand-ochreHover bg-amber-50/70 border border-brand-ochre/30 flex items-center justify-center gap-1 cursor-pointer";
-          tabSignUp.innerHTML = '<span>Sign Up / Register</span> <span class="px-1.5 py-0.2 rounded-full bg-brand-ochre text-white text-[9px] font-extrabold uppercase">New</span>';
+          tabSignUp.innerHTML = '<span>Create Parent Account</span>';
           tabSignIn.innerHTML = '<span>Sign In</span>';
         }
         if (authTitle) authTitle.innerText = "Sign in to VedIQ Academy";
         if (subcardBox) {
-          subcardBox.innerHTML = `<div class="text-xs text-brand-ink font-bold flex items-center justify-center gap-1.5"><span>🪔</span> <span>New to VedIQ Academy?</span></div><button type="button" onclick="switchAuthTab('register')" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-ochre to-amber-500 hover:from-brand-ochreHover hover:to-amber-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-md transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"><span>🌟 Create Your Parent Account &rarr;</span></button>`;
+          subcardBox.style.display = 'none';
         }
       }
     }
@@ -2994,6 +3014,25 @@
       const errEl = document.getElementById('loginErrorText');
       const passInput = document.getElementById('loginPassword');
       if (errEl) {
+        errEl.innerHTML = `
+          <div class="p-3 my-2 rounded-2xl bg-rose-50 border-2 border-rose-300 text-rose-800 text-xs font-bold flex items-start gap-2 shadow-xs">
+            <span class="text-base leading-none">⚠️</span>
+            <div class="flex-1 leading-snug">${msg}</div>
+          </div>
+        `;
+        errEl.classList.remove('hidden');
+        try { errEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+      }
+      if (passInput) {
+        passInput.classList.add('border-rose-500', 'bg-rose-50', 'ring-2', 'ring-rose-200');
+        passInput.focus();
+      }
+      return;
+    }
+    function old_showLoginError(msg) { return showLoginError(msg); } function legacy_dormant_login_err() {
+      const errEl = document.getElementById('loginErrorText');
+      const passInput = document.getElementById('loginPassword');
+      if (errEl) {
         errEl.innerText = msg;
         errEl.classList.remove('hidden');
       }
@@ -3006,8 +3045,8 @@
     function clearLoginError() {
       const errEl = document.getElementById('loginErrorText');
       const passInput = document.getElementById('loginPassword');
-      if (errEl) errEl.classList.add('hidden');
-      if (passInput) passInput.classList.remove('border-rose-500', 'bg-rose-50/40');
+      if (errEl) { errEl.innerHTML = ''; errEl.classList.add('hidden'); }
+      if (passInput) passInput.classList.remove('border-rose-500', 'bg-rose-50', 'ring-2', 'ring-rose-200');
     }
 
     // Handle Login Form Submit (Strict Password Verification + Fast Loading Feedback)
@@ -3048,7 +3087,41 @@
 
         // If user does not exist at all, reject!
         if (!match) {
-          showLoginError("No account found with this email or phone. Please create an account or verify your details.");
+          let fbUserFound = false;
+          if (typeof firebase !== 'undefined' && firebase.auth) {
+            initFirebase();
+            try {
+              const authEmail = identifier.includes('@') ? identifier.trim().toLowerCase() : `${identifier.replace(/\D/g, '').slice(-10)}@vediqacademy.com`;
+              const res = await firebase.auth().signInWithEmailAndPassword(authEmail, password);
+              if (res && res.user) {
+                fbUserFound = true;
+                const isEmail = identifier.includes('@');
+                const phoneDigits = identifier.replace(/\D/g, '').slice(-10);
+                match = {
+                  parentId: "PAR-" + Math.floor(1000 + Math.random() * 9000),
+                  parentName: res.user.displayName || (isEmail ? `Parent (${identifier.split('@')[0]})` : "Gurukul Parent"),
+                  phone: phoneDigits || "9800000000",
+                  email: isEmail ? identifier.trim().toLowerCase() : (res.user.email || `${phoneDigits}@vediqacademy.com`),
+                  firebaseUid: res.user.uid,
+                  activeChildIndex: 0,
+                  children: []
+                };
+                saveStudentToDatabase(match);
+              }
+            } catch (fbErr) {
+              if (fbErr.code === 'auth/wrong-password' || fbErr.code === 'auth/invalid-credential') {
+                showLoginError("Wrong password! Please check your password and try again, or click 'Forgot password?' / 'Sign in with Email OTP Code' below.");
+                restoreBtn();
+                return;
+              }
+            }
+          }
+          if (!fbUserFound) {
+            showLoginError("No account found with this email or phone. Please create an account or verify your details.");
+            restoreBtn();
+            return;
+          }
+          if (false)
           restoreBtn();
           return;
         }
@@ -3080,14 +3153,14 @@
             authSuccess = true;
           }
         }
-        if (false) { {
+        if (false) { { {
         }
 
           }
         }
 
         if (!authSuccess) {
-          showLoginError("Incorrect password. Please enter your registered account password or tap 'Sign in with Email OTP Code' below.");
+          showLoginError("Wrong password! Please check your password and try again, or click 'Forgot password?' / 'Sign in with Email OTP Code' below.");
           restoreBtn();
           return;
         }
@@ -3793,6 +3866,18 @@
 
     // Execute Parent Registration (Supports Dual Login, SHA-256 Hashing & Co-Parent Linking)
     async function executeParentRegistration(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const regBtn = document.getElementById('btnSubmitRegistration');
+      if (regBtn) {
+        regBtn.disabled = true;
+        regBtn.innerHTML = `<span class="inline-block animate-spin">⏳</span> <span>Creating Account...</span>`;
+      }
+      function restoreRegBtn() {
+        if (regBtn) {
+          regBtn.disabled = false;
+          regBtn.innerHTML = `<span>Create Account &amp; Enroll Child</span> <span aria-hidden="true">&rarr;</span>`;
+        }
+      }
       e.preventDefault();
       const parentName = (document.getElementById('regParentName') ? document.getElementById('regParentName').value : "").trim();
       const rawPhone = (document.getElementById('regPhone') ? document.getElementById('regPhone').value : "").trim();
@@ -3882,7 +3967,8 @@
         const childName = (document.getElementById('regChildName') ? document.getElementById('regChildName').value : "").trim();
         const childGrade = document.getElementById('regChildAge') ? document.getElementById('regChildAge').value : "Ages 8-11 • Pravesh";
 
-        if (!childName) {
+        const resolvedChildName = childName || ((parentName.replace(/^(Mr\.|Mrs\.|Ms\.|Dr\.)\s*/i, '').trim().split(' ')[0] || 'Your') + "'s Child");
+        if (false && !childName) {
           alert("Please enter your child's full name.");
           const cInp = document.getElementById('regChildName');
           if (cInp) cInp.focus();
@@ -3895,7 +3981,7 @@
         initialChild = {
           childId: rawChildId,
           familyCode: rawFamilyCode,
-          childName: childName,
+          childName: resolvedChildName,
           childGrade: childGrade,
           batch: "Daily 5:00 PM – 6:00 PM IST",
           focusScore: "0",
@@ -3922,6 +4008,15 @@
           }
         } catch (err) {
           console.warn("Firebase Auth registration note:", err.message);
+          if (err && err.code === 'auth/email-already-in-use') {
+            alert("This email is already registered in Firebase. Switching to Sign In so you can log in directly.");
+            switchAuthTab('login');
+            const idInput = document.getElementById('loginIdentifier');
+            if (idInput) idInput.value = email;
+            const passInp = document.getElementById('loginPassword');
+            if (passInp) passInp.focus();
+            return;
+          }
         }
       }
 
@@ -3956,7 +4051,7 @@
         alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour account has been created and ${initialChild.childName} is now enrolled (Student ID: ${initialChild.childId}). Opening your dashboard...`);
       }
 
-      loadDashboardForStudent(newParent);
+      if (typeof restoreRegBtn === 'function') restoreRegBtn(); loadDashboardForStudent(newParent);
       return;
     }
 
@@ -4036,7 +4131,7 @@
       localStorage.setItem('vediq_remembered_identifier', email);
       localStorage.setItem('vediq_remember_me', 'true');
       alert(`🎉 Welcome to VedIQ Academy Gurukul, ${parentName}!\n\nYour account has been created and ${childName} is now enrolled (Student ID: ${firstChild.childId}). Opening your dashboard...`);
-      loadDashboardForStudent(newParent);
+      if (typeof restoreRegBtn === 'function') restoreRegBtn(); loadDashboardForStudent(newParent);
     }
 
     // Load Dashboard with Active Student (Supports Multi-Child Switcher & Dynamic Baseline)
