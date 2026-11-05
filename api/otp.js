@@ -149,7 +149,11 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
     </html>
   `;
 
-  const sender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
+  let sender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
+  if (!sender.includes("<") && sender.includes("@")) {
+    sender = `VedIQ Academy <${sender.trim()}>`;
+  }
+  const replyTo = process.env.RESEND_REPLY_TO || "myvediqacademy@gmail.com";
 
   try {
     const resp = await fetch("https://api.resend.com/emails", {
@@ -160,6 +164,7 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
       },
       body: JSON.stringify({
         from: sender,
+        reply_to: replyTo,
         to: [toEmail],
         subject: emailSubject,
         html: emailHtml
