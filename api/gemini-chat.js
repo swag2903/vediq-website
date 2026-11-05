@@ -1,7 +1,8 @@
 /**
  * Serverless Function: Gemini AI Chatbot Handler
  * Supports multi-turn conversation history, robust system instructions,
- * and transparent error diagnostics.
+ * cascading model fallbacks (gemini-1.5-flash, gemini-2.0-flash, gemini-1.5-pro),
+ * key sanitization, and transparent error diagnostics.
  * Compatible with Vercel and Netlify runtime.
  */
 
@@ -36,7 +37,7 @@ Navigation & Portal Assistance:
   * Instant 1-Click Login: Click "Continue with Google" (no password or OTP required).
   * Email OTP / Password: Enter registered email/phone.
   * Registration: Click the "Sign Up / Register" tab on parent.html to enroll a child.
-  * Dashboard features: Tratak gaze timer, math velocity scores, habit streaks, certified report cards, and course video recordings.
+  * Dashboard features: Tratak gaze timer, math velocity scores, habit streaks, certified report cards, course video recordings, and UPI fee receipts.
 - Teacher Console: Available at vediqacademy.com/teacher.html (authorized faculty only).
 - Direct Human Support & Admissions Escalation:
   * WhatsApp Admissions: +91 8390332500 / +91 9766772819
@@ -49,6 +50,14 @@ Conversational Behavioral Guidelines:
 4. ACCURACY: NEVER invent or hallucinate discounts, alternate fees, or outside curriculum.
 5. TONE: Empathetic, culturally respectful, academically authoritative, and concise (1 to 2 crisp paragraphs, optionally using bullet points for readability). Respond in English or Hinglish matching the user's language.`;
 
+const CANDIDATE_MODELS = [
+  "gemini-1.5-flash",
+  "gemini-2.0-flash",
+  "gemini-2.5-flash",
+  "gemini-1.5-pro",
+  "gemini-1.5-flash-8b"
+];
+
 const handler = async (req, res) => {
   if (req.method) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -59,7 +68,9 @@ const handler = async (req, res) => {
     if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method Not Allowed" });
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
+      const rawKey = process.env.GEMINI_API_KEY || "";
+      const apiKey = rawKey.trim();
+
       if (!apiKey) {
         return res.status(200).json({
           ok: false,
@@ -95,8 +106,6 @@ const handler = async (req, res) => {
         }
       }
 
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
       const requestBody = {
         system_instruction: {
           parts: [{ text: GURUKUL_AI_SYSTEM_PROMPT }]
@@ -104,62 +113,79 @@ const handler = async (req, res) => {
         contents: contents,
         generationConfig: {
           temperature: 0.65,
-          maxOutputTokens: 500
+          maxOutputTokens: 600
         }
       };
 
-      let resp = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody)
-      });
+      let successData = null;
+      let successfulModel = null;
+      let lastErrorStatus = null;
+      let lastErrorBody = null;
 
-      // Fallback: If system_instruction was rejected (older API proxy), prepend system prompt to first user message
-      if (!resp.ok && resp.status === 400) {
-        const fallbackContents = contents.map((c, idx) => {
-          if (idx === 0 && c.role === "user") {
-            return {
-              role: "user",
-              parts: [{ text: `${GURUKUL_AI_SYSTEM_PROMPT}\n\nUser Question: ${c.parts[0].text}` }]
-            };
+      // Cascading model evaluation
+      for (const modelName of CANDIDATE_MODELS) {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+        try {
+          let resp = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody)
+          });
+
+          // Fallback if system_instruction rejected by older endpoint proxy
+          if (!resp.ok && resp.status === 400) {
+            const fallbackContents = contents.map((c, idx) => {
+              if (idx === 0 && c.role === "user") {
+                return {
+                  role: "user",
+                  parts: [{ text: `${GURUKUL_AI_SYSTEM_PROMPT}\n\nUser Question: ${c.parts[0].text}` }]
+                };
+              }
+              return c;
+            });
+
+            resp = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: fallbackContents,
+                generationConfig: { temperature: 0.65, maxOutputTokens: 600 }
+              })
+            });
           }
-          return c;
-        });
 
-        resp = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: fallbackContents,
-            generationConfig: { temperature: 0.65, maxOutputTokens: 500 }
-          })
-        });
+          if (resp.ok) {
+            const data = await resp.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text && text.trim()) {
+              successData = text.trim();
+              successfulModel = modelName;
+              break;
+            }
+          } else {
+            lastErrorStatus = resp.status;
+            lastErrorBody = await resp.text().catch(() => "");
+            console.warn(`Model ${modelName} returned status ${resp.status}`);
+          }
+        } catch (callErr) {
+          lastErrorBody = callErr.message;
+        }
       }
 
-      if (!resp.ok) {
-        const errBody = await resp.text().catch(() => "");
-        console.error("Gemini API Upstream Error:", resp.status, errBody);
+      if (!successData) {
+        console.error("All Gemini candidate models failed. Last error:", lastErrorStatus, lastErrorBody);
         return res.status(200).json({
           ok: false,
           error: "UPSTREAM_GEMINI_ERROR",
-          status: resp.status,
-          message: "Google Gemini API returned an error or quota limit."
-        });
-      }
-
-      const data = await resp.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!text || !text.trim()) {
-        return res.status(200).json({
-          ok: false,
-          error: "EMPTY_AI_RESPONSE",
-          message: "Gemini returned an empty response."
+          status: lastErrorStatus || 502,
+          message: "Google Gemini API upstream failure.",
+          details: lastErrorBody
         });
       }
 
       // Clean format with safe HTML line breaks and bold tags
-      const formattedAnswer = text.trim()
+      const formattedAnswer = successData
         .replace(/\n\n+/g, '<br><br>')
         .replace(/\n/g, '<br>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -168,8 +194,8 @@ const handler = async (req, res) => {
       return res.status(200).json({
         ok: true,
         answer: formattedAnswer,
-        rawText: text.trim(),
-        model: "gemini-1.5-flash"
+        rawText: successData,
+        model: successfulModel
       });
     } catch (err) {
       console.error("Gemini serverless function exception:", err);
