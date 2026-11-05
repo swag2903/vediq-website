@@ -70,11 +70,15 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
   ];
 
   // Secure Gemini AI Call (Via Netlify Serverless Function — Zero Frontend Key Exposure)
+  const VEDIQ_BACKEND_URL = (window.location.hostname.includes("vediqacademy.com") || window.location.hostname.includes("github.io"))
+    ? "https://vediq-academy-backend.netlify.app"
+    : "";
+
   async function queryLiveGeminiAi(prompt) {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 6000);
-      const resp = await fetch('/.netlify/functions/gemini-chat', {
+      const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/gemini-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,

@@ -1,6 +1,7 @@
 /**
  * Netlify Serverless Function: Secure Teacher & Staff Authentication
  * Server-side verification for teacher console access with role-based authorization.
+ * CORS-enabled for hybrid GitHub Pages integration.
  */
 
 const crypto = require("crypto");
@@ -14,10 +15,22 @@ const STAFF_ROSTER = {
 };
 
 exports.handler = async (event) => {
+  const origin = event.headers.origin || "*";
+  const headers = {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Content-Type": "application/json"
+  };
+
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 200, headers, body: "" };
+  }
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ error: "Method Not Allowed" })
     };
   }
@@ -30,7 +43,7 @@ exports.handler = async (event) => {
     if (!identifier || !password) {
       return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ authenticated: false, error: "Identifier and password are required" })
       };
     }
@@ -42,7 +55,7 @@ exports.handler = async (event) => {
     if (!staffMeta) {
       return {
         statusCode: 401,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ authenticated: false, error: "Unauthorized teacher account" })
       };
     }
@@ -61,13 +74,8 @@ exports.handler = async (event) => {
     }
 
     // If server environment variables are not yet configured on Netlify,
-    // require password to be non-empty and at least 6 characters, and log security requirement
+    // require password to be non-empty and at least 6 characters
     if (!masterAdminKey && !staffSecret) {
-      // In development mode prior to Netlify env setup:
-      // Compare securely using constant-time check against initialized staff salt
-      const devSalt = "vediq-salt-" + digits;
-      const expectedDevHash = crypto.createHash("sha256").update(devSalt + ":" + digits).digest("hex").slice(0, 8);
-      // Allows founder setup if env not yet populated
       if (password.length >= 6) {
         isValid = true;
       }
@@ -76,7 +84,7 @@ exports.handler = async (event) => {
     if (!isValid) {
       return {
         statusCode: 401,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ authenticated: false, error: "Invalid credentials" })
       };
     }
@@ -86,7 +94,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({
         authenticated: true,
         sessionToken: sessionToken,
@@ -103,8 +111,8 @@ exports.handler = async (event) => {
     console.error("Teacher auth error:", err);
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ authenticated: false, error: "Server authentication error" })
+      headers,
+      body: JSON.stringify({ error: "Server authentication error" })
     };
   }
 };

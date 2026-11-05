@@ -1793,8 +1793,13 @@
     </div>
   </div>
   <script>
+    // Configurable backend endpoint for Netlify Serverless Functions (CORS-enabled)
+    const VEDIQ_BACKEND_URL = (window.location.hostname.includes("vediqacademy.com") || window.location.hostname.includes("github.io"))
+      ? "https://vediq-academy-backend.netlify.app"
+      : "";
+
     // Secure Serverless Student Database Endpoint (Shields datastore from unauthorized direct browser tampering)
-    const CLOUD_API_URL = "/.netlify/functions/students-sync";
+    const CLOUD_API_URL = VEDIQ_BACKEND_URL + "/.netlify/functions/students-sync";
 
     function setCloudStatus(status, text) {
       const statusEl = document.getElementById('cloudSyncStatus');
@@ -2550,6 +2555,15 @@
 
       localStorage.setItem('vediq_remembered_identifier', email || (match ? (match.email || match.phone) : '') || '');
       localStorage.setItem('vediq_remember_me', 'true');
+      if (email) {
+        fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'issue-session', recipient: email })
+        }).then(r => r.json()).then(d => {
+          if (d.sessionToken) localStorage.setItem('vediq_session_token', d.sessionToken);
+        }).catch(() => {});
+      }
       loadDashboardForStudent(match);
     }
 
@@ -2641,6 +2655,16 @@
         if (shouldRemember) {
           localStorage.setItem('vediq_remembered_identifier', match.email || identifier);
           localStorage.setItem('vediq_remember_me', 'true');
+        }
+
+        if (match.email || identifier) {
+          fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'issue-session', recipient: match.email || identifier })
+          }).then(r => r.json()).then(d => {
+            if (d.sessionToken) localStorage.setItem('vediq_session_token', d.sessionToken);
+          }).catch(() => {});
         }
 
         loadDashboardForStudent(match);
@@ -2859,7 +2883,7 @@
 
       if (!isFirebase) {
         try {
-          const resp = await fetch('/.netlify/functions/otp', {
+          const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'send', recipient: recipient })
@@ -3030,7 +3054,7 @@
 
       // Re-dispatch secure serverless OTP
       try {
-        const resp = await fetch('/.netlify/functions/otp', {
+        const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'send', recipient: currentOtpSession.recipient })
@@ -3209,8 +3233,9 @@
       // 2. Server-Side Cryptographic OTP Verification (Netlify Function)
       let verifiedOnServer = false;
       let serverVerifyError = "Invalid verification code. Please check and try again.";
+      let serverSessionToken = null;
       try {
-        const resp = await fetch('/.netlify/functions/otp', {
+        const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3223,6 +3248,7 @@
         const res = await resp.json().catch(() => ({}));
         if (resp.ok && res.verified) {
           verifiedOnServer = true;
+          serverSessionToken = res.sessionToken || null;
         } else if (res.error) {
           serverVerifyError = res.error;
         }
@@ -3247,14 +3273,43 @@
       // Verification Succeeded!
       closeOtpModal();
       restoreOtpBtn();
-      await executeDirectLogin(currentOtpSession.targetIdentifier);
+      await executeDirectLogin(currentOtpSession.targetIdentifier, serverSessionToken);
     }
 
-    // Direct Login or Auto-Enrollment (Cloud-Aware, Exact Account Match)
-    async function executeDirectLogin(identifier) {
+    // Direct Login or Auto-Enrollment (Backend-Validated Identity & Student Isolation)
+    async function executeDirectLogin(identifier, sessionToken) {
       if (!identifier) return;
 
-      // 1. Search local DB
+      if (sessionToken) {
+        localStorage.setItem('vediq_session_token', sessionToken);
+      }
+
+      // 1. Fetch verified student profile from backend using cryptographic Bearer token
+      const activeToken = sessionToken || localStorage.getItem('vediq_session_token');
+      if (activeToken) {
+        try {
+          const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/student-profile', {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + activeToken,
+              'Content-Type': 'application/json'
+            }
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && data.profile) {
+              localStorage.setItem('vediq_remembered_identifier', data.profile.email || data.profile.phone || identifier);
+              localStorage.setItem('vediq_remember_me', 'true');
+              loadDashboardForStudent(data.profile);
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn("Backend student profile fetch notice:", e);
+        }
+      }
+
+      // 2. Search local DB (fallback for offline or standalone testing)
       let match = findStudentInDatabase(identifier);
 
       // 2. If not found locally, query live cloud DB
@@ -3451,6 +3506,7 @@
 
     function logoutParent() {
       if (confirm("Log out from the VedIQ Parent Portal?")) {
+        localStorage.removeItem('vediq_session_token');
         localStorage.removeItem('vediq_current_session');
         window.userClickedGoogleAuth = false;
         closeFirstTimeOnboardingModal();
@@ -3991,11 +4047,35 @@
       // Auto-connect and sync from Cloud Database (24/7 persistence)
       syncFromCloud();
 
+      // Cryptographically signed session verification (Zero-Trust localStorage validation)
+      const sessionToken = localStorage.getItem('vediq_session_token');
+      if (sessionToken) {
+        setCloudStatus('syncing', 'Restoring Gurukul Session...');
+        fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/student-profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + sessionToken,
+            'Content-Type': 'application/json'
+          }
+        }).then(resp => {
+          if (resp.ok) return resp.json();
+          throw new Error("Expired or invalid session token");
+        }).then(data => {
+          if (data && data.profile) {
+            loadDashboardForStudent(data.profile);
+          }
+        }).catch(err => {
+          console.log("Session token expired or unverified, resetting session:", err.message);
+          localStorage.removeItem('vediq_session_token');
+          localStorage.removeItem('vediq_current_session');
+        });
+        return;
+      }
+
       const savedSession = localStorage.getItem('vediq_current_session');
       if (savedSession) {
         try {
           const student = JSON.parse(savedSession);
-          // Check 30-day session expiration window (Keeps parents logged in without repeated OTPs)
           if (student._sessionExpiresAt && Date.now() > student._sessionExpiresAt) {
             localStorage.removeItem('vediq_current_session');
           } else {

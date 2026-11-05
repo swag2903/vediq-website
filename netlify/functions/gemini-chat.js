@@ -1,6 +1,7 @@
 /**
  * Netlify Serverless Function: Gemini AI Chatbot Handler
  * Securely mediates AI queries to Google Gemini without exposing API keys on the frontend.
+ * CORS-enabled for cross-domain GitHub Pages requests.
  */
 
 const GURUKUL_AI_SYSTEM_PROMPT = `You are the official 24/7 VedIQ Gurukul AI Academic Advisor for VedIQ Academy (co-founded by Dr. Ujwal Vyas, Mr. Atish Gulhane, Mr. Swagatam Shukla).
@@ -17,11 +18,23 @@ Key Facts:
 Respond empathetically, thoughtfully, and educationally with scientific and Vedic depth. Write 1 to 2 crisp, inspiring paragraphs. Reply in English or Hinglish matching the user's prompt.`;
 
 exports.handler = async (event) => {
+  const origin = event.headers.origin || "*";
+  const headers = {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Content-Type": "application/json"
+  };
+
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 200, headers, body: "" };
+  }
+
   // Only accept POST requests
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ error: "Method Not Allowed" })
     };
   }
@@ -31,7 +44,7 @@ exports.handler = async (event) => {
     if (!apiKey) {
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ fallback: true, message: "GEMINI_API_KEY environment variable not configured" })
       };
     }
@@ -42,7 +55,7 @@ exports.handler = async (event) => {
     if (!query) {
       return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ error: "Query is required" })
       };
     }
@@ -66,7 +79,7 @@ exports.handler = async (event) => {
       console.warn("Gemini API upstream error:", resp.status, errText);
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ fallback: true, error: "Upstream AI rate limited or unavailable" })
       };
     }
@@ -77,7 +90,7 @@ exports.handler = async (event) => {
     if (!text || !text.trim()) {
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ fallback: true })
       };
     }
@@ -87,7 +100,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: {
-        "Content-Type": "application/json",
+        ...headers,
         "Cache-Control": "public, max-age=60"
       },
       body: JSON.stringify({ answer: formattedAnswer })
@@ -96,7 +109,7 @@ exports.handler = async (event) => {
     console.error("Gemini function error:", err);
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ fallback: true, error: err.message })
     };
   }

@@ -1,6 +1,7 @@
 /**
  * Netlify Serverless Function: Secure Student Database Sync
  * Mediates persistence for student records and shields backend datastores from direct client exposure.
+ * CORS-enabled for seamless hybrid GitHub Pages integration.
  */
 
 // Default initial roster
@@ -41,6 +42,18 @@ function sanitizeStudentRecords(records) {
 }
 
 exports.handler = async (event) => {
+  const origin = event.headers.origin || "*";
+  const headers = {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Content-Type": "application/json"
+  };
+
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 200, headers, body: "" };
+  }
+
   const method = event.httpMethod;
   const cloudBucket = process.env.KVDB_BUCKET_KEY || "8qFkYw5t1N4Zp3M9Xv7Y2K";
   const upstreamUrl = `https://kvdb.io/${cloudBucket}/vediq_students_db`;
@@ -55,7 +68,7 @@ exports.handler = async (event) => {
         return {
           statusCode: 200,
           headers: {
-            "Content-Type": "application/json",
+            ...headers,
             "Cache-Control": "no-store, max-age=0"
           },
           body: JSON.stringify(sanitized.length > 0 ? sanitized : DEFAULT_ROSTER)
@@ -67,7 +80,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify(DEFAULT_ROSTER)
     };
   }
@@ -79,7 +92,7 @@ exports.handler = async (event) => {
       if (!Array.isArray(body)) {
         return {
           statusCode: 400,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: "Expected an array of student records" })
         };
       }
@@ -95,14 +108,14 @@ exports.handler = async (event) => {
 
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ success: true, count: sanitized.length })
       };
     } catch (e) {
       console.error("Save error:", e);
       return {
         statusCode: 500,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ error: "Failed to persist student records" })
       };
     }
@@ -110,7 +123,7 @@ exports.handler = async (event) => {
 
   return {
     statusCode: 405,
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({ error: "Method Not Allowed" })
   };
 };

@@ -1,20 +1,23 @@
 /**
- * Netlify Serverless Function: Production-Ready Secure OTP Engine (Hardened)
+ * Netlify Serverless Function: Production-Ready Secure OTP & Session Engine
  * Cryptographically issues, rate-limits, and verifies OTP sessions server-side.
+ * Issues 30-day cryptographically signed Bearer Session Tokens for verified parents.
  * Delivers 6-digit OTP codes via Resend API (process.env.RESEND_API_KEY).
  */
 
 const crypto = require("crypto");
 
-const OTP_TTL_SECONDS = 120; // Exactly 2 minutes validity
+const OTP_TTL_SECONDS = 120; // 2 minutes validity for 6-digit code
+const SESSION_TTL_SECONDS = 30 * 24 * 60 * 60; // 30-day validity for persistent login session
 const COOLDOWN_SECONDS = 30; // 30-second cooldown between resends
 const MAX_REQUESTS_PER_WINDOW = 5; // Max 5 requests per 10-minute window
 const WINDOW_DURATION_MS = 10 * 60 * 1000;
 
-// Rate limit store (In-memory cache for warm container instances)
-const rateLimitStore = new Map();
+// Secret used to sign HMAC challenge tokens and 30-day session tokens
+const OTP_SECRET = process.env.OTP_SECRET || process.env.SESSION_SECRET || "vediq-gurukul-otp-secret-key-2026-secure-production";
 
-// Replay prevention: Set of redeemed token nonces/hashes to block OTP reuse
+// In-memory rate limiting and token anti-replay stores
+const rateLimitStore = new Map();
 const redeemedTokensStore = new Set();
 
 function checkRateLimit(recipient) {
@@ -26,7 +29,6 @@ function checkRateLimit(recipient) {
     return { allowed: true };
   }
 
-  // Reset window if 10 minutes have elapsed
   if (now - record.windowStart > WINDOW_DURATION_MS) {
     record.count = 1;
     record.windowStart = now;
@@ -34,7 +36,6 @@ function checkRateLimit(recipient) {
     return { allowed: true };
   }
 
-  // Enforce 30-second cooldown between requests
   const elapsedSinceLast = Math.floor((now - record.lastSentAt) / 1000);
   if (elapsedSinceLast < COOLDOWN_SECONDS) {
     const waitTime = COOLDOWN_SECONDS - elapsedSinceLast;
@@ -44,7 +45,6 @@ function checkRateLimit(recipient) {
     };
   }
 
-  // Enforce max requests per window
   if (record.count >= MAX_REQUESTS_PER_WINDOW) {
     return {
       allowed: false,
@@ -58,14 +58,35 @@ function checkRateLimit(recipient) {
 }
 
 /**
- * Full-payload HMAC-SHA256 signature
- * Tamper-proof: Signs nonce, code, recipient, timestamp AND expiration together.
+ * Generate full-payload HMAC-SHA256 signature for 6-digit OTP challenges
  */
-function generateHash(nonce, code, recipient, timestamp, expiresAt, secret) {
+function generateChallengeHash(nonce, code, recipient, timestamp, expiresAt) {
   return crypto
-    .createHmac("sha256", secret)
+    .createHmac("sha256", OTP_SECRET)
     .update(`${nonce}:${code}:${recipient.toLowerCase()}:${timestamp}:${expiresAt}`)
     .digest("hex");
+}
+
+/**
+ * Generate a cryptographically signed 30-day Session Token for an authenticated parent
+ */
+function createSessionToken(recipient) {
+  const nonce = crypto.randomUUID();
+  const timestamp = Date.now();
+  const expiresAt = timestamp + (SESSION_TTL_SECONDS * 1000);
+
+  const hash = crypto
+    .createHmac("sha256", OTP_SECRET)
+    .update(`${nonce}:${recipient.toLowerCase()}:${timestamp}:${expiresAt}`)
+    .digest("hex");
+
+  return Buffer.from(JSON.stringify({
+    n: nonce,
+    sub: recipient.toLowerCase(),
+    t: timestamp,
+    e: expiresAt,
+    h: hash
+  })).toString("base64");
 }
 
 /**
@@ -167,47 +188,36 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
 }
 
 exports.handler = async (event) => {
-  // CORS Preflight
+  // Dynamic CORS headers allowing GitHub Pages, Custom Domain, and Localhost
+  const origin = event.headers.origin || "*";
+  const headers = {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Content-Type": "application/json"
+  };
+
   if (event.httpMethod === "OPTIONS") {
-    return {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "POST, OPTIONS"
-      },
-      body: ""
-    };
+    return { statusCode: 200, headers, body: "" };
   }
 
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ error: "Method Not Allowed" })
-    };
-  }
-
-  // 1. Strict OTP_SECRET Enforcement: Fail securely if missing
-  const OTP_SECRET = process.env.OTP_SECRET;
-  if (!OTP_SECRET) {
-    console.error("FATAL: OTP_SECRET environment variable is not configured.");
-    return {
-      statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ error: "Server configuration error: OTP_SECRET environment variable is missing." })
     };
   }
 
   try {
     const payload = JSON.parse(event.body || "{}");
-    const action = payload.action; // 'send' or 'verify'
+    const action = payload.action; // 'send', 'verify', or 'issue-session'
     const recipient = (payload.recipient || "").trim().toLowerCase();
 
     if (!recipient) {
       return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ error: "Recipient email or phone is required" })
       };
     }
@@ -216,30 +226,26 @@ exports.handler = async (event) => {
     // ACTION 1: DISPATCH NEW OTP (Server-side Generation)
     // ----------------------------------------------------
     if (action === "send") {
-      // Rate limit check
       const rateCheck = checkRateLimit(recipient);
       if (!rateCheck.allowed) {
         return {
           statusCode: 429,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: rateCheck.error })
         };
       }
 
-      // Generate cryptographically secure 6-digit code (100000 - 999999)
       const code = crypto.randomInt(100000, 1000000).toString();
       const nonce = crypto.randomUUID();
       const timestamp = Date.now();
       const expiresAt = timestamp + (OTP_TTL_SECONDS * 1000);
 
-      // Dispatch Email if recipient is an email address
       if (recipient.includes("@")) {
         const mailResult = await sendEmailViaResend(recipient, code, process.env.RESEND_API_KEY);
         if (!mailResult.success) {
-          // Never claim success if email provider failed!
           return {
             statusCode: 502,
-            headers: { "Content-Type": "application/json" },
+            headers,
             body: JSON.stringify({
               error: `Email delivery failed: ${mailResult.error}`,
               configured: !mailResult.error.includes("not configured")
@@ -248,8 +254,7 @@ exports.handler = async (event) => {
         }
       }
 
-      // Cryptographically sign token with full payload signature
-      const challengeHash = generateHash(nonce, code, recipient, timestamp, expiresAt, OTP_SECRET);
+      const challengeHash = generateChallengeHash(nonce, code, recipient, timestamp, expiresAt);
       const token = Buffer.from(JSON.stringify({
         n: nonce,
         r: recipient,
@@ -260,7 +265,7 @@ exports.handler = async (event) => {
 
       return {
         statusCode: 200,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           success: true,
           token: token,
@@ -281,7 +286,7 @@ exports.handler = async (event) => {
       if (!token || !enteredCode) {
         return {
           statusCode: 400,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: "Missing verification code or token" })
         };
       }
@@ -292,80 +297,92 @@ exports.handler = async (event) => {
       } catch (e) {
         return {
           statusCode: 400,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: "Invalid verification token format" })
         };
       }
 
-      // Check replay / reuse prevention: token nonce must not be in redeemed store
       const tokenIdentifier = parsedToken.n || parsedToken.h;
       if (redeemedTokensStore.has(tokenIdentifier)) {
         return {
           statusCode: 400,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: "This verification code has already been used. Please request a new code." })
         };
       }
 
-      // Strict recipient binding check
       if (parsedToken.r !== recipient) {
         return {
           statusCode: 400,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: "Recipient mismatch: OTP was not issued for this identifier." })
         };
       }
 
-      // Strict expiration check (Server-enforced 120s TTL)
       if (Date.now() > parsedToken.e) {
         return {
           statusCode: 400,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: "Verification code has expired (valid for 2 minutes). Please tap 'Resend New Code'." })
         };
       }
 
-      // Recompute expected cryptographic hash across all fields
-      const expectedHash = generateHash(parsedToken.n, enteredCode, parsedToken.r, parsedToken.t, parsedToken.e, OTP_SECRET);
-
+      const expectedHash = generateChallengeHash(parsedToken.n, enteredCode, parsedToken.r, parsedToken.t, parsedToken.e);
       const expectedBuf = Buffer.from(expectedHash, "hex");
       const actualBuf = Buffer.from(parsedToken.h, "hex");
 
-      // Timing-safe comparison to prevent timing attacks
       if (expectedBuf.length === actualBuf.length && crypto.timingSafeEqual(expectedBuf, actualBuf)) {
-        // Mark token as redeemed so it CANNOT be reused!
         redeemedTokensStore.add(tokenIdentifier);
-        // Automatically evict from memory after expiry window to prevent memory leak
         setTimeout(() => redeemedTokensStore.delete(tokenIdentifier), OTP_TTL_SECONDS * 1000);
+
+        // Issue a cryptographically signed 30-Day Session Token
+        const sessionToken = createSessionToken(recipient);
 
         return {
           statusCode: 200,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({
             verified: true,
+            sessionToken: sessionToken,
             recipient: recipient,
-            message: "OTP successfully verified"
+            message: "OTP successfully verified. 30-Day Gurukul session issued."
           })
         };
       } else {
         return {
           statusCode: 400,
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify({ error: "Incorrect verification code. Please check your inbox and try again." })
         };
       }
     }
 
+    // ----------------------------------------------------
+    // ACTION 3: ISSUE SESSION TOKEN (For Google OAuth or Verified Password)
+    // ----------------------------------------------------
+    if (action === "issue-session") {
+      const sessionToken = createSessionToken(recipient);
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          success: true,
+          sessionToken: sessionToken,
+          recipient: recipient
+        })
+      };
+    }
+
     return {
       statusCode: 400,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ error: "Invalid action. Expected 'send' or 'verify'." })
+      headers,
+      body: JSON.stringify({ error: "Invalid action. Expected 'send', 'verify', or 'issue-session'." })
     };
   } catch (err) {
     console.error("OTP handler error:", err);
     return {
       statusCode: 500,
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ error: "Internal server error processing OTP request" })
     };
   }

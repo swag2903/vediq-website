@@ -420,8 +420,13 @@
   <!-- TEACHER PORTAL LOGIC & SECURE AUTHENTICATION ENGINE -->
   <!-- ========================================================================= -->
   <script>
+    // Configurable backend endpoint for Netlify Serverless Functions (CORS-enabled)
+    const VEDIQ_BACKEND_URL = (window.location.hostname.includes("vediqacademy.com") || window.location.hostname.includes("github.io"))
+      ? "https://vediq-academy-backend.netlify.app"
+      : "";
+
     // Secure Serverless Student Database Endpoint (Shields cloud datastore from public exposure)
-    const CLOUD_API_URL = "/.netlify/functions/students-sync";
+    const CLOUD_API_URL = VEDIQ_BACKEND_URL + "/.netlify/functions/students-sync";
 
     // Authorized Staff Directory (Roles & Permission Levels — ZERO PASSWORDS STORED)
     const AUTHORIZED_STAFF_DIRECTORY = {
@@ -521,7 +526,6 @@
             parentName: "Mr. Rajesh Sharma",
             phone: "9800000001",
             email: "parent1@gmail.com",
-            password: "password123",
             activeChildIndex: 0,
             children: [
               {
@@ -674,7 +678,7 @@
       // 2. If Firebase Auth not yet populated in console, verify via secure serverless backend
       if (!authenticatedUser) {
         try {
-          const resp = await fetch('/.netlify/functions/teacher-auth', {
+          const resp = await fetch(VEDIQ_BACKEND_URL + '/.netlify/functions/teacher-auth', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ identifier, password })
