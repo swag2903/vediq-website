@@ -53,7 +53,7 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     },
     {
       keywords: ['parent', 'portal', 'login', 'dashboard', 'report', 'password', 'otp', 'sign in', 'app'],
-      answer: "👨‍👩‍👧 <strong>Parent Progress Portal (24/7 Live):</strong><br>Track your child's Tratak gaze seconds, daily habit streaks, mental math velocity, and weekly mentor remarks from Dr. Ujwal Vyas.<br><br>Visit <a href='parent.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/parent.html</a> to sign in with Google 1-Click, Email OTP, or password (default: <code>password123</code>)."
+      answer: "👨‍👩‍👧 <strong>Parent Progress Portal (24/7 Live):</strong><br>Track your child's Tratak gaze seconds, daily habit streaks, mental math velocity, and weekly mentor remarks from Dr. Ujwal Vyas.<br><br>Visit <a href='parent.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/parent.html</a> to sign in with Google 1-Click, Email OTP, or password."
     },
     {
       keywords: ['math', 'vedic math', 'calculation', 'speed', 'formula', 'sutra', 'hisab'],

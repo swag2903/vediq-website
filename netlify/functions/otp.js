@@ -1,21 +1,21 @@
 /**
- * Netlify Serverless Function: Production-Ready Secure OTP Engine
+ * Netlify Serverless Function: Production-Ready Secure OTP Engine (Hardened)
  * Cryptographically issues, rate-limits, and verifies OTP sessions server-side.
  * Delivers 6-digit OTP codes via Resend API (process.env.RESEND_API_KEY).
  */
 
 const crypto = require("crypto");
 
-// Server-side HMAC secret for signing OTP challenge tokens (persisted via env or secure fallback)
-const OTP_SECRET = process.env.OTP_SECRET || "vediq-gurukul-otp-secret-key-2026-secure-production";
 const OTP_TTL_SECONDS = 120; // Exactly 2 minutes validity
-
-// In-memory Rate Limiting & Cooldown Store (Per-instance Lambda memory)
-// Key: recipient email/phone -> { lastSentAt: number, count: number, windowStart: number }
-const rateLimitStore = new Map();
 const COOLDOWN_SECONDS = 30; // 30-second cooldown between resends
 const MAX_REQUESTS_PER_WINDOW = 5; // Max 5 requests per 10-minute window
 const WINDOW_DURATION_MS = 10 * 60 * 1000;
+
+// Rate limit store (In-memory cache for warm container instances)
+const rateLimitStore = new Map();
+
+// Replay prevention: Set of redeemed token nonces/hashes to block OTP reuse
+const redeemedTokensStore = new Set();
 
 function checkRateLimit(recipient) {
   const now = Date.now();
@@ -34,7 +34,7 @@ function checkRateLimit(recipient) {
     return { allowed: true };
   }
 
-  // Check 30-second cooldown
+  // Enforce 30-second cooldown between requests
   const elapsedSinceLast = Math.floor((now - record.lastSentAt) / 1000);
   if (elapsedSinceLast < COOLDOWN_SECONDS) {
     const waitTime = COOLDOWN_SECONDS - elapsedSinceLast;
@@ -44,7 +44,7 @@ function checkRateLimit(recipient) {
     };
   }
 
-  // Check max requests per window
+  // Enforce max requests per window
   if (record.count >= MAX_REQUESTS_PER_WINDOW) {
     return {
       allowed: false,
@@ -57,18 +57,21 @@ function checkRateLimit(recipient) {
   return { allowed: true };
 }
 
-function generateHash(code, recipient, timestamp) {
+/**
+ * Full-payload HMAC-SHA256 signature
+ * Tamper-proof: Signs nonce, code, recipient, timestamp AND expiration together.
+ */
+function generateHash(nonce, code, recipient, timestamp, expiresAt, secret) {
   return crypto
-    .createHmac("sha256", OTP_SECRET)
-    .update(`${code}:${recipient.toLowerCase()}:${timestamp}`)
+    .createHmac("sha256", secret)
+    .update(`${nonce}:${code}:${recipient.toLowerCase()}:${timestamp}:${expiresAt}`)
     .digest("hex");
 }
 
 /**
  * Dispatch transactional email via Resend API
  */
-async function sendEmailViaResend(toEmail, otpCode) {
-  const apiKey = process.env.RESEND_API_KEY;
+async function sendEmailViaResend(toEmail, otpCode, apiKey) {
   if (!apiKey) {
     return {
       success: false,
@@ -86,7 +89,6 @@ async function sendEmailViaResend(toEmail, otpCode) {
     </head>
     <body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FAF8F5; color: #0C111D;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 520px; background-color: #FFFFFF; border: 1px solid #E8E2D8; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-        <!-- Header -->
         <tr>
           <td style="padding: 28px 32px 20px 32px; background: linear-gradient(135deg, #0C111D 0%, #1A2234 100%); text-align: center;">
             <div style="font-size: 28px; line-height: 1;">🪔</div>
@@ -94,8 +96,6 @@ async function sendEmailViaResend(toEmail, otpCode) {
             <p style="margin: 0; color: #C59A51; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Bharatiya Integral Gurukul System</p>
           </td>
         </tr>
-
-        <!-- Body -->
         <tr>
           <td style="padding: 32px 32px 24px 32px; text-align: center;">
             <div style="display: inline-block; padding: 6px 14px; background-color: #FDF7EC; border: 1px solid #E8E2D8; border-radius: 50px; font-size: 11px; font-weight: 700; color: #C86D24; margin-bottom: 16px;">
@@ -107,14 +107,12 @@ async function sendEmailViaResend(toEmail, otpCode) {
               Enter this 6-digit verification code to securely access your child's cognitive dashboard and Gurukul progress reports:
             </p>
 
-            <!-- OTP Code Badge -->
             <div style="background-color: #FAF8F5; border: 2px dashed #C86D24; border-radius: 14px; padding: 18px 24px; margin: 0 auto 20px auto; display: inline-block;">
               <span style="font-family: 'Courier New', Courier, monospace; font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #C86D24;">
                 ${otpCode}
               </span>
             </div>
 
-            <!-- Expiry & Warning -->
             <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #B05917;">
               ⏱️ This code is valid for exactly 2 minutes (120 seconds).
             </p>
@@ -123,8 +121,6 @@ async function sendEmailViaResend(toEmail, otpCode) {
             </p>
           </td>
         </tr>
-
-        <!-- Footer -->
         <tr>
           <td style="padding: 20px 32px; background-color: #FAF8F5; border-top: 1px solid #E8E2D8; text-align: center;">
             <p style="margin: 0 0 4px 0; font-size: 11px; color: #667085;">
@@ -140,11 +136,9 @@ async function sendEmailViaResend(toEmail, otpCode) {
     </html>
   `;
 
-  // Determine sender: use custom domain if provided, otherwise fallback to Resend's onboarding address
-  const preferredSender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
-  const fallbackSender = "VedIQ Academy <onboarding@resend.dev>";
+  const sender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
 
-  async function callResend(fromAddress) {
+  try {
     const resp = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -152,33 +146,20 @@ async function sendEmailViaResend(toEmail, otpCode) {
         "Authorization": `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        from: fromAddress,
+        from: sender,
         to: [toEmail],
         subject: emailSubject,
         html: emailHtml
       })
     });
+    
     const data = await resp.json().catch(() => ({}));
-    return { ok: resp.ok, status: resp.status, data };
-  }
 
-  try {
-    let result = await callResend(preferredSender);
-
-    // If custom domain is not yet verified on Resend (403 domain error), auto-retry with onboarding@resend.dev
-    if (!result.ok && preferredSender !== fallbackSender) {
-      const errMsg = (result.data && result.data.message) ? result.data.message.toLowerCase() : "";
-      if (result.status === 403 || errMsg.includes("domain") || errMsg.includes("not verified")) {
-        console.warn(`Resend domain note for ${preferredSender}, falling back to ${fallbackSender}`);
-        result = await callResend(fallbackSender);
-      }
-    }
-
-    if (result.ok && result.data && result.data.id) {
-      return { success: true, messageId: result.data.id };
+    if (resp.ok && data && data.id) {
+      return { success: true, messageId: data.id };
     } else {
-      const errorDetail = (result.data && result.data.message) ? result.data.message : `HTTP status ${result.status}`;
-      return { success: false, error: errorDetail };
+      const errorMsg = data && data.message ? data.message : `HTTP status ${resp.status}`;
+      return { success: false, error: errorMsg };
     }
   } catch (err) {
     return { success: false, error: err.message || "Network error contacting email provider" };
@@ -186,7 +167,7 @@ async function sendEmailViaResend(toEmail, otpCode) {
 }
 
 exports.handler = async (event) => {
-  // CORS & Method validation
+  // CORS Preflight
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
@@ -207,6 +188,17 @@ exports.handler = async (event) => {
     };
   }
 
+  // 1. Strict OTP_SECRET Enforcement: Fail securely if missing
+  const OTP_SECRET = process.env.OTP_SECRET;
+  if (!OTP_SECRET) {
+    console.error("FATAL: OTP_SECRET environment variable is not configured.");
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ error: "Server configuration error: OTP_SECRET environment variable is missing." })
+    };
+  }
+
   try {
     const payload = JSON.parse(event.body || "{}");
     const action = payload.action; // 'send' or 'verify'
@@ -224,7 +216,7 @@ exports.handler = async (event) => {
     // ACTION 1: DISPATCH NEW OTP (Server-side Generation)
     // ----------------------------------------------------
     if (action === "send") {
-      // 1. Rate Limiting & Cooldown Check
+      // Rate limit check
       const rateCheck = checkRateLimit(recipient);
       if (!rateCheck.allowed) {
         return {
@@ -234,16 +226,17 @@ exports.handler = async (event) => {
         };
       }
 
-      // 2. Cryptographically generate 6-digit code (100000 - 999999)
+      // Generate cryptographically secure 6-digit code (100000 - 999999)
       const code = crypto.randomInt(100000, 1000000).toString();
+      const nonce = crypto.randomUUID();
       const timestamp = Date.now();
       const expiresAt = timestamp + (OTP_TTL_SECONDS * 1000);
 
-      // 3. Dispatch Email if recipient is an email address
+      // Dispatch Email if recipient is an email address
       if (recipient.includes("@")) {
-        const mailResult = await sendEmailViaResend(recipient, code);
+        const mailResult = await sendEmailViaResend(recipient, code, process.env.RESEND_API_KEY);
         if (!mailResult.success) {
-          // If email dispatch failed, DO NOT return success!
+          // Never claim success if email provider failed!
           return {
             statusCode: 502,
             headers: { "Content-Type": "application/json" },
@@ -255,9 +248,10 @@ exports.handler = async (event) => {
         }
       }
 
-      // 4. Create cryptographically signed challenge token (NEVER contains plain OTP)
-      const challengeHash = generateHash(code, recipient, timestamp);
+      // Cryptographically sign token with full payload signature
+      const challengeHash = generateHash(nonce, code, recipient, timestamp, expiresAt, OTP_SECRET);
       const token = Buffer.from(JSON.stringify({
+        n: nonce,
         r: recipient,
         t: timestamp,
         e: expiresAt,
@@ -303,16 +297,26 @@ exports.handler = async (event) => {
         };
       }
 
-      // Recipient match check
+      // Check replay / reuse prevention: token nonce must not be in redeemed store
+      const tokenIdentifier = parsedToken.n || parsedToken.h;
+      if (redeemedTokensStore.has(tokenIdentifier)) {
+        return {
+          statusCode: 400,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ error: "This verification code has already been used. Please request a new code." })
+        };
+      }
+
+      // Strict recipient binding check
       if (parsedToken.r !== recipient) {
         return {
           statusCode: 400,
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ error: "Recipient mismatch" })
+          body: JSON.stringify({ error: "Recipient mismatch: OTP was not issued for this identifier." })
         };
       }
 
-      // Expiration check (Server-enforced 120s expiry)
+      // Strict expiration check (Server-enforced 120s TTL)
       if (Date.now() > parsedToken.e) {
         return {
           statusCode: 400,
@@ -321,14 +325,19 @@ exports.handler = async (event) => {
         };
       }
 
-      // Recompute expected cryptographic hash
-      const expectedHash = generateHash(enteredCode, parsedToken.r, parsedToken.t);
+      // Recompute expected cryptographic hash across all fields
+      const expectedHash = generateHash(parsedToken.n, enteredCode, parsedToken.r, parsedToken.t, parsedToken.e, OTP_SECRET);
 
-      // Timing-safe comparison to prevent timing attacks
       const expectedBuf = Buffer.from(expectedHash, "hex");
       const actualBuf = Buffer.from(parsedToken.h, "hex");
 
+      // Timing-safe comparison to prevent timing attacks
       if (expectedBuf.length === actualBuf.length && crypto.timingSafeEqual(expectedBuf, actualBuf)) {
+        // Mark token as redeemed so it CANNOT be reused!
+        redeemedTokensStore.add(tokenIdentifier);
+        // Automatically evict from memory after expiry window to prevent memory leak
+        setTimeout(() => redeemedTokensStore.delete(tokenIdentifier), OTP_TTL_SECONDS * 1000);
+
         return {
           statusCode: 200,
           headers: { "Content-Type": "application/json" },

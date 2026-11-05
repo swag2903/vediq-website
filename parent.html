@@ -556,7 +556,7 @@
           <!-- Password input with Remember Me & Forgot Password -->
           <div>
             <label class="block text-xs font-semibold text-brand-ink mb-1.5">Password</label>
-            <input type="password" id="loginPassword" required placeholder="Enter password (default: password123)" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
+            <input type="password" id="loginPassword" required placeholder="Enter your account password" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/60 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre focus:ring-2 focus:ring-brand-ochre/20 transition" />
             <div class="flex items-center justify-between mt-2 text-xs">
               <label class="flex items-center gap-1.5 cursor-pointer text-brand-ink select-none">
                 <input type="checkbox" id="rememberMeCheck" checked class="w-4 h-4 rounded accent-brand-ochre cursor-pointer" />
@@ -1896,28 +1896,6 @@
     // In-memory / persistent student database store with multi-child family accounts (Zero plaintext passwords)
     const INITIAL_STUDENTS = [
       {
-        parentId: "PAR-100",
-        parentName: "VedIQ Gurukul Parent",
-        phone: "9594806822",
-        email: "myvediqacademy@gmail.com",
-        activeChildIndex: 0,
-        children: [
-          {
-            childId: "VED-2026-001",
-            childName: "Kabir",
-            childGrade: "Ages 8-11 • Pravesh",
-            batch: "Daily 5:00 PM – 6:00 PM IST",
-            focusScore: "0",
-            streak: "0",
-            habits: [false, false, false, false],
-            tratakGaze: "0s (Day 1 Baseline)",
-            mathVelocity: "0 sums/min",
-            cognitiveGrade: "Baseline in Progress",
-            mentorNotes: "Welcome to VedIQ Gurukul! Daily cognitive evaluation starts from Day 1."
-          }
-        ]
-      },
-      {
         parentId: "PAR-101",
         parentName: "Mr. Rajesh Sharma",
         phone: "9800000001",
@@ -2677,7 +2655,7 @@
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       let identifier = idInput ? idInput.value.trim() : "";
-      if (identifier.toLowerCase().includes('swagatam') || identifier.toLowerCase().includes('test')) {
+      if (identifier.toLowerCase().includes('swagatam') || identifier.includes('9594806822') || identifier.toLowerCase().includes('test')) {
         identifier = "";
         if (idInput) idInput.value = "";
         localStorage.removeItem('vediq_remembered_identifier');
@@ -2724,9 +2702,10 @@
       if (phoneField) setTimeout(() => phoneField.focus(), 100);
     }
 
-    function dispatchOtpFromPhoneStep() {
+    async function dispatchOtpFromPhoneStep() {
       const phoneField = document.getElementById('otpPhoneInputField');
       const err = document.getElementById('otpPhoneInputError');
+      const btn = document.getElementById('btnSendOtpStep1');
       const raw = phoneField ? phoneField.value.trim() : "";
 
       if (!raw) {
@@ -2738,49 +2717,100 @@
         return;
       }
 
-      if (raw.includes('@')) {
-        if (err) err.classList.add('hidden');
+      if (err) err.classList.add('hidden');
+
+      const origBtnHtml = btn ? btn.innerHTML : "Send 6-Digit Code";
+      function setBtnLoading(isLoading, text) {
+        if (!btn) return;
+        btn.disabled = isLoading;
+        if (isLoading) {
+          btn.innerHTML = `<span class="inline-block animate-spin">⏳</span> <span>${text || 'Sending Code...'}</span>`;
+        } else {
+          btn.innerHTML = origBtnHtml;
+        }
+      }
+
+      // 1. Email Format Validation
+      if (raw.includes('@') || /[a-zA-Z]/.test(raw)) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        if (!emailRegex.test(raw)) {
+          if (err) {
+            err.innerText = "Please enter a valid email address (e.g. parent@gmail.com).";
+            err.classList.remove('hidden');
+          }
+          if (phoneField) phoneField.focus();
+          return;
+        }
+
+        const emailAddr = raw.toLowerCase().trim();
         const mainId = document.getElementById('loginIdentifier');
-        if (mainId) mainId.value = raw.toLowerCase();
-        initiateEmailOtpDispatch(raw.toLowerCase());
+        if (mainId) mainId.value = emailAddr;
+
+        setBtnLoading(true, "Dispatching OTP to " + emailAddr + "...");
+        const result = await requestOtpFlow({
+          recipient: emailAddr,
+          displayRecipient: emailAddr,
+          targetIdentifier: emailAddr,
+          type: 'email',
+          isFirebase: false
+        });
+        setBtnLoading(false);
+
+        if (!result.success) {
+          if (err) {
+            err.innerHTML = `⚠️ <strong>Email delivery failed:</strong> ${result.error}`;
+            err.classList.remove('hidden');
+          }
+          if (phoneField) phoneField.focus();
+        }
         return;
       }
 
-      const digits = raw.replace(/\D/g, '').slice(-10);
-      if (!digits || digits.length < 10) {
+      // 2. Indian Phone Number Validation (10 digits starting with 6, 7, 8, or 9)
+      let cleanDigits = raw.replace(/\D/g, '');
+      if (cleanDigits.length === 12 && cleanDigits.startsWith('91')) {
+        cleanDigits = cleanDigits.slice(2);
+      } else if (cleanDigits.length === 11 && cleanDigits.startsWith('0')) {
+        cleanDigits = cleanDigits.slice(1);
+      }
+
+      if (cleanDigits.length !== 10 || !/^[6-9]\d{9}$/.test(cleanDigits)) {
         if (err) {
-          err.innerText = "Please enter a valid email address or 10-digit mobile number.";
+          err.innerText = "Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9 (e.g. 98000 00000).";
           err.classList.remove('hidden');
         }
         if (phoneField) phoneField.focus();
         return;
       }
 
-      if (err) err.classList.add('hidden');
       const mainId = document.getElementById('loginIdentifier');
-      if (mainId) mainId.value = digits;
+      if (mainId) mainId.value = cleanDigits;
 
-      initiatePhoneOtpDispatch(digits);
+      setBtnLoading(true, "Dispatching OTP to +91 " + cleanDigits + "...");
+      const result = await initiatePhoneOtpDispatch(cleanDigits);
+      setBtnLoading(false);
+
+      if (result && !result.success) {
+        if (err) {
+          err.innerHTML = `⚠️ <strong>Mobile OTP failed:</strong> ${result.error || 'Please try again later.'}`;
+          err.classList.remove('hidden');
+        }
+        if (phoneField) phoneField.focus();
+      }
     }
 
     async function initiateEmailOtpDispatch(emailAddr) {
-      const btn = document.getElementById('btnPhoneOtpText');
-      if (btn) btn.innerText = "Sending code to " + emailAddr + "...";
-
-      requestOtpFlow({
+      return requestOtpFlow({
         recipient: emailAddr,
         displayRecipient: emailAddr,
         targetIdentifier: emailAddr,
         type: 'email',
         isFirebase: false
       });
-      if (btn) btn.innerText = "Sign in with Email OTP / Verification Code";
     }
 
     async function initiatePhoneOtpDispatch(phoneDigits) {
       const fullPhone = "+91" + phoneDigits;
-      const btn = document.getElementById('btnPhoneOtpText');
-      if (btn) btn.innerText = "Dispatching OTP to +91 " + phoneDigits + "...";
 
       // Attempt Firebase Phone Auth if enabled
       initFirebase();
@@ -2795,23 +2825,19 @@
           const confirmationResult = await firebase.auth().signInWithPhoneNumber(fullPhone, window.recaptchaVerifier);
           window.confirmationResult = confirmationResult;
 
-          if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
-          requestOtpFlow({
+          return requestOtpFlow({
             recipient: fullPhone,
             displayRecipient: fullPhone,
             targetIdentifier: phoneDigits,
             type: 'firebase-phone',
             isFirebase: true
           });
-          return;
         } catch (err) {
-          console.warn("Firebase Phone Auth attempt:", err);
-          if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
+          console.warn("Firebase Phone Auth attempt note:", err);
         }
       }
 
-      if (btn) btn.innerText = "Sign in with Mobile Number (Direct SMS OTP)";
-      requestOtpFlow({
+      return requestOtpFlow({
         recipient: fullPhone,
         displayRecipient: fullPhone,
         targetIdentifier: phoneDigits,
@@ -2838,15 +2864,21 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'send', recipient: recipient })
           });
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data.token) {
-              serverToken = data.token;
-              if (data.expiresAt) expiresAt = data.expiresAt;
-            }
+          const data = await resp.json().catch(() => ({}));
+          
+          if (!resp.ok || !data.token) {
+            const errorMsg = data.error || `Unable to send code (Status: ${resp.status})`;
+            return { success: false, error: errorMsg };
           }
+
+          serverToken = data.token;
+          if (data.expiresAt) expiresAt = data.expiresAt;
         } catch (e) {
-          console.warn("Secure OTP server dispatch notice:", e);
+          console.error("Secure OTP server dispatch error:", e);
+          return {
+            success: false,
+            error: "Unable to reach OTP service. Please ensure your Netlify Functions are running."
+          };
         }
       }
 
@@ -2861,7 +2893,7 @@
         expiresAt: expiresAt
       };
 
-      // Show Step 2 (Code Verification) and hide Step 1
+      // Show Step 2 (Code Verification) and hide Step 1 ONLY upon confirmed dispatch
       const step1 = document.getElementById('otpStepPhoneInput');
       const step2 = document.getElementById('otpStepCodeVerify');
       if (step1) step1.classList.add('hidden');
@@ -2880,7 +2912,9 @@
       }
 
       const labelEl = document.getElementById('otpRecipientLabel');
-      if (labelEl) labelEl.innerText = targetDisplay;
+      if (labelEl) {
+        labelEl.innerText = type === 'email' ? targetDisplay : (targetDisplay.startsWith('+91') ? targetDisplay : `+91 ${targetDisplay}`);
+      }
 
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
@@ -2904,8 +2938,11 @@
         if (first) first.focus();
       }, 150);
 
-      // Start 2-Minute (120s) Live Countdown
-      startOtpTimer(120);
+      // Start 2-Minute (120s) Live Countdown matching server expiration
+      const remainingSecs = Math.max(10, Math.round((expiresAt - Date.now()) / 1000));
+      startOtpTimer(remainingSecs);
+
+      return { success: true };
     }
 
     // Dispatch inquiry to WhatsApp Desk if code is taking time
@@ -2947,49 +2984,109 @@
 
     async function resendOtpCode() {
       if (!currentOtpSession) return;
-      currentOtpSession.createdAt = Date.now();
-      currentOtpSession.expiresAt = Date.now() + (120 * 1000); // Reset 2 minutes
+      const btnResend = document.getElementById('btnResendOtp');
+      const err = document.getElementById('otpErrorText');
+      if (err) err.classList.add('hidden');
+
+      const origText = btnResend ? btnResend.innerText : "🔄 Resend New Code";
+      if (btnResend) {
+        btnResend.disabled = true;
+        btnResend.innerText = "⏳ Resending Code...";
+      }
       
       // Re-trigger carrier SMS if phone
-      if (currentOtpSession.targetPhone && typeof firebase !== 'undefined' && firebase.auth) {
+      if (currentOtpSession.targetPhone && typeof firebase !== 'undefined' && firebase.auth && currentOtpSession.isFirebase) {
         try {
           if (!window.recaptchaVerifier) {
             window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
           }
           const confirmationResult = await firebase.auth().signInWithPhoneNumber("+91" + currentOtpSession.targetPhone, window.recaptchaVerifier);
           window.confirmationResult = confirmationResult;
+          currentOtpSession.expiresAt = Date.now() + (120 * 1000);
+          startOtpTimer(120);
+          if (btnResend) {
+            btnResend.disabled = false;
+            btnResend.innerText = origText;
+            btnResend.classList.add('hidden');
+          }
+          if (err) {
+            err.innerHTML = '<span class="text-emerald-700 font-bold">✓ New SMS code dispatched to your phone!</span>';
+            err.classList.remove('hidden');
+          }
+          return;
         } catch(e) {
           console.warn("Carrier SMS resend notice:", e);
-        }
-      } else if (currentOtpSession.recipient) {
-        // Re-dispatch secure serverless OTP
-        try {
-          const resp = await fetch('/.netlify/functions/otp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'send', recipient: currentOtpSession.recipient })
-          });
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data.token) currentOtpSession.token = data.token;
+          if (err) {
+            err.innerText = "Failed to resend SMS: " + (e.message || "Please try again later.");
+            err.classList.remove('hidden');
           }
-        } catch (e) {
-          console.warn("Serverless OTP resend notice:", e);
+          if (btnResend) {
+            btnResend.disabled = false;
+            btnResend.innerText = origText;
+          }
+          return;
         }
       }
 
-      const err = document.getElementById('otpErrorText');
-      if (err) err.classList.add('hidden');
+      // Re-dispatch secure serverless OTP
+      try {
+        const resp = await fetch('/.netlify/functions/otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'send', recipient: currentOtpSession.recipient })
+        });
+        const data = await resp.json().catch(() => ({}));
 
-      for (let i = 1; i <= 6; i++) {
-        const box = document.getElementById('otp-' + i);
-        if (box) {
-          box.value = '';
-          box.classList.remove('border-rose-500');
+        if (!resp.ok || !data.token) {
+          const errorMsg = data.error || `Unable to resend code (Status: ${resp.status})`;
+          if (err) {
+            err.innerText = errorMsg;
+            err.classList.remove('hidden');
+          }
+          if (btnResend) {
+            btnResend.disabled = false;
+            btnResend.innerText = origText;
+          }
+          return;
+        }
+
+        currentOtpSession.token = data.token;
+        if (data.expiresAt) currentOtpSession.expiresAt = data.expiresAt;
+
+        for (let i = 1; i <= 6; i++) {
+          const box = document.getElementById('otp-' + i);
+          if (box) {
+            box.value = '';
+            box.classList.remove('border-rose-500');
+          }
+        }
+
+        if (err) {
+          err.innerHTML = '<span class="text-emerald-700 font-bold">✓ New verification code sent to your email!</span>';
+          err.classList.remove('hidden');
+        }
+
+        const remainingSecs = Math.max(10, Math.round((currentOtpSession.expiresAt - Date.now()) / 1000));
+        startOtpTimer(remainingSecs);
+
+        if (btnResend) {
+          btnResend.disabled = false;
+          btnResend.innerText = origText;
+          btnResend.classList.add('hidden');
+        }
+        const first = document.getElementById('otp-1');
+        if (first) first.focus();
+      } catch (e) {
+        console.warn("Serverless OTP resend error:", e);
+        if (err) {
+          err.innerText = "Network error resending code. Please check your connection.";
+          err.classList.remove('hidden');
+        }
+        if (btnResend) {
+          btnResend.disabled = false;
+          btnResend.innerText = origText;
         }
       }
-
-      startOtpTimer(120);
     }
 
     function closeOtpModal() {
@@ -3111,6 +3208,7 @@
 
       // 2. Server-Side Cryptographic OTP Verification (Netlify Function)
       let verifiedOnServer = false;
+      let serverVerifyError = "Invalid verification code. Please check and try again.";
       try {
         const resp = await fetch('/.netlify/functions/otp', {
           method: 'POST',
@@ -3122,24 +3220,25 @@
             recipient: currentOtpSession.recipient
           })
         });
-        if (resp.ok) {
-          const res = await resp.json();
-          if (res.verified) {
-            verifiedOnServer = true;
-          }
+        const res = await resp.json().catch(() => ({}));
+        if (resp.ok && res.verified) {
+          verifiedOnServer = true;
+        } else if (res.error) {
+          serverVerifyError = res.error;
         }
       } catch (srvErr) {
         console.warn("Serverless OTP verify note:", srvErr);
+        serverVerifyError = "Network error verifying code. Please check your connection.";
       }
 
       if (!verifiedOnServer) {
         if (err) {
-          err.innerText = "Invalid verification code. Please check and try again.";
+          err.innerText = serverVerifyError;
           err.classList.remove('hidden');
         }
         for (let i = 1; i <= 6; i++) {
           const box = document.getElementById('otp-' + i);
-          if (box) box.classList.add('border-red-500');
+          if (box) box.classList.add('border-rose-500');
         }
         restoreOtpBtn();
         return;
@@ -3277,6 +3376,9 @@
       if (!parentProfile) return;
       normalizeParentProfile(parentProfile);
       activeStudent = parentProfile;
+      if (!parentProfile._sessionExpiresAt) {
+        parentProfile._sessionExpiresAt = Date.now() + (30 * 24 * 60 * 60 * 1000); // 30-Day Persistent Active Session
+      }
       localStorage.setItem('vediq_current_session', JSON.stringify(parentProfile));
       if (parentProfile.email || parentProfile.phone) {
         localStorage.setItem('vediq_remembered_identifier', parentProfile.email || parentProfile.phone);
@@ -3626,8 +3728,6 @@
       const obPass = document.getElementById('obPassword') ? document.getElementById('obPassword').value : "";
       if (obPass && obPass.length >= 6) {
         pendingOnboardingProfile.password = obPass;
-      } else if (!pendingOnboardingProfile.password) {
-        pendingOnboardingProfile.password = "password123";
       }
 
       const firstChild = {
@@ -3895,14 +3995,19 @@
       if (savedSession) {
         try {
           const student = JSON.parse(savedSession);
-          loadDashboardForStudent(student);
-          return;
+          // Check 30-day session expiration window (Keeps parents logged in without repeated OTPs)
+          if (student._sessionExpiresAt && Date.now() > student._sessionExpiresAt) {
+            localStorage.removeItem('vediq_current_session');
+          } else {
+            loadDashboardForStudent(student);
+            return;
+          }
         } catch (e) {}
       }
 
       // Restore remembered email/phone permanently (auto-clean legacy personal emails)
       let rememberedId = localStorage.getItem('vediq_remembered_identifier');
-      if (rememberedId && (rememberedId.toLowerCase().includes('swagatam') || rememberedId.toLowerCase().includes('test@'))) {
+      if (rememberedId && (rememberedId.toLowerCase().includes('swagatam') || rememberedId.includes('9594806822') || rememberedId.toLowerCase().includes('test@'))) {
         localStorage.removeItem('vediq_remembered_identifier');
         rememberedId = null;
       }
