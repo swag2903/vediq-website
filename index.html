@@ -415,30 +415,35 @@
   </style>
 </head>
 
-<body class="bg-brand-cream text-brand-ink font-sans selection:bg-brand-ochre selection:text-white leading-relaxed">
+<body class="bg-brand-cream text-brand-ink font-sans selection:bg-brand-ochre selection:text-white leading-relaxed pb-24 lg:pb-0">
 
-  <!-- TOP ANNOUNCEMENT BAR (Customer Friendly, Responsive on Mobile/Tablet/PC) -->
-  <aside class="border-b border-brand-border bg-brand-surface text-brand-muted py-2.5 px-3 sm:px-4 transition">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-center sm:text-left">
-      <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold text-xs uppercase tracking-wide border border-emerald-200 shadow-xs">
+  <!-- TOP ANNOUNCEMENT BAR (Clean & Sleek Single-Line on Phones, Full on Desktop) -->
+  <aside class="border-b border-brand-border bg-brand-surface py-2 px-3 sm:px-4 transition">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      <!-- Left: Admissions Badge + Info -->
+      <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold text-brand-ink truncate">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[11px] sm:text-xs uppercase tracking-wide border border-emerald-200 shrink-0">
           <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-          New Batch Admissions Open
+          Admissions Open
         </span>
-        <span class="text-brand-ink font-semibold text-xs sm:text-sm">Free 3-Day Live Gurukul Demo (Ages 5–15)</span>
+        <span class="hidden sm:inline text-brand-border">•</span>
+        <span class="truncate text-brand-ink font-semibold">Free 3-Day Live Gurukul Demo (Ages 5–15)</span>
       </div>
-      <div class="flex items-center justify-center gap-2.5 shrink-0 flex-wrap">
-        <!-- English / Hindi Language Toggle Switch -->
+
+      <!-- Right: Compact, Never Crammed -->
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- English / Hindi Switch -->
         <div class="inline-flex items-center rounded-lg border border-brand-border bg-white text-xs font-bold overflow-hidden shadow-xs">
-          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-3 py-1 bg-brand-ink text-white transition text-xs">EN</button>
-          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-3 py-1 text-brand-muted hover:text-brand-ink transition text-xs">हिन्दी</button>
+          <button type="button" onclick="translatePage('en')" id="btnLangEn" class="px-2.5 py-1 bg-brand-ink text-white transition text-xs">EN</button>
+          <button type="button" onclick="translatePage('hi')" id="btnLangHi" class="px-2.5 py-1 text-brand-muted hover:text-brand-ink transition text-xs">हिन्दी</button>
         </div>
-        <!-- Quick Parent Portal Access Pill -->
-        <a href="parent.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs border border-amber-300 transition shadow-xs">
-          <span>👨‍👩‍👧 Parent Portal</span>
+        <!-- Quick Parent Portal (Hidden on smallest mobile to keep top clean) -->
+        <a href="parent.html" class="hidden sm:inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs border border-amber-300 transition shadow-xs">
+          <span>👨‍👩‍👧 Portal</span>
         </a>
-        <button onclick="openDemoModal()" class="px-3.5 py-1.5 rounded-lg bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs transition shadow-sm flex items-center gap-1">
-          <span>Book Free Slot &rarr;</span>
+        <!-- Book Demo CTA -->
+        <button onclick="openDemoModal()" class="px-3.5 py-1.5 rounded-lg bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs sm:text-sm transition shadow-sm flex items-center gap-1">
+          <span>Book Demo &rarr;</span>
         </button>
       </div>
     </div>
@@ -495,7 +500,7 @@
       </div>
 
       <!-- Prominent Parent Login Card for Mobile -->
-      <a href="parent.html" onclick="toggleMobileNav()" class="flex items-center justify-between p-3 rounded-xl bg-brand-ochre text-white font-bold text-xs shadow-md">
+      <a href="parent.html" onclick="toggleMobileNav()" class="flex items-center justify-between p-3.5 rounded-2xl bg-brand-ochre text-white font-bold text-sm shadow-md">
         <span class="flex items-center gap-2">
           <span>👨‍👩‍👧</span>
           <span>Parent Portal (Login / Register)</span>
@@ -503,14 +508,14 @@
         <span>&rarr;</span>
       </a>
 
-      <a href="#system" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">1-Hour Daily System</a>
-      <a href="#curriculum" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">10-Year Roadmap</a>
-      <a href="#scripts" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Word-to-Word Scripts</a>
-      <a href="parent.html" onclick="toggleMobileNav()" class="block text-brand-ochre font-bold flex items-center gap-1">📱 Open Parent App Portal</a>
-      <a href="#franchise" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Franchise & Teachers</a>
-      <a href="#plans" onclick="toggleMobileNav()" class="block hover:text-brand-ochre">Tuition Plans</a>
+      <a href="#system" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">1-Hour Daily System</a>
+      <a href="#curriculum" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">10-Year Roadmap</a>
+      <a href="#scripts" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">Word-to-Word Scripts</a>
+      <a href="parent.html" onclick="toggleMobileNav()" class="block py-2 text-base text-brand-ochre font-bold flex items-center gap-1">📱 Open Parent App Portal</a>
+      <a href="#franchise" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">Franchise & Teachers</a>
+      <a href="#plans" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">Tuition Plans</a>
       <div class="pt-4 border-t border-brand-border flex flex-col gap-2.5">
-        <button onclick="toggleMobileNav(); openDemoModal();" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink">
+        <button onclick="toggleMobileNav(); openDemoModal();" class="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-brand-ink">
           Book Free 3-Day Demo
         </button>
       </div>
@@ -518,117 +523,140 @@
   </header>
 
   <!-- HERO: EDITORIAL LUXURY & REFINED BREATHING ROOM -->
-  <section class="relative pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden bg-fine-grid border-b border-brand-border">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+  <section class="relative pt-12 pb-20 md:pt-24 md:pb-32 overflow-hidden bg-fine-grid border-b border-brand-border">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       
-      <!-- Minimalist Category Pill -->
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-surface border border-brand-border shadow-subtle mb-8">
-        <span class="w-1.5 h-1.5 rounded-full bg-brand-ochre"></span>
-        <span class="text-[11px] font-bold uppercase tracking-wider text-brand-ink">The Parallel Education System</span>
+      <!-- Category Pill -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-brand-border shadow-xs mb-6">
+        <span class="w-2 h-2 rounded-full bg-brand-ochre animate-pulse"></span>
+        <span class="text-xs font-bold uppercase tracking-wider text-brand-ink">The Parallel Education System</span>
         <span class="text-brand-border">•</span>
-        <span class="text-[11px] font-medium text-brand-muted">Ages 5 to 15</span>
+        <span class="text-xs font-bold text-brand-ochre">Ages 5 to 15</span>
       </div>
 
       <!-- Hero Headline with Cormorant Garamond Serif Accent -->
-      <h1 class="text-3xl sm:text-5xl lg:text-7xl font-light text-brand-ink tracking-tight max-w-4xl mx-auto leading-[1.12]">
+      <h1 class="text-3xl sm:text-5xl lg:text-7xl font-bold text-brand-ink tracking-tight max-w-4xl mx-auto leading-[1.18] sm:leading-[1.12]">
         Ancient wisdom for the <br />
-        <span class="font-serif italic font-semibold text-brand-ochre">modern scientific mind.</span>
+        <span class="font-serif italic font-bold text-brand-ochre block mt-1 sm:inline sm:mt-0">modern scientific mind.</span>
       </h1>
 
-      <!-- Refined Subtitle -->
-      <p class="mt-5 text-base sm:text-lg lg:text-xl text-brand-muted max-w-2xl mx-auto font-normal leading-relaxed px-2">
-        Modern education teaches knowledge; <strong class="text-brand-ink font-semibold">VedIQ Academy trains the mind</strong>. A daily 1-hour Gurukul ritual fusing ancient Tratak concentration, Vedic mathematics, and neuroscience to build unbreakable focus and noble character.
+      <!-- Refined Subtitle: High contrast, readable on phones -->
+      <p class="mt-5 sm:mt-6 text-base sm:text-xl text-slate-800 font-normal max-w-2xl mx-auto leading-relaxed px-1">
+        Modern education teaches knowledge; <strong class="text-brand-ink font-bold">VedIQ Academy trains the mind</strong>. A daily 1-hour Gurukul ritual fusing ancient Tratak concentration, Vedic mathematics, and neuroscience to build unbreakable focus and noble character.
       </p>
 
-      <!-- Primary Action Buttons -->
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-md mx-auto">
-        <button onclick="openDemoModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-sm tracking-wider uppercase text-white bg-brand-ink hover:bg-brand-ochre hover:shadow-ochre transition duration-200 shadow-md">
-          Book Free 3-Day Demo Class &rarr;
+      <!-- Primary Action Buttons: Stacked on mobile with full thumb comfort -->
+      <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-md mx-auto px-2">
+        <button onclick="openDemoModal()" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base tracking-wider uppercase text-white bg-brand-ink hover:bg-brand-ochre hover:shadow-ochre transition duration-200 shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+          <span>Book Free 3-Day Demo Class</span>
+          <span aria-hidden="true">&rarr;</span>
         </button>
-        <a href="#system" class="w-full sm:w-auto px-7 py-4 rounded-2xl font-bold text-sm tracking-wider uppercase text-brand-ink bg-brand-surface border border-brand-border hover:bg-brand-subtle transition shadow-xs">
-          View 60-Minute Ritual
+        <a href="#system" class="w-full sm:w-auto px-7 py-4 rounded-2xl font-bold text-base tracking-wider uppercase text-brand-ink bg-white border-2 border-brand-border hover:bg-brand-subtle transition shadow-xs flex items-center justify-center gap-1.5">
+          <span>View 60-Minute Ritual</span>
+          <span aria-hidden="true">&darr;</span>
         </a>
       </div>
 
-      <!-- Trust & Credibility Metrics (Optimized across Phone/Tablet/PC) -->
-      <div class="mt-12 pt-8 border-t border-brand-border/80 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-3xl mx-auto text-center sm:text-left">
-        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
-          <span class="text-3xl sm:text-4xl font-display font-bold text-brand-ink">60 Min</span>
-          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Daily calibrated routine</p>
+      <!-- Trust & Credibility Metrics: High Contrast Clean Cards -->
+      <div class="mt-12 pt-8 border-t border-brand-border grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-3xl mx-auto text-left">
+        <div class="p-4 bg-white rounded-2xl border border-brand-border shadow-xs flex flex-col justify-center">
+          <span class="text-3xl sm:text-4xl font-display font-extrabold text-brand-ink">60 Min</span>
+          <p class="text-xs sm:text-sm text-slate-800 font-bold mt-1">Daily calibrated routine</p>
         </div>
-        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
-          <span class="text-3xl sm:text-4xl font-display font-bold text-brand-ochre">+30%</span>
-          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Focus boost in 7 days</p>
+        <div class="p-4 bg-white rounded-2xl border border-brand-border shadow-xs flex flex-col justify-center">
+          <span class="text-3xl sm:text-4xl font-display font-extrabold text-brand-ochre">+30%</span>
+          <p class="text-xs sm:text-sm text-slate-800 font-bold mt-1">Focus boost in 7 days</p>
         </div>
-        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
-          <span class="text-3xl sm:text-4xl font-display font-bold text-brand-ink">1:8</span>
-          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Micro-batch mentorship</p>
+        <div class="p-4 bg-white rounded-2xl border border-brand-border shadow-xs flex flex-col justify-center">
+          <span class="text-3xl sm:text-4xl font-display font-extrabold text-brand-ink">1:8</span>
+          <p class="text-xs sm:text-sm text-slate-800 font-bold mt-1">Micro-batch mentorship</p>
         </div>
-        <div class="p-3.5 bg-brand-surface/70 rounded-2xl border border-brand-border/60 shadow-xs">
-          <span class="text-3xl sm:text-4xl font-display font-bold text-emerald-700">365</span>
-          <p class="text-xs sm:text-sm text-brand-muted font-medium mt-1">Standardized daily lessons</p>
+        <div class="p-4 bg-white rounded-2xl border border-brand-border shadow-xs flex flex-col justify-center">
+          <span class="text-3xl sm:text-4xl font-display font-extrabold text-emerald-700">365</span>
+          <p class="text-xs sm:text-sm text-slate-800 font-bold mt-1">Standardized daily lessons</p>
         </div>
       </div>
 
     </div>
   </section>
 
-  <!-- THE THREE PILLARS (Minimalist Editorial Grid - Stacks on Mobile & Tablet for Maximum Legibility) -->
-  <section class="py-20 bg-brand-surface border-b border-brand-border reveal-on-scroll">
+  <!-- THE THREE PILLARS (High Legibility & Modern Editorial Cards) -->
+  <section class="py-16 sm:py-24 bg-brand-surface border-b border-brand-border reveal-on-scroll">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <div class="max-w-2xl mb-12 text-center sm:text-left">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-ochre">Core Philosophy</span>
-        <h2 class="mt-2 text-2xl sm:text-4xl font-light text-brand-ink tracking-tight font-display">
-          Three faculties essential for the next generation
+      <div class="max-w-2xl mb-10 text-left">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-ochre">Core Gurukul Philosophy</span>
+        <h2 class="mt-2 text-2xl sm:text-4xl font-semibold text-brand-ink font-serif tracking-tight leading-snug">
+          Three faculties essential for the <span class="italic font-bold text-brand-ochre">next generation</span>
         </h2>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         
         <!-- Pillar 1 -->
-        <div class="soothing-card p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40">
-          <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
-            01
+        <div class="soothing-card p-6 sm:p-8 rounded-3xl bg-white border border-brand-border space-y-4 shadow-sm hover:border-brand-ochre/40">
+          <div class="flex items-center justify-between">
+            <div class="w-12 h-12 rounded-2xl bg-brand-ink text-brand-gold flex items-center justify-center text-base font-display font-bold shadow-sm">
+              01
+            </div>
+            <span class="px-3 py-1 rounded-full bg-brand-ochre/10 text-brand-ochre text-xs font-bold">
+              Dharana Focus
+            </span>
           </div>
-          <h3 class="text-xl font-bold text-brand-ink">Concentration (Dharana)</h3>
-          <p class="text-sm sm:text-base text-brand-muted leading-relaxed">
-            Reversing the neural damage of short-form algorithmic video addiction. Daily Tratak gaze stillness resets dopamine receptors and cultivates 45+ minutes of continuous deep cognitive focus.
+          <h3 class="text-xl sm:text-2xl font-bold text-brand-ink">Concentration (Dharana)</h3>
+          <p class="text-base text-slate-800 leading-relaxed font-normal">
+            Reversing the neural damage of short-form algorithmic reels. Daily Tratak gaze stillness resets dopamine receptors and cultivates <strong class="text-brand-ink font-semibold">45+ minutes of continuous deep cognitive focus</strong>.
           </p>
-          <div class="pt-2 text-xs sm:text-sm text-brand-ochre font-bold bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/60">
-            Result: Deep study without restlessness
+          <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-bold flex items-center gap-2">
+            <span class="text-emerald-600 text-base font-extrabold">✓</span>
+            <span>Measurable Result: Deep study without restlessness</span>
           </div>
         </div>
 
         <!-- Pillar 2 -->
-        <div class="soothing-card p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40">
-          <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
-            02
+        <div class="soothing-card p-6 sm:p-8 rounded-3xl bg-white border border-brand-border space-y-4 shadow-sm hover:border-brand-ochre/40">
+          <div class="flex items-center justify-between">
+            <div class="w-12 h-12 rounded-2xl bg-brand-ink text-brand-gold flex items-center justify-center text-base font-display font-bold shadow-sm">
+              02
+            </div>
+            <span class="px-3 py-1 rounded-full bg-brand-ochre/10 text-brand-ochre text-xs font-bold">
+              Vedic Logic
+            </span>
           </div>
-          <h3 class="text-xl font-bold text-brand-ink">Vedic Mathematical Logic</h3>
-          <p class="text-sm sm:text-base text-brand-muted leading-relaxed">
-            Transforming numbers from an anxiety trigger into joyful visual pattern puzzles. 16 ancient Sutras teach children to calculate multi-digit multiplication and roots entirely in their mind.
+          <h3 class="text-xl sm:text-2xl font-bold text-brand-ink">Vedic Mathematical Logic</h3>
+          <p class="text-base text-slate-800 leading-relaxed font-normal">
+            Transforming numbers from an anxiety trigger into joyful visual pattern puzzles. 16 ancient Sutras teach children to calculate <strong class="text-brand-ink font-semibold">multi-digit multiplication and roots entirely in their mind</strong>.
           </p>
-          <div class="pt-2 text-xs sm:text-sm text-brand-ochre font-bold bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/60">
-            Result: 10x speed & zero exam fear
+          <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-bold flex items-center gap-2">
+            <span class="text-emerald-600 text-base font-extrabold">✓</span>
+            <span>Measurable Result: 10x calculation speed & zero exam fear</span>
           </div>
         </div>
 
         <!-- Pillar 3 -->
-        <div class="soothing-card p-7 sm:p-9 rounded-3xl bg-brand-cream border border-brand-border space-y-4 shadow-xs hover:border-brand-ochre/40">
-          <div class="w-10 h-10 rounded-xl bg-brand-ink text-brand-gold flex items-center justify-center text-sm font-display font-bold">
-            03
+        <div class="soothing-card p-6 sm:p-8 rounded-3xl bg-white border border-brand-border space-y-4 shadow-sm hover:border-brand-ochre/40">
+          <div class="flex items-center justify-between">
+            <div class="w-12 h-12 rounded-2xl bg-brand-ink text-brand-gold flex items-center justify-center text-base font-display font-bold shadow-sm">
+              03
+            </div>
+            <span class="px-3 py-1 rounded-full bg-brand-ochre/10 text-brand-ochre text-xs font-bold">
+              Noble Character
+            </span>
           </div>
-          <h3 class="text-xl font-bold text-brand-ink">Character & Sanskar</h3>
-          <p class="text-sm sm:text-base text-brand-muted leading-relaxed">
-            Intelligence without ethical roots creates chaos. Daily lessons from the Ramayana, Upanishads, and Panchatatva instill profound respect for parents, humility, courage, and lifelong discipline.
+          <h3 class="text-xl sm:text-2xl font-bold text-brand-ink">Character & Sanskar</h3>
+          <p class="text-base text-slate-800 leading-relaxed font-normal">
+            Intelligence without ethical roots creates chaos. Daily lessons from the Ramayana, Upanishads, and Panchatatva instill <strong class="text-brand-ink font-semibold">profound respect for parents, humility, courage, and lifelong discipline</strong>.
           </p>
-          <div class="pt-2 text-xs sm:text-sm text-brand-ochre font-bold bg-amber-50/80 p-2.5 rounded-xl border border-amber-200/60">
-            Result: Grounded, respectful future leaders
+          <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-bold flex items-center gap-2">
+            <span class="text-emerald-600 text-base font-extrabold">✓</span>
+            <span>Measurable Result: Grounded, respectful future leaders</span>
           </div>
         </div>
 
       </div>
+
+    </div>
+  </section>
 
     </div>
   </section>
@@ -1445,8 +1473,8 @@
     </div>
   </div>
 
-  <!-- FLOATING 1-TAP WHATSAPP BUTTON (High Trust & Quick Admissions Chat) -->
-  <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20I%20have%20a%20question%20about%20admissions%20at%20VedIQ%20Academy." target="_blank" class="hidden sm:flex fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-2xl items-center gap-2.5 transition duration-200 hover:scale-105 border border-emerald-400/50 text-xs font-bold tracking-wide" title="Chat with Dr. Ujwal Vyas on WhatsApp">
+  <!-- FLOATING 1-TAP WHATSAPP BUTTON (Desktop & Laptop Only, never overlapping mobile content) -->
+  <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20I%20have%20a%20question%20about%20admissions%20at%20VedIQ%20Academy." target="_blank" class="hidden lg:flex fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-2xl items-center gap-2.5 transition duration-200 hover:scale-105 border border-emerald-400/50 text-xs font-bold tracking-wide" title="Chat with Dr. Ujwal Vyas on WhatsApp">
     <span class="relative flex h-2.5 w-2.5">
       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
       <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
@@ -1455,12 +1483,12 @@
     <span>Chat with Dr. Ujwal Vyas</span>
   </a>
 
-  <!-- STICKY MOBILE CONVERSION BAR -->
-  <div class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-brand-surface/95 backdrop-blur-md border-t border-brand-border p-2.5 flex items-center gap-2 shadow-2xl">
-    <button onclick="openDemoModal()" class="flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white bg-brand-ochre text-center shadow-sm">
-      Book Free Demo
+  <!-- STICKY MOBILE CONVERSION DOCKED BAR (Never overlaps cards) -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-brand-surface/95 backdrop-blur-md border-t border-brand-border p-2.5 flex items-center gap-2 shadow-2xl">
+    <button onclick="openDemoModal()" class="flex-1 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white bg-brand-ochre text-center shadow-sm">
+      Book Free 3-Day Demo &rarr;
     </button>
-    <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20I%20am%20interested%20in%20the%20VedIQ%20Academy%20program." target="_blank" class="px-4 py-2.5 rounded-lg text-xs font-bold text-white bg-emerald-600 flex items-center justify-center gap-1 shadow-sm">
+    <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20I%20am%20interested%20in%20the%20VedIQ%20Academy%20program." target="_blank" class="px-4 py-3 rounded-xl text-sm font-bold text-white bg-emerald-600 flex items-center justify-center gap-1.5 shadow-sm shrink-0">
       <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
       <span>WhatsApp</span>
     </a>
