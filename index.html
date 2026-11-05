@@ -2346,9 +2346,9 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
       }
     ];
 
-    // Configurable backend endpoint for Netlify Serverless Functions (CORS-enabled)
+    // Configurable backend endpoint for Serverless Functions (Vercel / Netlify)
     const VEDIQ_BACKEND_URL = (window.location.hostname.includes("vediqacademy.com") || window.location.hostname.includes("github.io"))
-      ? "https://vediq-academy-backend.netlify.app"
+      ? "https://vediq-website.vercel.app"
       : "";
 
     // Secure Gemini AI Call (Via Netlify Serverless Function — Zero Frontend Key Exposure)
