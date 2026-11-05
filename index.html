@@ -250,6 +250,65 @@
       animation: iosSheetIn 0.35s var(--ios-spring) forwards;
     }
 
+    /* ========================================================================= */
+    /* CHATBOT UI FIXES: ZERO HORIZONTAL SCROLLBAR & NO NESTED SCROLL JITTER */
+    /* ========================================================================= */
+    .no-scrollbar::-webkit-scrollbar,
+    .scrollbar-none::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar,
+    .scrollbar-none {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    #aiChatLog {
+      overscroll-behavior-y: contain;
+      scroll-behavior: smooth;
+    }
+    #aiChatLog::-webkit-scrollbar {
+      width: 4px;
+    }
+    #aiChatLog::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #aiChatLog::-webkit-scrollbar-thumb {
+      background: rgba(200, 109, 36, 0.25);
+      border-radius: 4px;
+    }
+    #aiChatLog::-webkit-scrollbar-thumb:hover {
+      background: rgba(200, 109, 36, 0.5);
+    }
+
+    .ai-chat-bubble {
+      animation: iosBubbleIn 0.28s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes iosBubbleIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Intelligent WhatsApp Floating Button - Auto-shift left when Contact is in view */
+    #floatingWhatsAppBtn {
+      transition: all 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform, left, right;
+    }
+    #floatingWhatsAppBtn.wa-shift-left {
+      right: auto !important;
+      left: 1.5rem !important;
+      transform: scale(0.98);
+    }
+
     /* Soft Scroll Reveal (GPU Accelerated Compositor with Apple Spring) */
     .reveal-on-scroll {
       opacity: 0;
@@ -1372,65 +1431,64 @@
         <div class="lg:col-span-7 bg-white rounded-3xl border border-brand-border shadow-xl overflow-hidden flex flex-col h-[540px]">
           
           <!-- Chatbot Header -->
-          <div class="px-5 py-3.5 bg-brand-ink text-white flex items-center justify-between border-b border-brand-borderDark shrink-0">
+          <div class="px-4 sm:px-5 py-3.5 bg-brand-ink text-white flex items-center justify-between border-b border-brand-borderDark shrink-0">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-brand-ochre text-white flex items-center justify-center text-lg font-bold shadow-xs">
+              <div class="w-9 h-9 rounded-xl bg-brand-ochre text-white flex items-center justify-center text-lg font-bold shadow-xs shrink-0">
                 🪔
               </div>
-              <div>
+              <div class="min-w-0">
                 <div class="flex items-center gap-2">
-                  <h3 class="text-xs font-bold text-white uppercase tracking-wider">VedIQ Gurukul AI Concierge</h3>
-                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="Live Online"></span>
+                  <h3 class="text-xs font-bold text-white uppercase tracking-wider truncate">VedIQ Gurukul AI Concierge</h3>
+                  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" title="Live Online"></span>
                 </div>
-                <p class="text-[10px] text-brand-gold">Instant Vedic &amp; Admission Resolution</p>
+                <p class="text-[10px] text-brand-gold truncate">Instant Vedic &amp; Admission Resolution</p>
               </div>
             </div>
-            <button type="button" onclick="triggerImmediateEscalation()" class="px-2.5 py-1.5 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[11px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer" title="Directly escalate to Founders">
-              <span>🚨 Escalate Issue</span>
+            <button type="button" onclick="triggerImmediateEscalation()" class="px-3 py-1.5 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[11px] font-bold transition flex items-center gap-1.5 shadow-xs shrink-0 cursor-pointer" title="Directly escalate to Support Desk">
+              <span>🚨 Escalate to Support Desk</span>
             </button>
           </div>
 
-          <!-- Quick Suggestion Topic Pills -->
-          <div class="px-4 py-2.5 bg-brand-cream/60 border-b border-brand-border flex items-center gap-2 overflow-x-auto text-xs shrink-0 no-scrollbar">
-            <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider shrink-0">Quick Topics:</span>
-            <button type="button" onclick="askAiQuestion('What is the 60-minute daily Gurukul routine?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 shadow-2xs cursor-pointer">
+          <!-- Quick Suggestion Topic Pills (Zero Horizontal Scrollbar & Smooth Swipe) -->
+          <div class="px-3.5 py-2.5 bg-brand-cream/60 border-b border-brand-border flex items-center gap-2 overflow-x-auto text-xs shrink-0 no-scrollbar select-none">
+            <span class="text-[10px] font-bold text-brand-muted uppercase tracking-wider shrink-0 whitespace-nowrap">Quick Topics:</span>
+            <button type="button" onclick="askAiQuestion('What is the 60-minute daily Gurukul routine?')" class="px-3 py-1.5 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 whitespace-nowrap shadow-2xs cursor-pointer">
               ⏰ 60-Min Routine
             </button>
-            <button type="button" onclick="askAiQuestion('How does Tratak reduce phone & screen addiction?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 shadow-2xs cursor-pointer">
+            <button type="button" onclick="askAiQuestion('How does Tratak reduce phone & screen addiction?')" class="px-3 py-1.5 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 whitespace-nowrap shadow-2xs cursor-pointer">
               🎯 Tratak for Focus
             </button>
-            <button type="button" onclick="askAiQuestion('What is the tuition fee and refund policy?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 shadow-2xs cursor-pointer">
+            <button type="button" onclick="askAiQuestion('What is the tuition fee and refund policy?')" class="px-3 py-1.5 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 whitespace-nowrap shadow-2xs cursor-pointer">
               💳 Fees &amp; Refund
             </button>
-            <button type="button" onclick="askAiQuestion('How do I log into the Parent Portal?')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 shadow-2xs cursor-pointer">
+            <button type="button" onclick="askAiQuestion('How do I log into the Parent Portal?')" class="px-3 py-1.5 rounded-lg bg-white hover:bg-brand-ochre hover:text-white border border-brand-border text-[11px] font-semibold text-brand-ink transition shrink-0 whitespace-nowrap shadow-2xs cursor-pointer">
               👨‍👩‍👧 Parent Portal
             </button>
-            <button type="button" onclick="triggerImmediateEscalation()" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 text-[11px] font-bold text-rose-700 transition shrink-0 shadow-2xs cursor-pointer">
-              📞 Talk to Founders
+            <button type="button" onclick="triggerImmediateEscalation()" class="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 text-[11px] font-bold text-rose-700 transition shrink-0 whitespace-nowrap shadow-2xs cursor-pointer">
+              🚨 Escalate to Support Desk
             </button>
           </div>
 
-          <!-- Chat Conversation Scroll Area -->
+          <!-- Chat Conversation Scroll Area (Zero Jitter, Smooth Internal Scroll) -->
           <div id="aiChatLog" class="flex-1 p-4 sm:p-5 overflow-y-auto space-y-3.5 bg-gradient-to-b from-white to-brand-cream/20 text-xs">
             <!-- Welcome message -->
-            <div class="flex items-start gap-2.5">
+            <div class="flex items-start gap-2.5 ai-chat-bubble">
               <div class="w-7 h-7 rounded-lg bg-brand-ochre text-white flex items-center justify-center text-xs shrink-0 font-bold">
                 🪔
               </div>
-              <div class="max-w-[88%] p-3.5 rounded-2xl rounded-tl-xs bg-brand-cream border border-brand-border text-brand-ink text-xs space-y-1.5 leading-relaxed shadow-2xs">
+              <div class="max-w-[88%] p-3.5 rounded-2xl rounded-tl-xs bg-brand-cream border border-brand-border text-brand-ink text-xs space-y-1.5 leading-relaxed shadow-2xs break-words">
                 <p class="font-bold text-brand-ochre text-[11px]">Namaste! Welcome to VedIQ Academy Support.</p>
-                <p>I am your 24/7 Gurukul AI Assistant. You can ask me anything about our 3-Day Demo, 60-Minute routine, Tratak focus, fees, or parent dashboard.</p>
-                <p class="text-[11px] text-brand-muted">If my answer doesn't resolve your problem, click <strong class="text-rose-600 font-bold">"🚨 Escalate Issue"</strong> anytime to reach Dr. Vyas &amp; our founders directly!</p>
+                <p>I am your 24/7 Gurukul AI Concierge. You can ask me anything about our 3-Day Demo, 60-Minute routine, Tratak focus science, Vedic Math, tuition fees, or the Parent Portal.</p>
               </div>
             </div>
           </div>
 
-          <!-- Chat Input Area -->
-          <form onsubmit="handleAiChatSubmit(event)" class="p-3 bg-white border-t border-brand-border flex items-center gap-2 shrink-0">
-            <input type="text" id="aiChatInput" placeholder="Type your question or issue here..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre" />
-            <button type="submit" class="px-4 py-2.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-1.5 shrink-0 cursor-pointer">
+          <!-- Chat Input Area (Fixed Visibility & Clean Touch Alignment) -->
+          <form onsubmit="handleAiChatSubmit(event)" class="p-3 sm:p-3.5 bg-white border-t border-brand-border flex items-center gap-2 shrink-0 relative z-10">
+            <input type="text" id="aiChatInput" placeholder="Type your question or issue here..." class="flex-1 min-w-0 px-4 py-2.5 sm:py-3 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs sm:text-sm font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre transition" />
+            <button type="submit" class="px-4 sm:px-5 py-2.5 sm:py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition flex items-center gap-1.5 shrink-0 active:scale-95 cursor-pointer">
               <span>Send</span>
-              <span>&rarr;</span>
+              <span aria-hidden="true">&rarr;</span>
             </button>
           </form>
 
@@ -1738,6 +1796,16 @@
       </form>
     </div>
   </div>
+
+  <!-- INTELLIGENT FLOATING WHATSAPP BUTTON (Auto-shifts away from Chatbot Input) -->
+  <a id="floatingWhatsAppBtn" href="https://wa.me/919766772819?text=Namaste!%20I%20have%20a%20question%20about%20admissions%20at%20VedIQ%20Academy." target="_blank" class="hidden lg:flex fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-2xl items-center gap-2.5 border border-emerald-400/50 text-xs font-bold tracking-wide cursor-pointer" title="Chat with VedIQ Admissions on WhatsApp">
+    <span class="relative flex h-2.5 w-2.5">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+    </span>
+    <svg class="w-4 h-4 fill-current text-white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+    <span>WhatsApp Admissions Desk</span>
+  </a>
 
   <!-- STICKY MOBILE CONVERSION DOCKED BAR (Never overlaps cards) -->
   <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-brand-surface/95 backdrop-blur-md border-t border-brand-border p-2.5 flex items-center gap-2 shadow-2xl">
@@ -2441,6 +2509,25 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
       appendAiMessage(answer, true, rawText);
     }
 
+    // Intelligent WhatsApp Floating Button - Auto-shift left when Contact is in view
+    function initFloatingWhatsAppObserver() {
+      const contactSection = document.getElementById('contact');
+      const waBtn = document.getElementById('floatingWhatsAppBtn');
+      if (!contactSection || !waBtn) return;
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            waBtn.classList.add('wa-shift-left');
+          } else {
+            waBtn.classList.remove('wa-shift-left');
+          }
+        });
+      }, { threshold: 0.12 });
+      
+      observer.observe(contactSection);
+    }
+
     // Init
     window.addEventListener('DOMContentLoaded', () => {
       const isHindi = document.cookie.includes('googtrans=/en/hi');
@@ -2451,6 +2538,7 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
       selectScript(1);
       updateROI();
       initScrollReveal();
+      initFloatingWhatsAppObserver();
     });
   </script>
 

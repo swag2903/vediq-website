@@ -186,18 +186,18 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     const container = document.createElement('div');
     container.id = 'vediqAiFloatingContainer';
     container.innerHTML = `
-      <!-- 1. Floating Collapsed Badge (Pulsing Gurukul Lamp + Live Status) -->
-      <div id="vediqAiFloatingBadge" onclick="window.toggleVediqAiChat(true)" class="fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full bg-slate-950 text-white shadow-2xl border border-amber-500/40 cursor-pointer backdrop-blur-md">
-        <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-brand-ochre to-amber-400 text-white text-base shadow-sm">
+      <!-- 1. Floating Collapsed Badge (Pulsing Gurukul Lamp + Live Status - Stacked Safely Above Bottom Bars) -->
+      <div id="vediqAiFloatingBadge" onclick="window.toggleVediqAiChat(true)" class="fixed bottom-20 lg:bottom-22 right-4 sm:right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-slate-950 text-white shadow-2xl border border-amber-500/40 cursor-pointer backdrop-blur-md">
+        <div class="relative flex items-center justify-center w-7 h-7 rounded-full bg-gradient-to-tr from-brand-ochre to-amber-400 text-white text-sm shadow-sm">
           🪔
           <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-slate-950 animate-pulse"></span>
         </div>
         <div class="text-left pr-1">
-          <div class="text-[12px] font-bold text-white flex items-center gap-1.5 leading-none">
+          <div class="text-[11px] font-bold text-white flex items-center gap-1.5 leading-none">
             <span>VedIQ AI Desk</span>
-            <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold uppercase">Online</span>
+            <span class="text-[8px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold uppercase">Live</span>
           </div>
-          <div class="text-[10px] text-amber-300 font-medium mt-1 leading-none">Ask doubts &amp; assistance &rarr;</div>
+          <div class="text-[9px] text-amber-300 font-medium mt-1 leading-none">Ask doubts &amp; assistance &rarr;</div>
         </div>
       </div>
 
