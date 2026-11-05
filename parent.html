@@ -546,7 +546,7 @@
           <span>Create Parent Account</span>
         </button>
       </div>
-      <div style="display:none"><!--
+      <!--
           <span>Create Parent Account</span>
         </button>
       </div>
@@ -560,7 +560,7 @@
       </div>
 
 </div>
---></div>
+-->
       <!-- Card Box -->
       <div class="bg-white rounded-3xl border border-brand-border shadow-xl p-6 sm:p-7 space-y-4">
         
@@ -3333,6 +3333,17 @@
         setBtnLoading(false);
 
         if (!result.success) {
+          if (typeof firebase !== 'undefined' && firebase.auth) {
+            initFirebase();
+            try {
+              await firebase.auth().sendPasswordResetEmail(emailAddr);
+              alert(`✉️ Login Email Dispatched!\n\nWe sent an official login & verification email to ${emailAddr} via Google Firebase.\n\nPlease check your inbox (and Spam folder) to access your account.`);
+              closeOtpModal();
+              return;
+            } catch (fbErr) {
+              console.warn("Firebase email fallback note:", fbErr);
+            }
+          }
           if (err) {
             err.innerHTML = `⚠️ <strong>Email delivery failed:</strong> ${result.error}`;
             err.classList.remove('hidden');
