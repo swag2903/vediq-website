@@ -1767,7 +1767,7 @@
         <div class="space-y-2">
           <div class="flex items-center justify-between px-1">
             <label class="text-xs font-bold text-brand-ink">Enter 6-Digit Code</label>
-            <button type="button" onclick="backToOtpStepPhone()" class="text-[11px] text-brand-ochre font-semibold hover:underline cursor-pointer">
+            <button type="button" onclick="pasteOtpFromClipboard()" class="text-[11px] text-brand-ochre font-bold hover:underline cursor-pointer mr-2">📋 Paste Code</button><button type="button" onclick="backToOtpStepPhone()" class="text-[11px] text-brand-ochre font-semibold hover:underline cursor-pointer">
               Change email / number
             </button>
           </div>
@@ -3704,6 +3704,26 @@
       if (otpCountdownTimer) clearInterval(otpCountdownTimer);
     }
 
+    async function pasteOtpFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        const digits = text.replace(/\D/g, '').slice(0, 6);
+        if (digits.length > 0) {
+          for (let i = 1; i <= 6; i++) {
+            const box = document.getElementById('otp-' + i);
+            if (box) box.value = digits[i - 1] || '';
+          }
+          if (digits.length === 6) {
+            verifyOtpAndProceed();
+          }
+        }
+      } catch (e) {
+        console.warn("Clipboard access notice:", e);
+        const box = document.getElementById('otp-1');
+        if (box) { box.focus(); box.select(); }
+      }
+    }
+
     function setupOtpInputs() {
       for (let i = 1; i <= 6; i++) {
         const box = document.getElementById('otp-' + i);
@@ -5196,12 +5216,31 @@
       bindClick('tabBtnSignUp', () => switchAuthTab('register'));
       bindClick('btnHeroCreateAccount', () => switchAuthTab('register'));
       bindClick('btnRegisterBackToLogin', () => switchAuthTab('login'));
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlOtp = urlParams.get('otp');
+        const urlEmail = urlParams.get('email');
+        if (urlOtp && urlOtp.length === 6) {
+          triggerOtpSignIn();
+          const pField = document.getElementById('otpPhoneInputField');
+          if (pField && urlEmail) pField.value = decodeURIComponent(urlEmail);
+          const step1 = document.getElementById('otpStepPhoneInput');
+          const step2 = document.getElementById('otpStepCodeVerify');
+          if (step1) { step1.classList.add('hidden'); step1.style.setProperty('display', 'none', 'important'); }
+          if (step2) { step2.classList.remove('hidden'); step2.style.setProperty('display', 'block', 'important'); }
+          for (let i = 1; i <= 6; i++) {
+            const b = document.getElementById('otp-' + i);
+            if (b) b.value = urlOtp[i - 1];
+          }
+        }
+      } catch (e) {}
     });
 
     // Global Window Function Attachments (Guarantees Universal Availability)
     window.triggerOtpSignIn = triggerOtpSignIn;
     window.openOtpPhoneInputModal = openOtpPhoneInputModal;
     window.closeOtpModal = closeOtpModal;
+    window.pasteOtpFromClipboard = pasteOtpFromClipboard;
     window.dispatchOtpFromPhoneStep = dispatchOtpFromPhoneStep;
     window.verifyOtpAndProceed = verifyOtpAndProceed;
     window.resendOtpCode = resendOtpCode;

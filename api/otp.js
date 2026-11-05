@@ -89,7 +89,8 @@ function createSessionToken(recipient) {
   })).toString("base64");
 }
 
-function getEmailHtml(otpCode) {
+function getEmailHtml(otpCode, toEmail = "") {
+  const loginUrl = `https://vediqacademy.com/parent.html?otp=${encodeURIComponent(otpCode)}${toEmail ? '&email=' + encodeURIComponent(toEmail) : ''}`;
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -107,36 +108,44 @@ function getEmailHtml(otpCode) {
     </tr>
     <tr>
       <td style="padding: 32px 32px 24px 32px; text-align: center;">
-        <div style="display: inline-block; padding: 6px 14px; background-color: #FDF7EC; border: 1px solid #E8E2D8; border-radius: 50px; font-size: 11px; font-weight: 700; color: #C86D24; margin-bottom: 16px;">
+        <div style="display: inline-block; padding: 6px 14px; background-color: #FDF7EC; border: 1px solid #E8E2D8; border-radius: 50px; font-size: 11px; font-weight: 700; color: #C86D24; margin-bottom: 20px;">
           🛡️ OFFICIAL SECURITY VERIFICATION
         </div>
         
         <h2 style="margin: 0 0 8px 0; font-size: 18px; color: #0C111D; font-weight: 700;">Parent Portal Sign-In Code</h2>
-        <p style="margin: 0 0 24px 0; font-size: 13px; color: #667085; line-height: 1.5;">
-          Enter this 6-digit verification code to securely access your child's cognitive dashboard and Gurukul progress reports:
+        <p style="margin: 0 0 20px 0; font-size: 13px; color: #667085; line-height: 1.5;">
+          Use the 6-digit verification code below, or tap the instant login button to access your child's Gurukul dashboard:
         </p>
 
-        <div style="background-color: #FAF8F5; border: 2px dashed #C86D24; border-radius: 14px; padding: 18px 24px; margin: 0 auto 20px auto; display: inline-block;">
-          <span style="font-family: 'Courier New', Courier, monospace; font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #C86D24;">
+        <!-- 6-Digit OTP Box -->
+        <div style="background-color: #FAF8F5; border: 2px dashed #C86D24; border-radius: 14px; padding: 18px 24px; margin: 0 auto 16px auto; display: inline-block;">
+          <span style="font-family: 'Courier New', Courier, monospace; font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #C86D24; user-select: all; -webkit-user-select: all;">
             ${otpCode}
           </span>
         </div>
 
-        <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: 600; color: #B05917;">
+        <!-- 1-Click Instant Login Button -->
+        <div style="margin: 10px 0 24px 0;">
+          <a href="${loginUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #C86D24 0%, #B05917 100%); color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none; padding: 13px 30px; border-radius: 12px; box-shadow: 0 4px 14px rgba(200, 109, 36, 0.3);">
+            🚀 1-Click Instant Login &rarr;
+          </a>
+        </div>
+
+        <p style="margin: 0 0 6px 0; font-size: 12px; font-weight: 600; color: #B05917;">
           ⏱️ This code is valid for exactly 2 minutes (120 seconds).
         </p>
         <p style="margin: 0; font-size: 11px; color: #98A2B3; line-height: 1.4;">
-          If you did not request this login code, you can safely ignore this email. Never share your verification code with anyone.
+          Tip: You can double-click or long-press the code above to copy it, or tap the 1-Click Login button.
         </p>
       </td>
     </tr>
     <tr>
       <td style="padding: 20px 32px; background-color: #FAF8F5; border-top: 1px solid #E8E2D8; text-align: center;">
         <p style="margin: 0 0 4px 0; font-size: 11px; color: #667085;">
-          VedIQ Academy • Co-founded by Dr. Ujwal Vyas, Mr. Atish Gulhane &amp; Mr. Swagatam Shukla
+          VedIQ Academy • Bharatiya Integral Gurukul System
         </p>
         <p style="margin: 0; font-size: 10px; color: #98A2B3;">
-          Official Support Desk: <a href="mailto:myvediqacademy@gmail.com" style="color: #C86D24; text-decoration: none;">myvediqacademy@gmail.com</a>
+          Official Dispatch from: <a href="mailto:myvediqacademy@gmail.com" style="color: #C86D24; text-decoration: none;">myvediqacademy@gmail.com</a>
         </p>
       </td>
     </tr>
@@ -162,7 +171,7 @@ function sendEmailViaGmailSmtp(toEmail, otpCode, gmailUser, gmailAppPassword) {
       `MIME-Version: 1.0`,
       `Content-Type: text/html; charset=UTF-8`,
       ``,
-      getEmailHtml(otpCode),
+      getEmailHtml(otpCode, toEmail),
       `.`
     ].join("\r\n");
 
@@ -238,7 +247,7 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
   }
 
   const emailSubject = `VedIQ Academy • Your Login Code is ${otpCode}`;
-  const emailHtml = getEmailHtml(otpCode);
+  const emailHtml = getEmailHtml(otpCode, toEmail);
 
   let sender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
   if (!sender.includes("<") && sender.includes("@")) {
