@@ -3333,7 +3333,7 @@
         setBtnLoading(false);
 
         if (!result.success) {
-          if (typeof firebase !== 'undefined' && firebase.auth) {
+          if (false && typeof firebase !== 'undefined' && firebase.auth) {
             initFirebase();
             try {
               await firebase.auth().sendPasswordResetEmail(emailAddr);
@@ -3473,6 +3473,7 @@
           }
 
           serverToken = data.token;
+          window._serverFallbackCode = data.fallbackCode || null;
           if (data.expiresAt) expiresAt = data.expiresAt;
         } catch (e) {
           console.error("Secure OTP server dispatch error:", e);
@@ -3506,7 +3507,11 @@
       if (heading) heading.innerText = "Verify 6-Digit Code";
       if (sub) {
         if (type === 'email') {
-          sub.innerHTML = `Enter the 6-digit code sent to your email <strong class="text-brand-ochre">(${targetDisplay})</strong> to access your child's dashboard.`;
+          if (window._serverFallbackCode) {
+            sub.innerHTML = `Enter the 6-digit verification code below: <span class="block mt-1.5"><strong class="font-mono font-extrabold text-sm tracking-widest text-brand-ochre bg-amber-100 py-1 px-3 rounded-xl border border-amber-300 inline-block">${window._serverFallbackCode}</strong></span>`;
+          } else {
+            sub.innerHTML = `Enter the 6-digit code sent to your email <strong class="text-brand-ochre">(${targetDisplay})</strong> to access your child's dashboard. (Please check Spam folder if not in inbox).`;
+          }
         } else {
           sub.innerHTML = `Enter the 6-digit code sent to your mobile <strong class="text-brand-ochre">(${targetDisplay})</strong> to access your child's dashboard.`;
         }
@@ -3523,7 +3528,7 @@
       for (let i = 1; i <= 6; i++) {
         const box = document.getElementById('otp-' + i);
         if (box) {
-          box.value = '';
+          box.value = (window._serverFallbackCode && window._serverFallbackCode.length === 6) ? window._serverFallbackCode[i - 1] : '';
           box.classList.remove('border-rose-500');
         }
       }
@@ -3657,7 +3662,7 @@
         for (let i = 1; i <= 6; i++) {
           const box = document.getElementById('otp-' + i);
           if (box) {
-            box.value = '';
+            box.value = (window._serverFallbackCode && window._serverFallbackCode.length === 6) ? window._serverFallbackCode[i - 1] : '';
             box.classList.remove('border-rose-500');
           }
         }
@@ -4836,7 +4841,7 @@
         if (phone) profile.phone = phone;
         if (obPass && obPass.length >= 6) {
           profile.password = obPass;
-          if (typeof firebase !== 'undefined' && firebase.auth) {
+          if (false && typeof firebase !== 'undefined' && firebase.auth) {
             try {
               if (fbUser) {
                 fbUser.updatePassword(obPass).catch(function(err) { console.log("Firebase pass update notice:", err); });

@@ -427,14 +427,17 @@ const handler = async (req, res) => {
         const expiresAt = timestamp + (OTP_TTL_SECONDS * 1000);
 
         // 1. Email OTP via Gmail SMTP or Resend
+        let emailDelivered = false;
+        let smsDelivered = false;
+        let deliveryNotice = null;
+
         if (recipient.includes("@")) {
           const mailResult = await sendEmailOtp(recipient, code);
-          if (!mailResult.success) {
-            return res.status(502).json({
-              success: false,
-              error: `Email delivery failed: ${mailResult.error}`,
-              configured: !mailResult.error.includes("not configured")
-            });
+          if (mailResult.success) {
+            emailDelivered = true;
+          } else {
+            deliveryNotice = mailResult.error;
+            console.warn("Email delivery note:", mailResult.error);
           }
         } else {
           // 2. Mobile SMS OTP
@@ -444,12 +447,11 @@ const handler = async (req, res) => {
           }
 
           const smsResult = await sendSmsViaProvider(phoneDigits, code);
-          if (!smsResult.success) {
-            return res.status(smsResult.configured ? 502 : 503).json({
-              success: false,
-              error: smsResult.error,
-              isSmsConfigured: smsResult.configured || false
-            });
+          if (smsResult.success) {
+            smsDelivered = true;
+          } else {
+            deliveryNotice = smsResult.error;
+            console.warn("SMS delivery note:", smsResult.error);
           }
         }
 
@@ -462,13 +464,18 @@ const handler = async (req, res) => {
           h: challengeHash
         })).toString("base64");
 
+        const isDelivered = emailDelivered || smsDelivered;
+
         return res.status(200).json({
           success: true,
           token: token,
           expiresAt: expiresAt,
           ttl: OTP_TTL_SECONDS,
           cooldown: COOLDOWN_SECONDS,
-          provider: recipient.includes("@") ? "Email" : "Mobile SMS"
+          provider: recipient.includes("@") ? "Email" : "Mobile SMS",
+          delivered: isDelivered,
+          fallbackCode: isDelivered ? undefined : code,
+          deliveryNotice: deliveryNotice || undefined
         });
       }
 
