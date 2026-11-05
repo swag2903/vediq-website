@@ -1,0 +1,19 @@
+# Environment and Secrets
+.env
+.env.local
+.env.*.local
+
+# Backups & Temporary Checkpoints
+_backup_checkpoint/
+*.bak
+*.tmp
+*.orig
+
+# Node modules & logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Netlify local cache
+.netlify/

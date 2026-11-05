@@ -18,6 +18,10 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Firebase Authentication SDK (v10.8 Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -186,19 +190,19 @@
       <div class="bg-brand-cream rounded-2xl p-3 border border-brand-border space-y-2">
         <span class="text-[10px] uppercase font-bold text-brand-muted tracking-wider block">1-Tap Fast Staff Switch:</span>
         <div class="grid grid-cols-2 gap-1.5 text-left">
-          <button type="button" onclick="quickFillStaff('9766772819', 'vyas123')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
+          <button type="button" onclick="quickFillStaff('9766772819')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
             <div class="text-[11px] font-bold text-brand-ink">Dr. Ujwal Vyas</div>
             <div class="text-[9px] text-brand-ochre font-bold">Founder Desk</div>
           </button>
-          <button type="button" onclick="quickFillStaff('8390332500', 'atish123')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
+          <button type="button" onclick="quickFillStaff('8390332500')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
             <div class="text-[11px] font-bold text-brand-ink">Mr. Atish</div>
             <div class="text-[9px] text-amber-700 font-bold">Co-Founder Desk</div>
           </button>
-          <button type="button" onclick="quickFillStaff('9594806822', 'swag123')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
+          <button type="button" onclick="quickFillStaff('9594806822')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
             <div class="text-[11px] font-bold text-brand-ink">Mr. Swagatam</div>
             <div class="text-[9px] text-purple-700 font-bold">Co-Founder Desk</div>
           </button>
-          <button type="button" onclick="quickFillStaff('9800000000', 'teacher123')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
+          <button type="button" onclick="quickFillStaff('9800000000')" class="action-pill p-2 rounded-xl bg-white hover:bg-amber-50 border border-brand-border text-left shadow-2xs">
             <div class="text-[11px] font-bold text-brand-ink">Teacher Desk</div>
             <div class="text-[9px] text-emerald-700 font-bold">Gurukul Faculty</div>
           </button>
@@ -413,19 +417,43 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- TEACHER PORTAL LOGIC & CLOUD DATABASE ENGINE -->
+  <!-- TEACHER PORTAL LOGIC & SECURE AUTHENTICATION ENGINE -->
   <!-- ========================================================================= -->
   <script>
-    // Live Cloud Database Endpoint
-    const CLOUD_API_URL = "https://kvdb.io/8qFkYw5t1N4Zp3M9Xv7Y2K/vediq_students_db";
+    // Secure Serverless Student Database Endpoint (Shields cloud datastore from public exposure)
+    const CLOUD_API_URL = "/.netlify/functions/students-sync";
 
-    // Staff Accounts Pre-Configurations
-    const STAFF_CREDENTIALS = {
-      "9766772819": { name: "Dr. Ujwal Vyas", role: "Founder & Head Master Mentor", pass: "vyas123" },
-      "8390332500": { name: "Mr. Atish Gulhane", role: "Co-Founder • Admissions & Ops", pass: "atish123" },
-      "9594806822": { name: "Mr. Swagatam Shukla", role: "Co-Founder • Academic & Tech Lead", pass: "swag123" },
-      "9800000000": { name: "Faculty Teacher", role: "Gurukul Master Mentor", pass: "teacher123" }
+    // Authorized Staff Directory (Roles & Permission Levels — ZERO PASSWORDS STORED)
+    const AUTHORIZED_STAFF_DIRECTORY = {
+      "9766772819": { name: "Dr. Ujwal Vyas", role: "Founder & Head Master Mentor", email: "dr.ujwal@vediqacademy.com", permissions: "founder_admin" },
+      "8390332500": { name: "Mr. Atish Gulhane", role: "Co-Founder • Admissions & Ops", email: "atish@vediqacademy.com", permissions: "admin" },
+      "9594806822": { name: "Mr. Swagatam Shukla", role: "Co-Founder • Academic & Tech Lead", email: "swagatam@vediqacademy.com", permissions: "admin" },
+      "9800000000": { name: "Faculty Teacher", role: "Gurukul Master Mentor", email: "faculty@vediqacademy.com", permissions: "teacher" }
     };
+
+    // Firebase Configuration for Staff Authentication
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyDJhKmad1sh0AUOh_oZ_W2xOOTY5Z19BaY",
+      authDomain: "vediq-fc475.firebaseapp.com",
+      projectId: "vediq-fc475",
+      storageBucket: "vediq-fc475.firebasestorage.app",
+      messagingSenderId: "316645962785",
+      appId: "1:316645962785:web:b8ec8ad448f0db2ca59f60"
+    };
+
+    let firebaseInitialized = false;
+    function initFirebase() {
+      if (typeof firebase === 'undefined') return false;
+      if (firebase.apps && firebase.apps.length > 0) return true;
+      try {
+        firebase.initializeApp(FIREBASE_CONFIG);
+        firebaseInitialized = true;
+        return true;
+      } catch (e) {
+        console.warn("Firebase staff init notice:", e);
+        return false;
+      }
+    }
 
     let activeTeacher = null;
     let studentsDatabase = [];
@@ -573,55 +601,115 @@
     }
 
     // ==========================================
-    // AUTHENTICATION LOGIC FOR TEACHERS
+    // SECURE AUTHENTICATION LOGIC FOR TEACHERS (Firebase Auth & Serverless Backend)
     // ==========================================
-    function quickFillStaff(phone, pass) {
-      document.getElementById('teacherIdentifier').value = phone;
-      document.getElementById('teacherPassword').value = pass;
+    function quickFillStaff(phone) {
+      const idInp = document.getElementById('teacherIdentifier');
+      const passInp = document.getElementById('teacherPassword');
+      if (idInp) idInp.value = phone;
+      if (passInp) {
+        passInp.value = '';
+        passInp.focus();
+      }
     }
 
-    function handleTeacherLogin(e) {
+    async function handleTeacherLogin(e) {
       e.preventDefault();
       const idInput = document.getElementById('teacherIdentifier');
       const passInput = document.getElementById('teacherPassword');
       const err = document.getElementById('teacherLoginError');
+      const btn = document.getElementById('btnTeacherSignIn');
 
       const identifier = idInput ? idInput.value.trim() : "";
       const password = passInput ? passInput.value : "";
 
       if (err) err.classList.add('hidden');
-
-      const digits = identifier.replace(/\D/g, '').slice(-10);
-      let matchStaff = STAFF_CREDENTIALS[digits];
-
-      // Master password access for school faculty
-      if (password === "admin123" || password === "vyas123" || password === "atish123" || password === "swag123" || password === "teacher123" || password === "vediq2026") {
-        if (!matchStaff) {
-          matchStaff = {
-            name: identifier.includes('@') ? identifier.split('@')[0] : "Gurukul Teacher",
-            role: "Master Mentor",
-            pass: password
-          };
-        }
-      } else if (matchStaff && password !== matchStaff.pass) {
+      if (!identifier || !password) {
         if (err) {
-          err.innerText = "Incorrect staff password. Please enter correct credentials.";
-          err.classList.remove('hidden');
-        }
-        return;
-      } else if (!matchStaff) {
-        if (err) {
-          err.innerText = "Staff account not found. Use a registered teacher mobile or master key.";
+          err.innerText = "Please enter both identifier and password.";
           err.classList.remove('hidden');
         }
         return;
       }
 
-      // Login Successful!
-      activeTeacher = matchStaff;
-      localStorage.setItem('vediq_teacher_session', JSON.stringify(matchStaff));
-      localStorage.setItem('vediq_teacher_identifier', identifier);
-      showTeacherDashboard();
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="inline-block animate-spin">⏳</span> <span>Verifying Staff Credentials...</span>`;
+      }
+
+      function restoreBtn() {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>Enter Teacher Console</span> <span aria-hidden="true">&rarr;</span>`;
+        }
+      }
+
+      const digits = identifier.replace(/\D/g, '').slice(-10);
+      const staffMeta = AUTHORIZED_STAFF_DIRECTORY[digits] ||
+        Object.values(AUTHORIZED_STAFF_DIRECTORY).find(s => s.email.toLowerCase() === identifier.toLowerCase());
+
+      // 1. Try Firebase Authentication first
+      initFirebase();
+      let authenticatedUser = null;
+
+      if (typeof firebase !== 'undefined' && firebase.auth) {
+        try {
+          const authEmail = identifier.includes('@') ? identifier : (staffMeta ? staffMeta.email : `${digits}@vediqacademy.com`);
+          const cred = await firebase.auth().signInWithEmailAndPassword(authEmail, password);
+          if (cred && cred.user) {
+            authenticatedUser = {
+              uid: cred.user.uid,
+              email: cred.user.email,
+              name: (staffMeta ? staffMeta.name : cred.user.displayName) || "Gurukul Mentor",
+              role: staffMeta ? staffMeta.role : "Certified Faculty",
+              permissions: staffMeta ? staffMeta.permissions : "teacher",
+              authMethod: "firebase"
+            };
+          }
+        } catch (fbErr) {
+          console.warn("Firebase Auth check note:", fbErr.code);
+        }
+      }
+
+      // 2. If Firebase Auth not yet populated in console, verify via secure serverless backend
+      if (!authenticatedUser) {
+        try {
+          const resp = await fetch('/.netlify/functions/teacher-auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier, password })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.authenticated && data.teacher) {
+              authenticatedUser = Object.assign({}, data.teacher, { authMethod: "serverless_secure" });
+            }
+          }
+        } catch (srvErr) {
+          console.warn("Serverless auth note:", srvErr);
+        }
+      }
+
+      // 3. Validation result
+      if (authenticatedUser) {
+        activeTeacher = authenticatedUser;
+        sessionStorage.setItem('vediq_teacher_auth_session', JSON.stringify(authenticatedUser));
+        localStorage.setItem('vediq_teacher_identifier', identifier);
+        showTeacherDashboard();
+        restoreBtn();
+        return;
+      }
+
+      // Unauthorized
+      restoreBtn();
+      if (err) {
+        err.innerText = "Invalid credentials or unauthorized teacher account. Please check your staff login details.";
+        err.classList.remove('hidden');
+      }
+      if (passInput) {
+        passInput.value = '';
+        passInput.focus();
+      }
     }
 
     function showTeacherDashboard() {
@@ -642,8 +730,12 @@
 
     function logoutTeacher() {
       if (confirm("Log out from the Teacher Console?")) {
+        sessionStorage.removeItem('vediq_teacher_auth_session');
         localStorage.removeItem('vediq_teacher_session');
         activeTeacher = null;
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+          firebase.auth().signOut().catch(() => {});
+        }
         document.getElementById('view-teacher-dashboard').classList.add('hidden');
         document.getElementById('teacherUserPill').classList.add('hidden');
         document.getElementById('view-teacher-login').classList.remove('hidden');
@@ -1139,7 +1231,6 @@
           parentName: parentName,
           phone: phoneDigits,
           email: email,
-          password: "password123",
           activeChildIndex: 0,
           children: [newChild]
         };
@@ -1156,10 +1247,11 @@
     // INITIALIZATION ON PAGE LOAD
     // ==========================================
     window.addEventListener('DOMContentLoaded', () => {
-      const savedTeacher = localStorage.getItem('vediq_teacher_session');
-      if (savedTeacher) {
+      // Check secure session storage
+      const authSession = sessionStorage.getItem('vediq_teacher_auth_session');
+      if (authSession) {
         try {
-          activeTeacher = JSON.parse(savedTeacher);
+          activeTeacher = JSON.parse(authSession);
           showTeacherDashboard();
           return;
         } catch (e) {}
@@ -1170,7 +1262,7 @@
         const idInp = document.getElementById('teacherIdentifier');
         if (idInp) idInp.value = rememberedTeacher;
       } else {
-        quickFillStaff('9766772819', 'vyas123');
+        quickFillStaff('9766772819');
       }
     });
   </script>

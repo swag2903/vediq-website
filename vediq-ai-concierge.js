@@ -65,37 +65,30 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
     },
     {
       keywords: ['teacher', 'mentor console', 'faculty', 'login teacher', 'teacher login', 'teacher portal', 'staff login', 'faculty login'],
-      answer: "🔐 <strong>Teacher & Master Mentor Console:</strong><br>Mentors can manage student cohorts, Tratak timers, and daily scores at <a href='teacher.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/teacher.html</a>.<br><br><strong>Staff Login Credentials:</strong><br>• Dr. Ujwal Vyas: <code>9766772819</code> / <code>vyas123</code><br>• Mr. Atish Gulhane: <code>8390332500</code> / <code>atish123</code><br>• Mr. Swagatam Shukla: <code>9594806822</code> / <code>swag123</code><br>• General Faculty: <code>9800000000</code> / <code>teacher123</code>"
+      answer: "🔐 <strong>Teacher & Master Mentor Console:</strong><br>Mentors can securely access student progress dashboards, Tratak calibration, and class evaluations at <a href='teacher.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/teacher.html</a> using verified faculty credentials."
     }
   ];
 
-  // Live Google Gemini 1.5 Flash Call
+  // Secure Gemini AI Call (Via Netlify Serverless Function — Zero Frontend Key Exposure)
   async function queryLiveGeminiAi(prompt) {
-    const apiKey = "AIzaSyDJhKmad1sh0AUOh_oZ_W2xOOTY5Z19BaY";
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 6000);
-      const resp = await fetch(endpoint, {
+      const resp = await fetch('/.netlify/functions/gemini-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `${GURUKUL_AI_SYSTEM_PROMPT}\n\nParent/User Query: ${prompt}` }] }],
-          generationConfig: { temperature: 0.65, maxOutputTokens: 350 }
-        })
+        body: JSON.stringify({ query: prompt })
       });
       clearTimeout(timeoutId);
       if (resp.ok) {
         const data = await resp.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text && text.trim()) {
-          return text.trim().replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        if (data && data.answer) {
+          return data.answer;
         }
       }
     } catch (e) {
-      console.warn("Live Gemini API response notice, falling back to Gurukul brain:", e);
+      console.warn("Live AI serverless response notice, using Gurukul brain:", e);
     }
     return null;
   }

@@ -1483,20 +1483,17 @@
           </button>
         </div>
 
-        <!-- Backup Options if Email OTP is Delayed -->
-        <div class="p-3 bg-emerald-50/80 border border-emerald-200 rounded-2xl text-left space-y-2">
+        <!-- Help if Code is Delayed -->
+        <div class="p-3 bg-emerald-50/80 border border-emerald-200 rounded-2xl text-left space-y-1">
           <div class="flex items-center justify-between">
             <span class="text-[11px] font-bold text-emerald-900 flex items-center gap-1">
-              <span>💬</span> <span>Email OTP taking time?</span>
+              <span>💬</span> <span>Code taking time to arrive?</span>
             </span>
             <button type="button" onclick="dispatchOtpToWhatsApp()" class="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 underline cursor-pointer">
-              Get on WhatsApp &rarr;
+              Get via WhatsApp &rarr;
             </button>
           </div>
-          
-          <button type="button" onclick="autoFillCurrentOtpAndVerify()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-brand-ochre hover:opacity-95 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer">
-            <span>⚡ Instant Auto-Verify (1-Tap Login)</span>
-          </button>
+          <p class="text-[10px] text-emerald-800/80">Check your spam folder or tap above to request verified mentor dispatch.</p>
         </div>
 
       </div>
@@ -1796,8 +1793,8 @@
     </div>
   </div>
   <script>
-    // 24/7 Global Cloud Database Endpoint (Works from any phone/device even if laptop is down)
-    const CLOUD_API_URL = "https://kvdb.io/8qFkYw5t1N4Zp3M9Xv7Y2K/vediq_students_db";
+    // Secure Serverless Student Database Endpoint (Shields datastore from unauthorized direct browser tampering)
+    const CLOUD_API_URL = "/.netlify/functions/students-sync";
 
     function setCloudStatus(status, text) {
       const statusEl = document.getElementById('cloudSyncStatus');
@@ -1896,14 +1893,13 @@
       return false;
     }
 
-    // In-memory / persistent student database store with multi-child family accounts
+    // In-memory / persistent student database store with multi-child family accounts (Zero plaintext passwords)
     const INITIAL_STUDENTS = [
       {
         parentId: "PAR-100",
         parentName: "VedIQ Gurukul Parent",
         phone: "9594806822",
         email: "myvediqacademy@gmail.com",
-        password: "password123",
         activeChildIndex: 0,
         children: [
           {
@@ -1926,7 +1922,6 @@
         parentName: "Mr. Rajesh Sharma",
         phone: "9800000001",
         email: "parent1@gmail.com",
-        password: "password123",
         activeChildIndex: 0,
         children: [
           {
@@ -1962,7 +1957,6 @@
         parentName: "Mrs. Sunita Patel",
         phone: "9800000002",
         email: "parent2@gmail.com",
-        password: "password123",
         activeChildIndex: 0,
         children: [
           {
@@ -2084,6 +2078,10 @@
     function saveStudentToDatabase(student) {
       if (!student) return;
       normalizeParentProfile(student);
+      // Security: Strip plaintext passwords before storing
+      delete student.password;
+      delete student.pass;
+
       const db = getStudentDatabase();
       const existingIdx = db.findIndex(s => {
         if (student.parentId && s.parentId && s.parentId === student.parentId) return true;
@@ -2361,28 +2359,24 @@
       const phoneDigits = match.phone ? match.phone.replace(/\D/g, '').slice(-10) : "";
       const emailAddr = match.email || (isEmail ? val : "");
 
-      // Generate secure 6-digit OTP for password reset
-      const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-      const chosenRecipient = (preferredMethod === 'email' || isEmail) ? emailAddr : (phoneDigits ? ("+91 " + phoneDigits) : emailAddr);
-
-      forgotResetSession = {
-        user: match,
-        code: resetCode,
-        recipient: chosenRecipient
-      };
-
-      // 1. If user chose Email method: dispatch branded Gurukul email from VedIQ Academy
+      // 1. If user chose Email method: Use Firebase official secure password reset
       if (preferredMethod === 'email' || isEmail) {
-        sendBrandedGurukulEmail({
-          recipient: emailAddr,
-          recipientName: match.parentName || "Gurukul Parent",
-          subject: `VedIQ Academy • Your Password Reset Code is ${resetCode}`,
-          code: resetCode
-        });
+        initFirebase();
+        if (typeof firebase !== 'undefined' && firebase.auth && emailAddr) {
+          try {
+            await firebase.auth().sendPasswordResetEmail(emailAddr);
+            alert(`✉️ Official Password Reset Link Dispatched!\n\nWe have sent a secure password reset link to ${emailAddr}. Please check your inbox (and Spam folder) to set your new password.`);
+            closeForgotPasswordModal();
+            switchAuthTab('login');
+            return;
+          } catch (fbErr) {
+            console.warn("Firebase password reset notice:", fbErr);
+          }
+        }
       }
 
       // 2. If user chose SMS method: dispatch carrier SMS via Firebase Phone Auth
-      if (preferredMethod === 'sms' && phoneDigits && phoneDigits.length >= 10 && typeof firebase !== 'undefined' && firebase.auth) {
+      if (phoneDigits && phoneDigits.length >= 10 && typeof firebase !== 'undefined' && firebase.auth) {
         initFirebase();
         try {
           if (!window.recaptchaVerifier) {
@@ -2390,6 +2384,11 @@
           }
           const conf = await firebase.auth().signInWithPhoneNumber("+91" + phoneDigits, window.recaptchaVerifier);
           window.confirmationResult = conf;
+          forgotResetSession = {
+            user: match,
+            recipient: "+91 " + phoneDigits,
+            isFirebase: true
+          };
         } catch (e) {
           console.warn("Firebase carrier SMS for password reset:", e);
         }
@@ -2399,7 +2398,7 @@
       const step1 = document.getElementById('forgotStep1');
       const step2 = document.getElementById('forgotStep2');
       const recipientLabel = document.getElementById('forgotRecipientLabel');
-      if (recipientLabel) recipientLabel.innerText = forgotResetSession.recipient;
+      if (recipientLabel) recipientLabel.innerText = "+91 " + phoneDigits;
       if (step1) step1.classList.add('hidden');
       if (step2) step2.classList.remove('hidden');
 
@@ -2407,32 +2406,6 @@
         const otpInp = document.getElementById('forgotOtpInput');
         if (otpInp) otpInp.focus();
       }, 150);
-    }
-
-    // Branded Vedic Gurukul Email Dispatcher (Sender: VedIQ Academy <myvediqacademy@gmail.com>)
-    async function sendBrandedGurukulEmail({ recipient, recipientName, subject, code }) {
-      console.log("Dispatching official VedIQ Academy branded email to:", recipient);
-      try {
-        await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(recipient), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({
-            _subject: subject || `VedIQ Academy • Your Password Reset Code is ${code}`,
-            _template: "table",
-            sender: "VedIQ Academy",
-            official_email: "myvediqacademy@gmail.com",
-            parent_name: recipientName || "Respected Gurukul Parent",
-            verification_code: code,
-            validity: "15 Minutes",
-            instructions: `Namaste! Enter the 6-digit code (${code}) on the VedIQ Gurukul parent portal to reset your password and sign in securely.`
-          })
-        });
-      } catch (err) {
-        console.warn("Branded email dispatch notice:", err);
-      }
     }
 
     async function handleCompletePasswordReset() {
@@ -2456,7 +2429,7 @@
         return;
       }
 
-      // Verify OTP (Check Firebase confirmationResult or session code)
+      // Verify OTP via Firebase Phone Confirmation
       let otpValid = false;
       if (window.confirmationResult) {
         try {
@@ -2466,13 +2439,10 @@
           console.warn("Firebase reset code error:", fbErr);
         }
       }
-      if (!otpValid && enteredOtp === forgotResetSession.code) {
-        otpValid = true;
-      }
 
       if (!otpValid) {
         if (err) {
-          err.innerText = "Invalid verification code. Please check and try again.";
+          err.innerText = "Invalid verification code. Please check your SMS and try again.";
           err.classList.remove('hidden');
         }
         return;
@@ -2494,22 +2464,9 @@
         return;
       }
 
-      // Update password in user profile & database
       const user = forgotResetSession.user;
-      user.password = newPass;
-      saveStudentToDatabase(user);
-
-      alert(`🎉 Password reset successfully!\n\nWelcome back, ${user.parentName || "Parent"}. You can now sign in with your new password.`);
+      alert(`🎉 Verification confirmed!\n\nWelcome back, ${user.parentName || "Parent"}. You can now sign in.`);
       closeForgotPasswordModal();
-
-      // Switch to sign in tab and pre-fill credentials
-      switchAuthTab('login');
-      const loginId = document.getElementById('loginIdentifier');
-      const loginPass = document.getElementById('loginPassword');
-      if (loginId) loginId.value = user.email || user.phone || "";
-      if (loginPass) loginPass.value = newPass;
-
-      // Automatically log them in to make it super smooth!
       loadDashboardForStudent(user);
     }
 
@@ -2681,25 +2638,23 @@
           return;
         }
 
-        // 2. User exists: verify password!
-        const correctPassword = match.password || "password123";
-        const isPasswordCorrect = (password === correctPassword);
+        // 2. User exists: verify password via Firebase Auth!
+        let authSuccess = false;
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+          initFirebase();
+          try {
+            const authEmail = match.email || (identifier.includes('@') ? identifier : `${match.phone}@vediqacademy.com`);
+            const res = await firebase.auth().signInWithEmailAndPassword(authEmail, password);
+            if (res && res.user) authSuccess = true;
+          } catch (fbErr) {
+            console.warn("Firebase email auth note:", fbErr.code);
+          }
+        }
 
-        if (!isPasswordCorrect) {
-          // If local password didn't match, check if they set a password in Firebase
-          let fbSuccess = false;
-          if (identifier.includes('@') && typeof firebase !== 'undefined' && firebase.auth) {
-            initFirebase();
-            try {
-              const res = await firebase.auth().signInWithEmailAndPassword(identifier, password);
-              if (res && res.user) fbSuccess = true;
-            } catch (fbErr) {}
-          }
-          if (!fbSuccess) {
-            showLoginError("Incorrect password. Default password is 'password123'. Or tap 'Sign in with OTP' below.");
-            restoreBtn();
-            return;
-          }
+        if (!authSuccess) {
+          showLoginError("Incorrect password. Please enter your registered account password or tap 'Sign in with Email OTP Code' below.");
+          restoreBtn();
+          return;
         }
 
         // Credentials verified -> Save session & enter Gurukul Dashboard!
@@ -2865,23 +2820,45 @@
       });
     }
 
-    // Two-Factor Verification Engine (Official Carrier Delivery + 2-Minute Expiry)
+    // Two-Factor Verification Engine (Secure Server-Side Issuance & Cryptographic Validation)
     let currentOtpSession = null;
     let otpCountdownTimer = null;
 
-    function requestOtpFlow({ recipient, displayRecipient, targetIdentifier, type, isFirebase }) {
-      const code = Math.floor(100000 + Math.random() * 900000).toString();
+    async function requestOtpFlow({ recipient, displayRecipient, targetIdentifier, type, isFirebase }) {
       const cleanDigits = targetIdentifier ? targetIdentifier.toString().replace(/\D/g, '').slice(-10) : '';
 
+      // Server-side OTP dispatch via Netlify Function
+      let serverToken = null;
+      let expiresAt = Date.now() + (120 * 1000);
+
+      if (!isFirebase) {
+        try {
+          const resp = await fetch('/.netlify/functions/otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'send', recipient: recipient })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.token) {
+              serverToken = data.token;
+              if (data.expiresAt) expiresAt = data.expiresAt;
+            }
+          }
+        } catch (e) {
+          console.warn("Secure OTP server dispatch notice:", e);
+        }
+      }
+
       currentOtpSession = {
-        code: code,
+        token: serverToken,
         recipient: recipient,
         targetIdentifier: targetIdentifier || recipient,
         targetPhone: cleanDigits,
         type: type || 'otp',
         isFirebase: !!isFirebase,
         createdAt: Date.now(),
-        expiresAt: Date.now() + (120 * 1000) // 2 Minutes strictly
+        expiresAt: expiresAt
       };
 
       // Show Step 2 (Code Verification) and hide Step 1
@@ -2929,56 +2906,14 @@
 
       // Start 2-Minute (120s) Live Countdown
       startOtpTimer(120);
-
-      // Dispatch to real Email inbox or mobile carrier SMS (never shown on screen!)
-      if (type === 'email') {
-        sendRealEmailOtp(recipient, code);
-      }
     }
 
-    // Direct Real Email Dispatch (Sender: VedIQ Academy <myvediqacademy@gmail.com>)
-    async function sendRealEmailOtp(emailAddr, code) {
-      console.log("Dispatching real email OTP from VedIQ Academy to:", emailAddr);
-      try {
-        await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(emailAddr), {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
-          body: JSON.stringify({
-            _subject: "VedIQ Academy • Your Login Verification OTP is " + code,
-            _template: "table",
-            sender: "VedIQ Academy",
-            official_email: "myvediqacademy@gmail.com",
-            verification_code: code,
-            valid_for: "2 Minutes",
-            instructions: "Namaste! Please enter this 6-digit verification code to sign into the VedIQ Gurukul parent portal."
-          })
-        });
-      } catch (err) {
-        console.warn("Direct email dispatch notice:", err);
-      }
-    }
-
-    // Dispatch OTP directly to WhatsApp Desk / Parent WhatsApp
+    // Dispatch inquiry to WhatsApp Desk if code is taking time
     function dispatchOtpToWhatsApp() {
       if (!currentOtpSession) return;
-      const code = currentOtpSession.code;
       const target = currentOtpSession.targetIdentifier || currentOtpSession.recipient || "My Account";
-      const msg = encodeURIComponent(`Namaste VedIQ Academy! My login OTP verification code is ${code} for account (${target}). Please verify my session.`);
+      const msg = encodeURIComponent(`Namaste VedIQ Academy! I requested a login verification code for my account (${target}). Please verify my session.`);
       window.open(`https://wa.me/918390332500?text=${msg}`, '_blank');
-    }
-
-    // Instant 1-Tap Auto-Fill & Verify (Backup for delayed email/SMS delivery)
-    function autoFillCurrentOtpAndVerify() {
-      if (!currentOtpSession || !currentOtpSession.code) return;
-      const code = currentOtpSession.code;
-      for (let i = 0; i < 6; i++) {
-        const box = document.getElementById('otp-' + (i + 1));
-        if (box) box.value = code[i] || '';
-      }
-      setTimeout(() => verifyOtpAndProceed(), 100);
     }
 
     function startOtpTimer(durationSeconds = 120) {
@@ -3010,23 +2945,37 @@
       }, 1000);
     }
 
-    function resendOtpCode() {
+    async function resendOtpCode() {
       if (!currentOtpSession) return;
-      const newCode = Math.floor(100000 + Math.random() * 900000).toString();
-      currentOtpSession.code = newCode;
       currentOtpSession.createdAt = Date.now();
       currentOtpSession.expiresAt = Date.now() + (120 * 1000); // Reset 2 minutes
       
-      // Re-trigger carrier SMS
+      // Re-trigger carrier SMS if phone
       if (currentOtpSession.targetPhone && typeof firebase !== 'undefined' && firebase.auth) {
         try {
           if (!window.recaptchaVerifier) {
             window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { size: 'invisible' });
           }
-          firebase.auth().signInWithPhoneNumber("+91" + currentOtpSession.targetPhone, window.recaptchaVerifier).then(confirmationResult => {
-            window.confirmationResult = confirmationResult;
-          }).catch(e => console.warn("Carrier SMS resend notice:", e));
-        } catch(e) {}
+          const confirmationResult = await firebase.auth().signInWithPhoneNumber("+91" + currentOtpSession.targetPhone, window.recaptchaVerifier);
+          window.confirmationResult = confirmationResult;
+        } catch(e) {
+          console.warn("Carrier SMS resend notice:", e);
+        }
+      } else if (currentOtpSession.recipient) {
+        // Re-dispatch secure serverless OTP
+        try {
+          const resp = await fetch('/.netlify/functions/otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'send', recipient: currentOtpSession.recipient })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.token) currentOtpSession.token = data.token;
+          }
+        } catch (e) {
+          console.warn("Serverless OTP resend notice:", e);
+        }
       }
 
       const err = document.getElementById('otpErrorText');
@@ -3041,9 +2990,6 @@
       }
 
       startOtpTimer(120);
-      if (currentOtpSession.type === 'email') {
-        sendRealEmailOtp(currentOtpSession.recipient, newCode);
-      }
     }
 
     function closeOtpModal() {
@@ -3142,7 +3088,7 @@
         return;
       }
 
-      // Check if real Firebase Phone Auth confirmation is active
+      // 1. Firebase Phone SMS verification (Cryptographically validated by Firebase servers)
       if (window.confirmationResult && currentOtpSession.isFirebase) {
         try {
           const result = await window.confirmationResult.confirm(entered);
@@ -3154,19 +3100,39 @@
           }
         } catch (fbErr) {
           console.warn("Firebase OTP confirmation error:", fbErr);
-          // If Firebase failed, check if it matches the fallback simulated code
-          if (entered !== currentOtpSession.code) {
-            if (err) {
-              err.innerText = "Invalid SMS code. Please re-check or tap the instant code banner.";
-              err.classList.remove('hidden');
-            }
-            restoreOtpBtn();
-            return;
+          if (err) {
+            err.innerText = "Invalid SMS code. Please check the code sent to your phone and try again.";
+            err.classList.remove('hidden');
           }
+          restoreOtpBtn();
+          return;
         }
       }
 
-      if (entered !== currentOtpSession.code) {
+      // 2. Server-Side Cryptographic OTP Verification (Netlify Function)
+      let verifiedOnServer = false;
+      try {
+        const resp = await fetch('/.netlify/functions/otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'verify',
+            code: entered,
+            token: currentOtpSession.token,
+            recipient: currentOtpSession.recipient
+          })
+        });
+        if (resp.ok) {
+          const res = await resp.json();
+          if (res.verified) {
+            verifiedOnServer = true;
+          }
+        }
+      } catch (srvErr) {
+        console.warn("Serverless OTP verify note:", srvErr);
+      }
+
+      if (!verifiedOnServer) {
         if (err) {
           err.innerText = "Invalid verification code. Please check and try again.";
           err.classList.remove('hidden');
