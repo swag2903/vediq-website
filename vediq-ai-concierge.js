@@ -1,4 +1,4 @@
-/**
+﻿/**
  * VedIQ Academy — Universal 24/7 AI Concierge & Smart Support Desk Engine
  * High-Performance, Apple iOS Spring Fluid Animated Floating Widget
  * Deployed universally across index.html, parent.html & teacher.html
@@ -103,7 +103,7 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
 
   // Configurable backend endpoint for Serverless Functions (Vercel / Netlify)
   const VEDIQ_BACKEND_URL = (window.location.hostname.includes("vediqacademy.com") || window.location.hostname.includes("github.io"))
-    ? "https://vediq-website.vercel.app"
+    ? "https://vediq-website-three.vercel.app"
     : "";
 
   async function queryLiveGeminiAi(prompt) {
