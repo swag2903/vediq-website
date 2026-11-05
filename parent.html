@@ -511,9 +511,9 @@
 
           <!-- Quick OTP Alternative text link -->
           <div class="flex items-center justify-between text-[11px] text-brand-muted px-1">
-            <span>Prefer SMS / WhatsApp?</span>
+            <span>Want login without password?</span>
             <button type="button" onclick="triggerOtpSignIn()" class="text-brand-ochre font-semibold hover:underline cursor-pointer">
-              Sign in with Phone SMS OTP
+              Sign in with Email OTP Code
             </button>
           </div>
 
@@ -532,13 +532,13 @@
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
             </svg>
-            <span id="btnGoogleText" class="group-hover:text-brand-ochre transition">Continue with Google</span>
+            <span id="btnGoogleText" class="group-hover:text-brand-ochre transition">Continue with Google (1-Click)</span>
           </button>
 
-          <!-- Sign in with Mobile Phone SMS OTP Button -->
+          <!-- Sign in with Email OTP Button -->
           <button type="button" onclick="triggerOtpSignIn()" class="w-full py-2.5 px-4 rounded-xl border border-brand-border hover:bg-amber-50 hover:border-brand-ochre text-brand-ink text-xs font-bold transition flex items-center justify-center gap-2.5 shadow-xs group cursor-pointer">
-            <svg class="w-4 h-4 text-brand-ochre shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-            <span id="btnPhoneOtpText" class="group-hover:text-brand-ochre transition">Sign in with Mobile Number (Direct SMS OTP)</span>
+            <svg class="w-4 h-4 text-brand-ochre shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <span id="btnPhoneOtpText" class="group-hover:text-brand-ochre transition">Sign in with Email OTP / Verification Code</span>
           </button>
 
         </form>
@@ -636,13 +636,16 @@
       <!-- Direct Admissions Help Footer -->
       <div class="text-center text-[11px] text-brand-muted space-y-1">
         <div>
-          Need admission guidance? 
-          <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20portal%20login%20help." target="_blank" class="text-brand-ochre font-bold hover:underline">
-            WhatsApp Admissions (+91 83903 32500)
+          Official Admissions &amp; Support: 
+          <a href="mailto:myvediqacademy@gmail.com" class="text-brand-ochre font-bold hover:underline">
+            myvediqacademy@gmail.com
           </a>
         </div>
         <div class="text-slate-400">
-          Admissions Helpline: +91 98000 00000 • admissions@vediqacademy.com
+          <span>Parent Desk: </span>
+          <a href="https://wa.me/918390332500?text=Namaste!%20Need%20parent%20portal%20support." target="_blank" class="text-emerald-700 font-semibold hover:underline">
+            💬 WhatsApp Support Desk
+          </a>
         </div>
         <div class="pt-2">
           <a href="teacher.html" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-brand-ochre hover:underline">
@@ -1080,8 +1083,10 @@
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
               <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-brand-ochre text-white">Founder</span>
               <div class="text-xs font-bold text-brand-ink">Dr. Ujwal Vyas</div>
-              <div class="text-[10px] text-brand-muted">Founder & Head Master Mentor</div>
-              <div class="text-xs font-semibold text-brand-ink">Gurukul Academic Desk</div>
+              <div class="text-[10px] text-brand-muted">Founder &amp; Head Master Mentor</div>
+              <div class="text-xs font-semibold text-brand-ink">
+                <a href="mailto:myvediqacademy@gmail.com" class="text-brand-muted hover:text-brand-ochre transition truncate block">✉️ myvediqacademy@gmail.com</a>
+              </div>
               <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20Parent%20here." target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
                 💬 WhatsApp Founder Desk
               </a>
@@ -1090,20 +1095,24 @@
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
               <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 font-bold">Co-Founder</span>
               <div class="text-xs font-bold text-brand-ink">Mr. Atish Gulhane</div>
-              <div class="text-[10px] text-brand-muted">Co-Founder • Admissions & Operations</div>
-              <div class="text-xs font-semibold text-brand-ink">+91 83903 32500</div>
+              <div class="text-[10px] text-brand-muted">Co-Founder • Admissions &amp; Operations</div>
+              <div class="text-xs font-semibold text-brand-ink">
+                <a href="mailto:myvediqacademy@gmail.com" class="text-brand-muted hover:text-brand-ochre transition truncate block">✉️ myvediqacademy@gmail.com</a>
+              </div>
               <a href="https://wa.me/918390332500?text=Namaste%20Mr.%20Atish!%20Need%20parent%20support." target="_blank" class="block w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-xs rounded-lg transition mt-2">
-                💬 WhatsApp Admissions
+                💬 WhatsApp Admissions Desk
               </a>
             </div>
 
             <div class="p-5 rounded-2xl bg-white border border-brand-border shadow-sm space-y-2">
               <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 font-bold">Co-Founder</span>
               <div class="text-xs font-bold text-brand-ink">Mr. Swagatam Shukla (Swag)</div>
-              <div class="text-[10px] text-brand-muted">Co-Founder • Academic & Tech Lead</div>
-              <div class="text-xs font-semibold text-brand-ink">+91 95948 06822</div>
+              <div class="text-[10px] text-brand-muted">Co-Founder • Academic &amp; Tech Lead</div>
+              <div class="text-xs font-semibold text-brand-ink">
+                <a href="mailto:myvediqacademy@gmail.com" class="text-brand-muted hover:text-brand-ochre transition truncate block">✉️ myvediqacademy@gmail.com</a>
+              </div>
               <a href="https://wa.me/919594806822?text=Namaste%20Mr.%20Swagatam!%20Parent%20portal%20help." target="_blank" class="block w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-center font-bold text-xs rounded-lg transition mt-2">
-                💬 WhatsApp Tech Lead
+                💬 WhatsApp Academic Tech Desk
               </a>
             </div>
           </div>
@@ -1282,22 +1291,22 @@
           <span>VEDIQ ACADEMY</span> • <span>OFFICIAL SECURITY</span>
         </div>
         <h3 id="otpModalHeading" class="text-lg sm:text-xl font-bold text-brand-ink font-display">
-          Sign In with Phone OTP
+          Sign In with Email or Mobile OTP
         </h3>
         <p id="otpModalSubtext" class="text-xs text-brand-muted leading-relaxed">
-          Receive a 6-digit verification code directly from VedIQ Academy.
+          Receive official 6-digit verification code directly from <strong class="text-brand-ochre font-semibold">myvediqacademy@gmail.com</strong>.
         </p>
       </div>
 
-      <!-- STEP 1: PHONE NUMBER INPUT (If user clicked OTP login without typing phone first) -->
+      <!-- STEP 1: EMAIL OR PHONE NUMBER INPUT -->
       <div id="otpStepPhoneInput" class="space-y-4 text-left hidden">
         <div>
-          <label class="block text-xs font-bold text-brand-ink mb-1.5">Mobile Phone Number *</label>
+          <label class="block text-xs font-bold text-brand-ink mb-1.5">Registered Email Address or Mobile Number *</label>
           <div class="flex items-center rounded-2xl border-2 border-brand-border bg-brand-cream/60 focus-within:bg-white focus-within:border-brand-ochre transition overflow-hidden shadow-inner">
             <span class="px-3.5 py-3 text-xs font-bold text-brand-ink bg-brand-subtle border-r border-brand-border flex items-center gap-1">
-              <span>🇮🇳</span> <span>+91</span>
+              <span>✉️</span>
             </span>
-            <input type="tel" id="otpPhoneInputField" maxlength="10" placeholder="98000 00000" class="w-full px-3 py-3 bg-transparent text-sm font-bold tracking-wider text-brand-ink focus:outline-none" />
+            <input type="text" id="otpPhoneInputField" placeholder="e.g. parent@gmail.com or 98000 00000" class="w-full px-3 py-3 bg-transparent text-sm font-semibold tracking-wide text-brand-ink focus:outline-none" />
           </div>
           <p id="otpPhoneInputError" class="text-[11px] text-rose-600 font-semibold mt-1.5 hidden"></p>
         </div>
@@ -1305,20 +1314,20 @@
         <!-- Channel Selector -->
         <div>
           <label class="block text-[11px] font-semibold text-brand-muted mb-1.5">Send verification code via:</label>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <label class="flex items-center gap-2 p-2.5 rounded-xl border-2 border-brand-ochre bg-amber-50/60 cursor-pointer text-xs font-bold text-brand-ink">
-              <input type="radio" name="otpChannel" value="sms" checked class="accent-brand-ochre w-4 h-4" />
-              <span>📱 Mobile SMS</span>
+              <input type="radio" name="otpChannel" value="email" checked class="accent-brand-ochre w-4 h-4" />
+              <span>✉️ Email OTP (Official)</span>
             </label>
             <label class="flex items-center gap-2 p-2.5 rounded-xl border-2 border-brand-border hover:border-brand-ochre/40 bg-white cursor-pointer text-xs font-semibold text-brand-muted">
-              <input type="radio" name="otpChannel" value="whatsapp" class="accent-brand-ochre w-4 h-4" />
-              <span>💬 WhatsApp</span>
+              <input type="radio" name="otpChannel" value="sms" class="accent-brand-ochre w-4 h-4" />
+              <span>📱 Mobile SMS / WhatsApp</span>
             </label>
           </div>
         </div>
 
         <button type="button" onclick="dispatchOtpFromPhoneStep()" id="btnSendOtpStep1" class="w-full py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
-          <span>Send 6-Digit OTP</span>
+          <span>Send 6-Digit Code</span>
           <span aria-hidden="true">&rarr;</span>
         </button>
       </div>
@@ -1330,17 +1339,17 @@
         <div class="p-3.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl text-left space-y-1 shadow-xs">
           <div class="flex items-center justify-between text-[11px]">
             <span class="font-bold text-brand-ochre flex items-center gap-1.5">
-              <span>📩</span> <span>VedIQ Academy Security OTP</span>
+              <span>📩</span> <span>VedIQ Security (myvediqacademy@gmail.com)</span>
             </span>
             <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
               Active • 2 Min
             </span>
           </div>
           <p class="text-xs text-brand-ink">
-            Verification code sent to <strong id="otpRecipientLabel" class="text-brand-ochre font-bold">+91 98000 00000</strong>
+            Verification code sent to <strong id="otpRecipientLabel" class="text-brand-ochre font-bold">parent@gmail.com</strong>
           </p>
           <p class="text-[10px] text-amber-900/80 font-medium">
-            "Your VedIQ Academy verification OTP is valid for 2 minutes. Do not share this code."
+            "Your official VedIQ login OTP is valid for 2 minutes. Dispatched via myvediqacademy@gmail.com."
           </p>
         </div>
 
@@ -1787,6 +1796,29 @@
     // In-memory / persistent student database store with multi-child family accounts
     const INITIAL_STUDENTS = [
       {
+        parentId: "PAR-100",
+        parentName: "Swagatam Shukla",
+        phone: "9594806822",
+        email: "swagatam2903@gmail.com",
+        password: "password123",
+        activeChildIndex: 0,
+        children: [
+          {
+            childId: "VED-2026-001",
+            childName: "Kabir Shukla",
+            childGrade: "Ages 8-11 • Pravesh",
+            batch: "Daily 5:00 PM – 6:00 PM IST",
+            focusScore: "0",
+            streak: "0",
+            habits: [false, false, false, false],
+            tratakGaze: "0s (Day 1 Baseline)",
+            mathVelocity: "0 sums/min",
+            cognitiveGrade: "Baseline in Progress",
+            mentorNotes: "Welcome to VedIQ Gurukul! Daily cognitive evaluation starts from Day 1."
+          }
+        ]
+      },
+      {
         parentId: "PAR-101",
         parentName: "Mr. Rajesh Sharma",
         phone: "9800000001",
@@ -2205,7 +2237,7 @@
           initFirebase();
           try {
             await firebase.auth().sendPasswordResetEmail(emailAddr);
-            alert(`✉️ Official Password Reset Email sent to ${emailAddr}!\n\nPlease check your email inbox (and spam folder) to reset your password.`);
+            alert(`✉️ Official Password Reset Email dispatched from myvediqacademy@gmail.com to ${emailAddr}!\n\nPlease check your email inbox (and spam/promotions folder) to reset your password.`);
             closeForgotPasswordModal();
             return;
           } catch (fbErr) {
@@ -2550,19 +2582,21 @@
       }
     }
 
-    // Trigger OTP Flow for Mobile Phone SMS / WhatsApp (Dedicated Gurukul Interface - No Prompts)
+    // Trigger OTP Flow for Email & Phone (Official VedIQ Security Engine)
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       let identifier = idInput ? idInput.value.trim() : "";
-      const cleanDigits = identifier.replace(/\D/g, '');
-      const phoneDigits = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : '';
 
-      // If user has already typed a 10-digit phone in the sign-in input, use it directly!
-      if (phoneDigits && phoneDigits.length === 10) {
-        initiatePhoneOtpDispatch(phoneDigits);
+      if (identifier.includes('@')) {
+        initiateEmailOtpDispatch(identifier.toLowerCase());
       } else {
-        // Otherwise, open Step 1 cleanly in the Gurukul themed modal (Never use browser prompt)
-        openOtpPhoneInputModal(cleanDigits);
+        const cleanDigits = identifier.replace(/\D/g, '');
+        const phoneDigits = cleanDigits.length >= 10 ? cleanDigits.slice(-10) : '';
+        if (phoneDigits && phoneDigits.length === 10) {
+          initiatePhoneOtpDispatch(phoneDigits);
+        } else {
+          openOtpPhoneInputModal(identifier);
+        }
       }
     }
 
@@ -2581,8 +2615,8 @@
 
       const heading = document.getElementById('otpModalHeading');
       const sub = document.getElementById('otpModalSubtext');
-      if (heading) heading.innerText = "Sign In with Phone OTP";
-      if (sub) sub.innerText = "Enter your mobile number to receive official verification OTP directly from VedIQ Academy.";
+      if (heading) heading.innerText = "Sign In with Email or Mobile OTP";
+      if (sub) sub.innerText = "Receive official 6-digit verification code directly from myvediqacademy@gmail.com.";
 
       if (modal) {
         modal.classList.remove('hidden');
@@ -2606,11 +2640,28 @@
       const phoneField = document.getElementById('otpPhoneInputField');
       const err = document.getElementById('otpPhoneInputError');
       const raw = phoneField ? phoneField.value.trim() : "";
-      const digits = raw.replace(/\D/g, '').slice(-10);
 
+      if (!raw) {
+        if (err) {
+          err.innerText = "Please enter your registered email address or 10-digit mobile number.";
+          err.classList.remove('hidden');
+        }
+        if (phoneField) phoneField.focus();
+        return;
+      }
+
+      if (raw.includes('@')) {
+        if (err) err.classList.add('hidden');
+        const mainId = document.getElementById('loginIdentifier');
+        if (mainId) mainId.value = raw.toLowerCase();
+        initiateEmailOtpDispatch(raw.toLowerCase());
+        return;
+      }
+
+      const digits = raw.replace(/\D/g, '').slice(-10);
       if (!digits || digits.length < 10) {
         if (err) {
-          err.innerText = "Please enter a valid 10-digit mobile number.";
+          err.innerText = "Please enter a valid email address or 10-digit mobile number.";
           err.classList.remove('hidden');
         }
         if (phoneField) phoneField.focus();
@@ -2618,11 +2669,24 @@
       }
 
       if (err) err.classList.add('hidden');
-      // Also sync back to main login input
       const mainId = document.getElementById('loginIdentifier');
       if (mainId) mainId.value = digits;
 
       initiatePhoneOtpDispatch(digits);
+    }
+
+    async function initiateEmailOtpDispatch(emailAddr) {
+      const btn = document.getElementById('btnPhoneOtpText');
+      if (btn) btn.innerText = "Sending code to " + emailAddr + "...";
+
+      requestOtpFlow({
+        recipient: emailAddr,
+        displayRecipient: emailAddr + " (via myvediqacademy@gmail.com)",
+        targetIdentifier: emailAddr,
+        type: 'email',
+        isFirebase: false
+      });
+      if (btn) btn.innerText = "Sign in with Email OTP / Verification Code";
     }
 
     async function initiatePhoneOtpDispatch(phoneDigits) {
@@ -2739,7 +2803,7 @@
 
       if (codeEl) codeEl.innerText = code;
       if (msgEl) {
-        msgEl.innerHTML = `VedIQ Academy: Your verification OTP is <strong class="text-amber-300 font-mono text-sm underline">${code}</strong>. Valid for 2 minutes. Do not share this code.`;
+        msgEl.innerHTML = `VedIQ Security (myvediqacademy@gmail.com): Official login verification code is <strong class="text-amber-300 font-mono text-sm underline">${code}</strong>. Valid for 2 minutes. Dispatched to your registered email.`;
       }
 
       banner.classList.remove('-translate-y-24', 'opacity-0', 'pointer-events-none');
@@ -3396,6 +3460,10 @@
     let pendingOnboardingProfile = null;
 
     function openFirstTimeOnboardingModal(profile) {
+      if (!window.userClickedGoogleAuth && !window.userClickedSignUp) {
+        console.log("Blocking unauthorized auto-popup of onboarding modal on page load.");
+        return;
+      }
       pendingOnboardingProfile = profile;
       const modal = document.getElementById('firstTimeOnboardingModal');
       const pInput = document.getElementById('obParentName');
