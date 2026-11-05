@@ -1,4 +1,5 @@
 {
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/.netlify/functions/:splat", "destination": "/api/:splat" },
     { "source": "/api/:splat", "destination": "/api/:splat" }

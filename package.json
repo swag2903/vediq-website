@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "VedIQ Academy (BIGS) — Official Website & Parent Progress Portal",
-  "scripts": {
-    "build": "echo 'Static build ready'"
-  },
   "engines": {
     "node": ">=18.0.0"
   },
