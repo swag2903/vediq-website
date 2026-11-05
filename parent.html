@@ -2543,10 +2543,18 @@
         }
       } catch (err) {
         console.warn("Firebase Auth flow notice:", err);
-        if (err.code === 'auth/unauthorized-domain') {
-          alert("Notice: vediqacademy.com needs to be added in Firebase Console -> Authentication -> Settings -> Authorized Domains. In the meantime, you can sign in directly with your email & password (password123)!");
-        } else if (err.code === 'auth/popup-blocked') {
-          alert("Pop-up was blocked by your browser. Please allow popups for vediqacademy.com or sign in with your password.");
+        if (err.code === 'auth/popup-blocked') {
+          // If popup is blocked by browser, gracefully switch to redirect flow
+          try {
+            sessionStorage.setItem('vediq_google_auth_active', 'true');
+            const provider = new firebase.auth.GoogleAuthProvider();
+            await firebase.auth().signInWithRedirect(provider);
+            return;
+          } catch (redirectErr) {
+            console.warn("Google redirect fallback notice:", redirectErr);
+          }
+        } else if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+          console.log("Firebase login info:", err.message);
         }
       } finally {
         if (btnText) btnText.innerText = "Continue with Google (1-Click)";
@@ -2714,7 +2722,7 @@
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       let identifier = idInput ? idInput.value.trim() : "";
-      if (identifier.toLowerCase().includes('swagatam2903')) {
+      if (identifier.toLowerCase().includes('swagatam') || identifier.toLowerCase().includes('test')) {
         identifier = "";
         if (idInput) idInput.value = "";
         localStorage.removeItem('vediq_remembered_identifier');
@@ -2884,11 +2892,18 @@
 
       const heading = document.getElementById('otpModalHeading');
       const sub = document.getElementById('otpModalSubtext');
+      const targetDisplay = displayRecipient || recipient || "your account";
       if (heading) heading.innerText = "Verify 6-Digit Code";
-      if (sub) sub.innerText = "Enter the 6-digit code sent to your phone to access your child's dashboard.";
+      if (sub) {
+        if (type === 'email') {
+          sub.innerHTML = `Enter the 6-digit code sent to your email <strong class="text-brand-ochre">(${targetDisplay})</strong> to access your child's dashboard.`;
+        } else {
+          sub.innerHTML = `Enter the 6-digit code sent to your mobile <strong class="text-brand-ochre">(${targetDisplay})</strong> to access your child's dashboard.`;
+        }
+      }
 
       const labelEl = document.getElementById('otpRecipientLabel');
-      if (labelEl) labelEl.innerText = displayRecipient || recipient;
+      if (labelEl) labelEl.innerText = targetDisplay;
 
       const err = document.getElementById('otpErrorText');
       if (err) err.classList.add('hidden');
@@ -3921,7 +3936,7 @@
 
       // Restore remembered email/phone permanently (auto-clean legacy personal emails)
       let rememberedId = localStorage.getItem('vediq_remembered_identifier');
-      if (rememberedId && rememberedId.toLowerCase().includes('swagatam2903')) {
+      if (rememberedId && (rememberedId.toLowerCase().includes('swagatam') || rememberedId.toLowerCase().includes('test@'))) {
         localStorage.removeItem('vediq_remembered_identifier');
         rememberedId = null;
       }

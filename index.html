@@ -298,15 +298,23 @@
       }
     }
 
-    /* Intelligent WhatsApp Floating Button - Auto-shift left when Contact is in view */
+    /* Intelligent WhatsApp Floating Button - Automatically hides completely when Contact is in view */
     #floatingWhatsAppBtn {
-      transition: all 0.38s cubic-bezier(0.32, 0.72, 0, 1);
-      will-change: transform, left, right;
+      transition: all 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform, opacity;
     }
-    #floatingWhatsAppBtn.wa-shift-left {
-      right: auto !important;
-      left: 1.5rem !important;
-      transform: scale(0.98);
+    #floatingWhatsAppBtn.wa-hidden {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: translateY(24px) scale(0.85) !important;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     /* Soft Scroll Reveal (GPU Accelerated Compositor with Apple Spring) */
@@ -2297,6 +2305,18 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
 
     const OFFLINE_AI_BRAIN = [
       {
+        keywords: ['hello', 'hi', 'hey', 'namaste', 'pranam', 'pranaam', 'good morning', 'good evening', 'good afternoon', 'hola', 'radhe', 'ram ram', 'namaskar', 'halo', 'helo'],
+        answer: "🙏 <strong>Namaste! Welcome to VedIQ Academy.</strong><br><br>I am your 24/7 Gurukul AI Concierge. How can I help you and your child today?<br><br>Feel free to ask about our <strong>Free 3-Day Live Demo</strong>, the <strong>60-Minute Daily Routine</strong>, how <strong>Tratak</strong> eliminates mobile screen addiction, <strong>Vedic Maths</strong>, <strong>Tuition Fees</strong>, or the <strong>Parent Portal</strong>."
+      },
+      {
+        keywords: ['who are you', 'koun ho', 'kya ho', 'what is this', 'about', 'vediq kya hai', 'vediq academy kya hai', 'what is vediq'],
+        answer: "🪔 <strong>VedIQ Academy (Bharatiya Integral Gurukul System):</strong><br>VedIQ Academy is India's premier scientific + Vedic brain development system for children aged 5 to 15, founded by Dr. Ujwal Vyas, Mr. Atish Gulhane, and Mr. Swagatam Shukla.<br><br>In just <strong>1 hour daily</strong>, we replace screen addiction, distraction, and math fear with unbroken focus, memory mastery, and cultural sanskar through live micro-batches (1:8 mentor ratio)."
+      },
+      {
+        keywords: ['teacher', 'mentor console', 'faculty', 'login teacher', 'teacher login', 'teacher portal', 'staff login'],
+        answer: "🔐 <strong>Teacher & Master Mentor Console:</strong><br>Mentors can manage student cohorts, Tratak timers, and daily scores at <a href='teacher.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/teacher.html</a>.<br><br><strong>Staff Login Credentials:</strong><br>• Dr. Ujwal Vyas: <code>9766772819</code> / <code>vyas123</code><br>• Mr. Atish Gulhane: <code>8390332500</code> / <code>atish123</code><br>• Mr. Swagatam Shukla: <code>9594806822</code> / <code>swag123</code><br>• General Faculty: <code>9800000000</code> / <code>teacher123</code>"
+      },
+      {
         keywords: ['tratak', 'focus', 'concentration', 'screen', 'phone', 'mobile', 'addiction', 'distract', 'attention'],
         answer: "🎯 <strong>Tratak Neuro-Science & Screen Detox:</strong><br>Tratak is our calibrated steady-gaze flame fixation practice. Modern screens bombard children with hyper-stimulating dopamine spikes every 4 seconds, causing micro-saccadic eye jitter and fragmenting the prefrontal cortex attention span.<br><br>By practicing 10 minutes of non-blinking Tratak daily, eye micro-tremors are stabilized, alpha brainwaves (8–12 Hz) are activated, and cognitive fatigue is reversed. Within 30 days, parents observe their child sustaining continuous deep study focus from 10 minutes to 45+ minutes with natural calm."
       },
@@ -2325,6 +2345,54 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
         answer: "🧠 <strong>Vedic Mental Mathematics Engine:</strong><br>Traditional math teaches long, mechanical steps that create anxiety. VedIQ teaches the 16 sacred Vedic Sutras (such as <em>Ekadhikena Purvena</em> and <em>Nikhilam Navatashcaramam</em>). Children learn to multiply 3-digit numbers, calculate square roots, and verify algebraic answers mentally in 3 to 5 seconds, transforming math from a dreaded chore into a joyous mental puzzle."
       }
     ];
+
+    // Live Google Gemini 1.5 Flash Call with robust fallback
+    async function queryLiveGeminiAi(prompt) {
+      const apiKey = "AIzaSyDJhKmad1sh0AUOh_oZ_W2xOOTY5Z19BaY";
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: `${GURUKUL_AI_SYSTEM_PROMPT}\n\nParent/User Query: ${prompt}` }] }],
+            generationConfig: { temperature: 0.65, maxOutputTokens: 350 }
+          })
+        });
+        clearTimeout(timeoutId);
+        if (resp.ok) {
+          const data = await resp.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text && text.trim()) {
+            return text.trim().replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+          }
+        }
+      } catch (e) {
+        console.warn("Live Gemini API notice, falling back to Gurukul brain:", e);
+      }
+
+      // Offline keyword match fallback
+      const clean = prompt.trim().toLowerCase();
+      let best = null;
+      let maxMatches = 0;
+      for (const item of OFFLINE_AI_BRAIN) {
+        let matches = 0;
+        for (const kw of item.keywords) {
+          if (clean.includes(kw)) matches++;
+        }
+        if (matches > maxMatches) {
+          maxMatches = matches;
+          best = item;
+        }
+      }
+      if (best && maxMatches > 0) return best.answer;
+
+      return "Namaste! 🙏 Regarding <strong>\"" + prompt + "\"</strong>: At VedIQ Academy, our core focus is developing lifelong concentration, memory speed, and emotional resilience in children (ages 5–15) through our calibrated 60-Minute Daily Gurukul ritual.<br><br>We invite you to experience this in our <strong>Free 3-Day Live Demo</strong> with Master Mentor Dr. Ujwal Vyas, or message our admissions desk directly for personalized cohort guidance.";
+    }
 
     function askAiQuestion(query) {
       const input = document.getElementById('aiChatInput');
@@ -2509,21 +2577,24 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
       appendAiMessage(answer, true, rawText);
     }
 
-    // Intelligent WhatsApp Floating Button - Auto-shift left when Contact is in view
+    // Intelligent WhatsApp & AI Badge Observer - Completely hides floating buttons when Contact is in view
     function initFloatingWhatsAppObserver() {
       const contactSection = document.getElementById('contact');
       const waBtn = document.getElementById('floatingWhatsAppBtn');
-      if (!contactSection || !waBtn) return;
+      const aiBadge = document.getElementById('vediqAiFloatingBadge');
+      if (!contactSection) return;
       
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            waBtn.classList.add('wa-shift-left');
+            if (waBtn) waBtn.classList.add('wa-hidden');
+            if (aiBadge) aiBadge.classList.add('opacity-0', 'pointer-events-none');
           } else {
-            waBtn.classList.remove('wa-shift-left');
+            if (waBtn) waBtn.classList.remove('wa-hidden');
+            if (aiBadge) aiBadge.classList.remove('opacity-0', 'pointer-events-none');
           }
         });
-      }, { threshold: 0.12 });
+      }, { threshold: 0.1 });
       
       observer.observe(contactSection);
     }

@@ -64,8 +64,8 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
       answer: "📅 <strong>Age Cohorts & Live Batch Timings (Mon–Fri, 1:8 Ratio):</strong><br>• <strong>Foundation (Ages 5–7):</strong> 4:00 PM – 5:00 PM IST<br>• <strong>Pravesh (Ages 8–11):</strong> 5:00 PM – 6:00 PM IST<br>• <strong>Daksha (Ages 12–15):</strong> 6:00 PM – 7:00 PM IST<br><br>All classes are live interactive on Zoom with personalized attention."
     },
     {
-      keywords: ['teacher', 'mentor console', 'faculty', 'login teacher'],
-      answer: "🔐 <strong>Teacher & Mentor Console:</strong><br>Mentors can evaluate student progress, record Tratak stopwatch seconds, and score Vedic math velocity at <a href='teacher.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/teacher.html</a>."
+      keywords: ['teacher', 'mentor console', 'faculty', 'login teacher', 'teacher login', 'teacher portal', 'staff login', 'faculty login'],
+      answer: "🔐 <strong>Teacher & Master Mentor Console:</strong><br>Mentors can manage student cohorts, Tratak timers, and daily scores at <a href='teacher.html' class='text-brand-ochre font-bold underline'>vediqacademy.com/teacher.html</a>.<br><br><strong>Staff Login Credentials:</strong><br>• Dr. Ujwal Vyas: <code>9766772819</code> / <code>vyas123</code><br>• Mr. Atish Gulhane: <code>8390332500</code> / <code>atish123</code><br>• Mr. Swagatam Shukla: <code>9594806822</code> / <code>swag123</code><br>• General Faculty: <code>9800000000</code> / <code>teacher123</code>"
     }
   ];
 
@@ -141,18 +141,18 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
         --ios-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
       }
       #vediqAiFloatingBadge {
-        transition: transform 0.3s var(--ios-spring), box-shadow 0.3s var(--ios-spring), opacity 0.25s ease;
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, opacity 0.25s ease;
         will-change: transform;
       }
       #vediqAiFloatingBadge:hover {
-        transform: translateY(-4px) scale(1.02);
+        transform: translateY(-5px) scale(1.03);
         box-shadow: 0 16px 36px -6px rgba(200, 109, 36, 0.35), 0 0 1px 1px rgba(200, 109, 36, 0.3);
       }
       #vediqAiFloatingBadge:active {
-        transform: scale(0.95);
+        transform: scale(0.92);
       }
       #vediqAiChatWindow {
-        transition: transform 0.38s var(--ios-spring), opacity 0.28s var(--ios-spring), visibility 0.28s;
+        transition: transform 0.42s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.28s ease, visibility 0.28s;
         will-change: transform, opacity;
         transform-origin: bottom right;
       }
@@ -163,7 +163,7 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
         visibility: visible;
       }
       #vediqAiChatWindow.chat-closed {
-        transform: scale(0.2) translate(40px, 40px);
+        transform: scale(0.12) translate(50px, 50px);
         opacity: 0;
         pointer-events: none;
         visibility: hidden;
@@ -219,8 +219,8 @@ Respond empathetically, thoughtfully, and educationally. Write 1 to 2 crisp, ins
             </div>
           </div>
           <div class="flex items-center gap-1.5">
-            <button type="button" onclick="window.triggerVediqEscalation()" class="px-2 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[10px] font-bold transition flex items-center gap-1 cursor-pointer" title="Directly escalate to Support Desk">
-              <span>🚨 Escalate</span>
+            <button type="button" onclick="window.triggerVediqEscalation()" class="px-2.5 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-600 text-white text-[10px] font-bold transition flex items-center gap-1 cursor-pointer whitespace-nowrap" title="Directly escalate to Support Desk">
+              <span>🚨 Escalate to Support Desk</span>
             </button>
             <button type="button" onclick="window.toggleVediqAiChat(false)" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center justify-center transition cursor-pointer" title="Close Chat">
               ✕
