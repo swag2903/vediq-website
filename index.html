@@ -1739,16 +1739,6 @@
     </div>
   </div>
 
-  <!-- FLOATING 1-TAP WHATSAPP BUTTON (Desktop & Laptop Only, never overlapping mobile content) -->
-  <a href="https://wa.me/919766772819?text=Namaste!%20I%20have%20a%20question%20about%20admissions%20at%20VedIQ%20Academy." target="_blank" class="hidden lg:flex fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white pl-3.5 pr-4 py-2.5 rounded-full shadow-2xl items-center gap-2.5 transition duration-200 hover:scale-105 border border-emerald-400/50 text-xs font-bold tracking-wide" title="Chat with VedIQ Admissions on WhatsApp">
-    <span class="relative flex h-2.5 w-2.5">
-      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
-      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
-    </span>
-    <svg class="w-4 h-4 fill-current text-white" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-    <span>WhatsApp Admissions Desk</span>
-  </a>
-
   <!-- STICKY MOBILE CONVERSION DOCKED BAR (Never overlaps cards) -->
   <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-brand-surface/95 backdrop-blur-md border-t border-brand-border p-2.5 flex items-center gap-2 shadow-2xl">
     <button onclick="openDemoModal()" class="flex-1 py-3 rounded-xl text-sm font-bold uppercase tracking-wider text-white bg-brand-ochre text-center shadow-sm">
@@ -2333,7 +2323,7 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
             <div class="flex items-center gap-2">
               <button type="button" onclick="markAiHelpful(this)" class="hover:text-emerald-700 font-bold cursor-pointer transition">👍 Yes</button>
               <span>•</span>
-              <button type="button" onclick="triggerImmediateEscalation('${encodeURIComponent(rawUserQuery)}')" class="hover:text-rose-600 font-semibold cursor-pointer transition">👎 Not solved, need mentor</button>
+              <button type="button" onclick="triggerImmediateEscalation('${encodeURIComponent(rawUserQuery)}')" class="hover:text-rose-600 font-semibold cursor-pointer transition">👎 No, Escalate to Support Desk</button>
             </div>
           </div>
         `;
@@ -2360,7 +2350,7 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
     }
 
     function triggerImmediateEscalation(customReason = "") {
-      const ticketId = "VED-ESC-" + Math.floor(1000 + Math.random() * 9000);
+      const ticketId = "VED-SUP-" + Math.floor(1000 + Math.random() * 9000);
       const reasonText = customReason ? decodeURIComponent(customReason) : "Parent inquiry unresolved by AI";
 
       sendEscalationTicketToEmail(ticketId, reasonText);
@@ -2371,16 +2361,16 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
             <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-rose-600 text-white uppercase tracking-wider">Escalation Ticket</span>
             <span class="font-mono text-xs font-bold text-rose-800">${ticketId}</span>
           </div>
-          <h4 class="font-bold text-xs text-rose-950">Connecting You Directly with Dr. Ujwal Vyas & Founders</h4>
+          <h4 class="font-bold text-xs text-rose-950">Connecting You to Official Support Desk</h4>
           <p class="text-[11px] text-rose-900 leading-snug">
-            We understand your issue needs personal human mentorship. Your ticket has been dispatched to <strong>myvediqacademy@gmail.com</strong>.
+            Your ticket has been dispatched to <strong>myvediqacademy@gmail.com</strong>. Our Master Mentors Dr. Ujwal Vyas, Mr. Atish Gulhane & Mr. Swagatam Shukla will review your request.
           </p>
           <div class="pt-1 flex flex-col sm:flex-row gap-2">
-            <a href="https://wa.me/919766772819?text=Namaste%20Dr.%20Ujwal%20Vyas!%20My%20ticket%20is%20${ticketId}.%20Issue:%20${encodeURIComponent(reasonText)}" target="_blank" class="flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-[11px] transition shadow-xs flex items-center justify-center gap-1.5">
-              <span>💬 Message Dr. Vyas on WhatsApp</span>
+            <a href="https://wa.me/919766772819?text=Namaste!%20My%20ticket%20is%20${ticketId}.%20Issue:%20${encodeURIComponent(reasonText)}" target="_blank" class="flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-center font-bold text-[11px] transition shadow-xs flex items-center justify-center gap-1.5">
+              <span>💬 Message Support Desk on WhatsApp &rarr;</span>
             </a>
-            <a href="mailto:myvediqacademy@gmail.com?subject=Ticket%20${ticketId}&body=Hello%20VedIQ%20Leadership,%0A%0ATicket:%20${ticketId}%0AQuery:%20${encodeURIComponent(reasonText)}" class="py-2 px-3 rounded-lg bg-white hover:bg-rose-50 text-rose-800 border border-rose-300 font-bold text-[11px] transition text-center">
-              ✉️ Email Desk
+            <a href="mailto:myvediqacademy@gmail.com?subject=Ticket%20${ticketId}&body=Hello%20VedIQ%20Support%20Desk,%0A%0ATicket:%20${ticketId}%0AQuery:%20${encodeURIComponent(reasonText)}" class="py-2 px-3 rounded-lg bg-white hover:bg-rose-50 text-rose-800 border border-rose-300 font-bold text-[11px] transition text-center">
+              ✉️ Email Support Desk
             </a>
           </div>
         </div>
@@ -2394,7 +2384,7 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
           method: "POST",
           headers: { "Content-Type": "application/json", "Accept": "application/json" },
           body: JSON.stringify({
-            _subject: `🚨 [ESCALATION TICKET ${ticketId}] Support Issue Reported`,
+            _subject: `🚨 [SUPPORT DESK TICKET ${ticketId}] Issue Reported`,
             ticket_id: ticketId,
             issue_summary: issueText,
             timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
@@ -2406,46 +2396,7 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
       }
     }
 
-    // Live AI Generation (Google Gemini API with Fast Fallback)
-    async function queryLiveGeminiAi(prompt) {
-      const apiKey = "AIzaSyDJhKmad1sh0AUOh_oZ_W2xOOTY5Z19BaY";
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s fast timeout
-        const resp = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: controller.signal,
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  { text: `${GURUKUL_AI_SYSTEM_PROMPT}\n\nParent Question: ${prompt}` }
-                ]
-              }
-            ],
-            generationConfig: {
-              temperature: 0.6,
-              maxOutputTokens: 350
-            }
-          })
-        });
-        clearTimeout(timeoutId);
-        if (resp.ok) {
-          const data = await resp.json();
-          const candidate = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (candidate && candidate.trim()) {
-            return candidate.trim().replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-          }
-        }
-      } catch (err) {
-        console.warn("Live AI endpoint notice, using local Gurukul brain:", err);
-      }
-      return null;
-    }
-
+    // Live AI Generation (Using Universal VedIQ Conversational Intelligence)
     async function handleAiChatSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
       const input = document.getElementById('aiChatInput');
@@ -2457,12 +2408,12 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
       // 1. Show user message
       appendUserMessage(rawText);
 
-      // 2. Check if the user is explicitly complaining or asking to escalate because their problem was not solved
+      // 2. Check if the user is explicitly complaining or asking to escalate
       const lower = rawText.toLowerCase();
       const explicitUnsolvedWords = [
         'not solved', "didn't solve", 'did not solve', 'useless', 'not working', 
-        'stuck', 'talk to human', 'human', 'talk to someone', 'call me', 'complaint', 
-        'refund', 'escalate', 'dr vyas', 'swagatam', 'atish', 'fraud', 'bad', 'worst'
+        'talk to human', 'human', 'talk to someone', 'call me', 'complaint', 
+        'refund', 'escalate', 'fraud', 'worst'
       ];
       const isUnresolvedOrEscalation = explicitUnsolvedWords.some(w => lower.includes(w));
 
@@ -2471,49 +2422,23 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
         setTimeout(() => {
           removeAiTypingIndicator();
           triggerImmediateEscalation(rawText);
-        }, 500);
+        }, 400);
         return;
       }
 
-      // 3. Show typing indicator while Real AI thinks
+      // 3. Show typing indicator
       appendAiTypingIndicator();
 
-      // 4. Try Live Gemini AI first for real intelligent conversational reasoning
-      const liveAiAnswer = await queryLiveGeminiAi(rawText);
-      if (liveAiAnswer) {
-        appendAiMessage(liveAiAnswer, true, rawText);
-        return;
-      }
-
-      // 5. Intelligent Vedic Knowledge Fallback if offline
-      let bestMatch = null;
-      let highestScore = 0;
-
-      OFFLINE_AI_BRAIN.forEach(item => {
-        let score = 0;
-        item.keywords.forEach(kw => {
-          if (lower.includes(kw)) score += 1;
-        });
-        if (score > highestScore) {
-          highestScore = score;
-          bestMatch = item;
-        }
-      });
-
-      if (bestMatch && highestScore > 0) {
-        appendAiMessage(bestMatch.answer, true, rawText);
+      // 4. Generate intelligent Gurukul AI response
+      let answer = null;
+      if (window.vediqGenerateAiAnswer) {
+        answer = await window.vediqGenerateAiAnswer(rawText);
       } else {
-        // If query is totally unknown and AI cannot solve -> offer escalation!
-        appendAiMessage(`
-          <p>I want to make sure your question is addressed with complete accuracy. This specific query requires personalized guidance from our founding mentors:</p>
-          <div class="pt-2">
-            <button type="button" onclick="triggerImmediateEscalation('${encodeURIComponent(rawText)}')" class="w-full py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
-              <span>🚨 Connect Directly with Dr. Ujwal Vyas</span>
-              <span>&rarr;</span>
-            </button>
-          </div>
-        `, false);
+        const liveAi = await queryLiveGeminiAi(rawText);
+        answer = liveAi || "Namaste! Welcome to VedIQ Academy. I am your 24/7 Gurukul AI Concierge. How can I help you regarding our Free 3-Day Demo, 60-Minute routine, Tratak focus, Vedic Math, or Parent Portal?";
       }
+
+      appendAiMessage(answer, true, rawText);
     }
 
     // Init
@@ -2532,6 +2457,9 @@ Respond empathetically, thoughtfully, and educationally with scientific and Vedi
   <!-- Google Translate Backend Container & Script (Async Non-Blocking) -->
   <div id="google_translate_element" style="display:none !important;"></div>
   <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+
+  <!-- Universal 24/7 VedIQ AI Concierge & Support Desk Floating Engine -->
+  <script src="vediq-ai-concierge.js"></script>
 
 </body>
 </html>
