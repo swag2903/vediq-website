@@ -2535,18 +2535,30 @@
             recipient: "+91 " + phoneDigits,
             isFirebase: true
           };
+
+          // Show Step 2 in-modal ONLY upon confirmed SMS delivery
+          const step1 = document.getElementById('forgotStep1');
+          const step2 = document.getElementById('forgotStep2');
+          const recipientLabel = document.getElementById('forgotRecipientLabel');
+          if (recipientLabel) recipientLabel.innerText = "+91 " + phoneDigits;
+          if (step1) step1.classList.add('hidden');
+          if (step2) step2.classList.remove('hidden');
+          return;
         } catch (e) {
           console.warn("Firebase carrier SMS for password reset:", e);
+          if (err1) {
+            err1.innerHTML = "SMS delivery is currently unavailable: " + (e.message || "Failed to dispatch SMS") + ".<br>Please reset your password using your registered Email address or use Continue with Google.";
+            err1.classList.remove('hidden');
+          }
+          return;
         }
+      } else {
+        if (err1) {
+          err1.innerHTML = "Mobile SMS service is not active on this session. Please reset your password via Email or use 1-Click Google Sign-In.";
+          err1.classList.remove('hidden');
+        }
+        return;
       }
-
-      // Show Step 2 in-modal (Enter 6-digit code & set new password)
-      const step1 = document.getElementById('forgotStep1');
-      const step2 = document.getElementById('forgotStep2');
-      const recipientLabel = document.getElementById('forgotRecipientLabel');
-      if (recipientLabel) recipientLabel.innerText = "+91 " + phoneDigits;
-      if (step1) step1.classList.add('hidden');
-      if (step2) step2.classList.remove('hidden');
 
       setTimeout(() => {
         const otpInp = document.getElementById('forgotOtpInput');
@@ -2979,7 +2991,7 @@
 
       if (result && !result.success) {
         if (err) {
-          err.innerHTML = `⚠️ <strong>Mobile OTP failed:</strong> ${result.error || 'Please try again later.'}`;
+          err.innerHTML = "<strong>Mobile SMS OTP notice:</strong> " + (result.error || "SMS delivery failed.") + "<br><div class='mt-2.5 p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-brand-ink space-y-1 text-left'><div class='font-bold text-brand-ochre'>Quick Login Alternatives:</div><div>* Click <strong>\"Continue with Google\"</strong> below for instant 1-click login (no OTP needed).</div><div>* Or enter your registered <strong>Email address</strong> above to receive an instant verification code.</div></div>";
           err.classList.remove('hidden');
         }
         if (phoneField) phoneField.focus();

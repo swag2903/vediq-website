@@ -157,7 +157,11 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
     </html>
   `;
 
-  const sender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
+  let sender = process.env.RESEND_FROM_EMAIL || "VedIQ Academy <support@vediqacademy.com>";
+  if (!sender.includes("<") && sender.includes("@")) {
+    sender = `VedIQ Academy <${sender.trim()}>`;
+  }
+  const replyTo = process.env.RESEND_REPLY_TO || "myvediqacademy@gmail.com";
 
   try {
     const resp = await fetch("https://api.resend.com/emails", {
@@ -168,6 +172,7 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
       },
       body: JSON.stringify({
         from: sender,
+        reply_to: replyTo,
         to: [toEmail],
         subject: emailSubject,
         html: emailHtml
@@ -185,6 +190,85 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
   } catch (err) {
     return { success: false, error: err.message || "Network error contacting email provider" };
   }
+}
+
+/**
+ * Deliver Mobile SMS OTP via Configured Indian SMS Gateways (Fast2SMS / MSG91 / Twilio)
+ */
+async function sendSmsViaProvider(phoneDigits, otpCode) {
+  // Provider 1: Fast2SMS (Direct Indian Quick OTP API)
+  if (process.env.FAST2SMS_API_KEY) {
+    try {
+      const apiKey = process.env.FAST2SMS_API_KEY.trim();
+      const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=otp&variables_values=${encodeURIComponent(otpCode)}&flash=0&numbers=${encodeURIComponent(phoneDigits)}`;
+      const resp = await fetch(url, { headers: { "cache-control": "no-cache" } });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data && (data.return === true || data.status_code === 200)) {
+        return { success: true, provider: "Fast2SMS" };
+      } else {
+        const msg = (data && data.message && Array.isArray(data.message)) ? data.message.join(", ") : (data.message || `HTTP ${resp.status}`);
+        return { success: false, configured: true, error: `Fast2SMS dispatch error: ${msg}` };
+      }
+    } catch (e) {
+      return { success: false, configured: true, error: `Fast2SMS network error: ${e.message}` };
+    }
+  }
+
+  // Provider 2: MSG91 (DLT Compliant India OTP Route)
+  if (process.env.MSG91_AUTH_KEY) {
+    try {
+      const authKey = process.env.MSG91_AUTH_KEY.trim();
+      const templateId = (process.env.MSG91_TEMPLATE_ID || "").trim();
+      const url = `https://control.msg91.com/api/v5/otp?template_id=${encodeURIComponent(templateId)}&mobile=91${encodeURIComponent(phoneDigits)}&authkey=${encodeURIComponent(authKey)}&otp=${encodeURIComponent(otpCode)}`;
+      const resp = await fetch(url, { method: "POST" });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data && (data.type === "success" || data.message === "OTP sent successfully")) {
+        return { success: true, provider: "MSG91" };
+      } else {
+        return { success: false, configured: true, error: `MSG91 dispatch error: ${data.message || resp.status}` };
+      }
+    } catch (e) {
+      return { success: false, configured: true, error: `MSG91 network error: ${e.message}` };
+    }
+  }
+
+  // Provider 3: Twilio
+  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
+    try {
+      const sid = process.env.TWILIO_ACCOUNT_SID.trim();
+      const token = process.env.TWILIO_AUTH_TOKEN.trim();
+      const fromNum = process.env.TWILIO_PHONE_NUMBER.trim();
+      const auth = Buffer.from(`${sid}:${token}`).toString("base64");
+      const form = new URLSearchParams();
+      form.append("To", `+91${phoneDigits}`);
+      form.append("From", fromNum);
+      form.append("Body", `VedIQ Academy: Your login verification code is ${otpCode}. Valid for 2 minutes.`);
+
+      const resp = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(sid)}/Messages.json`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: form.toString()
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data && data.sid) {
+        return { success: true, provider: "Twilio" };
+      } else {
+        return { success: false, configured: true, error: `Twilio dispatch error: ${data.message || resp.status}` };
+      }
+    } catch (e) {
+      return { success: false, configured: true, error: `Twilio network error: ${e.message}` };
+    }
+  }
+
+  // No carrier SMS provider is configured in environment variables
+  return {
+    success: false,
+    configured: false,
+    error: "Mobile SMS gateway is not configured on the server. Please sign in instantly using 'Continue with Google', or enter your registered Email address to receive an instant OTP code."
+  };
 }
 
 exports.handler = async (event) => {
@@ -247,8 +331,31 @@ exports.handler = async (event) => {
             statusCode: 502,
             headers,
             body: JSON.stringify({
+              success: false,
               error: `Email delivery failed: ${mailResult.error}`,
               configured: !mailResult.error.includes("not configured")
+            })
+          };
+        }
+      } else {
+        const phoneDigits = recipient.replace(/\D/g, '').slice(-10);
+        if (phoneDigits.length !== 10) {
+          return {
+            statusCode: 400,
+            headers,
+            body: JSON.stringify({ success: false, error: "Invalid 10-digit Indian mobile number." })
+          };
+        }
+
+        const smsResult = await sendSmsViaProvider(phoneDigits, code);
+        if (!smsResult.success) {
+          return {
+            statusCode: smsResult.configured ? 502 : 503,
+            headers,
+            body: JSON.stringify({
+              success: false,
+              error: smsResult.error,
+              isSmsConfigured: smsResult.configured || false
             })
           };
         }

@@ -3,7 +3,10 @@
  * Works seamlessly on Vercel and Netlify.
  * Cryptographically issues, rate-limits, and verifies OTP sessions server-side.
  * Issues 30-day cryptographically signed Bearer Session Tokens for verified parents.
- * Delivers 6-digit OTP codes via Resend API (process.env.RESEND_API_KEY).
+ * Delivers 6-digit OTP codes via:
+ * 1. Resend API (Email delivery)
+ * 2. Fast2SMS / MSG91 / Twilio (Indian +91 SMS delivery)
+ * Returns genuine, verifiable delivery statuses without faking SMS acceptance.
  */
 
 const crypto = require("crypto");
@@ -84,6 +87,9 @@ function createSessionToken(recipient) {
   })).toString("base64");
 }
 
+/**
+ * Deliver Email OTP via Resend API
+ */
 async function sendEmailViaResend(toEmail, otpCode, apiKey) {
   if (!apiKey) {
     return {
@@ -184,9 +190,88 @@ async function sendEmailViaResend(toEmail, otpCode, apiKey) {
   }
 }
 
+/**
+ * Deliver Mobile SMS OTP via Configured Indian SMS Gateways (Fast2SMS / MSG91 / Twilio)
+ */
+async function sendSmsViaProvider(phoneDigits, otpCode) {
+  // Provider 1: Fast2SMS (Direct Indian Quick OTP API)
+  if (process.env.FAST2SMS_API_KEY) {
+    try {
+      const apiKey = process.env.FAST2SMS_API_KEY.trim();
+      const url = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(apiKey)}&route=otp&variables_values=${encodeURIComponent(otpCode)}&flash=0&numbers=${encodeURIComponent(phoneDigits)}`;
+      const resp = await fetch(url, { headers: { "cache-control": "no-cache" } });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data && (data.return === true || data.status_code === 200)) {
+        return { success: true, provider: "Fast2SMS" };
+      } else {
+        const msg = (data && data.message && Array.isArray(data.message)) ? data.message.join(", ") : (data.message || `HTTP ${resp.status}`);
+        return { success: false, configured: true, error: `Fast2SMS dispatch error: ${msg}` };
+      }
+    } catch (e) {
+      return { success: false, configured: true, error: `Fast2SMS network error: ${e.message}` };
+    }
+  }
+
+  // Provider 2: MSG91 (DLT Compliant India OTP Route)
+  if (process.env.MSG91_AUTH_KEY) {
+    try {
+      const authKey = process.env.MSG91_AUTH_KEY.trim();
+      const templateId = (process.env.MSG91_TEMPLATE_ID || "").trim();
+      const url = `https://control.msg91.com/api/v5/otp?template_id=${encodeURIComponent(templateId)}&mobile=91${encodeURIComponent(phoneDigits)}&authkey=${encodeURIComponent(authKey)}&otp=${encodeURIComponent(otpCode)}`;
+      const resp = await fetch(url, { method: "POST" });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data && (data.type === "success" || data.message === "OTP sent successfully")) {
+        return { success: true, provider: "MSG91" };
+      } else {
+        return { success: false, configured: true, error: `MSG91 dispatch error: ${data.message || resp.status}` };
+      }
+    } catch (e) {
+      return { success: false, configured: true, error: `MSG91 network error: ${e.message}` };
+    }
+  }
+
+  // Provider 3: Twilio
+  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
+    try {
+      const sid = process.env.TWILIO_ACCOUNT_SID.trim();
+      const token = process.env.TWILIO_AUTH_TOKEN.trim();
+      const fromNum = process.env.TWILIO_PHONE_NUMBER.trim();
+      const auth = Buffer.from(`${sid}:${token}`).toString("base64");
+      const form = new URLSearchParams();
+      form.append("To", `+91${phoneDigits}`);
+      form.append("From", fromNum);
+      form.append("Body", `VedIQ Academy: Your login verification code is ${otpCode}. Valid for 2 minutes.`);
+
+      const resp = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(sid)}/Messages.json`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: form.toString()
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data && data.sid) {
+        return { success: true, provider: "Twilio" };
+      } else {
+        return { success: false, configured: true, error: `Twilio dispatch error: ${data.message || resp.status}` };
+      }
+    } catch (e) {
+      return { success: false, configured: true, error: `Twilio network error: ${e.message}` };
+    }
+  }
+
+  // No carrier SMS provider is configured in environment variables
+  return {
+    success: false,
+    configured: false,
+    error: "Mobile SMS gateway is not configured on the server. Please sign in instantly using 'Continue with Google', or enter your registered Email address to receive an instant OTP code."
+  };
+}
+
 // Universal handler supporting both Vercel (req, res) and Netlify/AWS (event)
 const handler = async (req, res) => {
-  // If invoked in standard Node (Vercel) style
+  // Standard Node (Vercel) style
   if (req.method) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -219,12 +304,29 @@ const handler = async (req, res) => {
         const timestamp = Date.now();
         const expiresAt = timestamp + (OTP_TTL_SECONDS * 1000);
 
+        // 1. Email OTP via Resend
         if (recipient.includes("@")) {
           const mailResult = await sendEmailViaResend(recipient, code, process.env.RESEND_API_KEY);
           if (!mailResult.success) {
             return res.status(502).json({
+              success: false,
               error: `Email delivery failed: ${mailResult.error}`,
               configured: !mailResult.error.includes("not configured")
+            });
+          }
+        } else {
+          // 2. Mobile SMS OTP
+          const phoneDigits = recipient.replace(/\D/g, '').slice(-10);
+          if (phoneDigits.length !== 10) {
+            return res.status(400).json({ success: false, error: "Invalid 10-digit mobile number. Please enter a valid Indian number." });
+          }
+
+          const smsResult = await sendSmsViaProvider(phoneDigits, code);
+          if (!smsResult.success) {
+            return res.status(smsResult.configured ? 502 : 503).json({
+              success: false,
+              error: smsResult.error,
+              isSmsConfigured: smsResult.configured || false
             });
           }
         }
@@ -300,22 +402,19 @@ const handler = async (req, res) => {
         return res.status(200).json({
           success: true,
           sessionToken: sessionToken,
-          recipient: recipient
+          message: "Session successfully created."
         });
       }
 
-      return res.status(400).json({ error: "Invalid action" });
+      return res.status(400).json({ error: `Unknown action: ${action}` });
     } catch (err) {
-      return res.status(500).json({ error: "Internal server error processing OTP" });
+      console.error("OTP handler exception:", err);
+      return res.status(500).json({ error: "Internal server error during verification: " + err.message });
     }
   }
 
-  // AWS/Netlify Event fallback
-  return {
-    statusCode: 200,
-    headers: { "Access-Control-Allow-Origin": "*" },
-    body: JSON.stringify({ ok: true })
-  };
+  // Netlify / AWS Lambda event style fallback
+  return { statusCode: 200, body: JSON.stringify({ ok: true }) };
 };
 
 module.exports = handler;
