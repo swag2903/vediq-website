@@ -2469,20 +2469,11 @@
           provider.addScope('profile');
           provider.setCustomParameters({ prompt: 'select_account' });
 
-          try {
-            // Smooth Seamless Redirect (No popup mini-window, no exposed URL bar parameters)
-            if (btnText) btnText.innerText = "Redirecting to Google...";
-            sessionStorage.setItem('vediq_google_auth_active', 'true');
-            window.userClickedGoogleAuth = true;
-            await firebase.auth().signInWithRedirect(provider);
+          const result = await firebase.auth().signInWithPopup(provider);
+          if (result && result.user) {
+            if (btnText) btnText.innerText = "Welcome " + (result.user.displayName || "Parent") + "!";
+            handleSuccessfulGoogleLogin(result.user);
             return;
-          } catch (redirectError) {
-            console.warn("Redirect error, trying popup fallback:", redirectError);
-            const result = await firebase.auth().signInWithPopup(provider);
-            if (result && result.user) {
-              handleSuccessfulGoogleLogin(result.user);
-              return;
-            }
           }
         }
       } catch (err) {
@@ -2626,47 +2617,38 @@
           return;
         }
 
-        // 2. User exists: strictly verify password!
+        // 2. User exists: verify password!
         const correctPassword = match.password || "password123";
+        const isPasswordCorrect = (password === correctPassword);
 
-        // If registered with Firebase email/password
-        if (identifier.includes('@') && typeof firebase !== 'undefined' && firebase.auth) {
-          initFirebase();
-          try {
-            const res = await firebase.auth().signInWithEmailAndPassword(identifier, password);
-            if (res && res.user) {
-              localStorage.setItem('vediq_remembered_identifier', match.email || identifier);
-              localStorage.setItem('vediq_remember_me', 'true');
-              loadDashboardForStudent(match);
-              restoreBtn();
-              return;
-            }
-          } catch (fbErr) {
-            if (fbErr.code === 'auth/wrong-password' || fbErr.code === 'auth/invalid-credential') {
-              showLoginError("Incorrect password. Please enter the correct password or sign in with OTP.");
-              restoreBtn();
-              return;
-            }
+        if (!isPasswordCorrect) {
+          // If local password didn't match, check if they set a password in Firebase
+          let fbSuccess = false;
+          if (identifier.includes('@') && typeof firebase !== 'undefined' && firebase.auth) {
+            initFirebase();
+            try {
+              const res = await firebase.auth().signInWithEmailAndPassword(identifier, password);
+              if (res && res.user) fbSuccess = true;
+            } catch (fbErr) {}
+          }
+          if (!fbSuccess) {
+            showLoginError("Incorrect password. Default password is 'password123'. Or tap 'Sign in with OTP' below.");
+            restoreBtn();
+            return;
           }
         }
 
-        if (password !== correctPassword) {
-          showLoginError("Incorrect password. Please enter the correct password or sign in with OTP.");
-          restoreBtn();
-          return;
-        }
-
-        // Remember email/identifier permanently in browser storage
+        // Credentials verified -> Save session & enter Gurukul Dashboard!
         const rememberCheck = document.getElementById('rememberMeCheck');
         const shouldRemember = rememberCheck ? rememberCheck.checked : true;
         if (shouldRemember) {
-          localStorage.setItem('vediq_remembered_identifier', identifier);
+          localStorage.setItem('vediq_remembered_identifier', match.email || identifier);
           localStorage.setItem('vediq_remember_me', 'true');
         }
 
-        // Correct credentials -> Log in!
         loadDashboardForStudent(match);
         restoreBtn();
+        return;
       } catch (err) {
         restoreBtn();
       }
