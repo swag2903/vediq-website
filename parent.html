@@ -2653,7 +2653,7 @@
     }
 
     // Toggle between Sign In mode and Registration mode (Tab-aware)
-    let regChildMode = 'new';
+    var regChildMode = 'new';
     window.toggleRegChildMode = function() {
       const newChildBox = document.getElementById('regModeNewChild');
       const linkChildBox = document.getElementById('regModeLinkChild');
@@ -2728,6 +2728,7 @@
     // ==========================================
     let forgotResetSession = null;
 
+    window.openForgotPasswordModal = function() { openForgotPasswordModal(); };
     function openForgotPasswordModal() {
       const modal = document.getElementById('forgotPasswordModal');
       const step1 = document.getElementById('forgotStep1');
@@ -2931,6 +2932,7 @@
     // ==========================================
     window.userClickedGoogleAuth = false;
 
+
     async function startGoogleAuth() {
       window.userClickedGoogleAuth = true;
       const btnText = document.getElementById('btnGoogleText');
@@ -3080,6 +3082,8 @@
     }
 
     // Handle Login Form Submit (Strict Password Verification + Fast Loading Feedback)
+    window.handleLoginSubmit = function(e) { return handleLoginSubmit(e); };
+    window.clearLoginError = function() { clearLoginError(); };
     async function handleLoginSubmit(e) {
       if (e && e.preventDefault) e.preventDefault();
 
@@ -3223,6 +3227,7 @@
     }
 
     // Trigger OTP Flow for Email & Phone (Official VedIQ Security Engine)
+    window.triggerOtpSignIn = function() { triggerOtpSignIn(); };
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       let identifier = idInput ? idInput.value.trim() : "";
@@ -3896,6 +3901,7 @@
     }
 
     // Execute Parent Registration (Supports Dual Login, SHA-256 Hashing & Co-Parent Linking)
+    window.executeParentRegistration = function(e) { return executeParentRegistration(e); };
     async function executeParentRegistration(e) {
       if (e && e.preventDefault) e.preventDefault();
       const regBtn = document.getElementById('btnSubmitRegistration');
@@ -4251,6 +4257,7 @@
         localStorage.removeItem('vediq_session_token');
         localStorage.removeItem('vediq_current_session');
         window.userClickedGoogleAuth = false;
+
         closeFirstTimeOnboardingModal();
         if (typeof firebase !== 'undefined' && firebase.auth) {
           try { firebase.auth().signOut(); } catch (e) {}
@@ -4484,7 +4491,7 @@
     // ==========================================
     // REGISTRATION CHILD PROFILE MODE SWITCHER
     // ==========================================
-    let regChildMode = "new"; // "new" or "link"
+    regChildMode = regChildMode || "new"; // "new" or "link"
 
     function toggleRegChildMode() {
       const modeNew = document.getElementById("regModeNewChild");
@@ -5144,6 +5151,10 @@
       if (input && rememberedId) {
         input.value = rememberedId;
       }
+    });
+    // DOMContentLoaded closed
+    if (true) {
+      }
 
           // ==========================================
     // GURUKUL COURSE VIDEOS & STUDY NOTES ENGINE
@@ -5774,6 +5785,7 @@
     }
 
     // Close modals on Escape key
+    [1].forEach(() => {
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           closeFirstTimeOnboardingModal();
