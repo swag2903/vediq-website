@@ -644,6 +644,12 @@
         <div class="text-slate-400">
           Admissions Helpline: +91 98000 00000 • admissions@vediqacademy.com
         </div>
+        <div class="pt-2">
+          <a href="teacher.html" class="inline-flex items-center gap-1.5 text-[11px] font-bold text-brand-ochre hover:underline">
+            <span>🔐 Teacher &amp; Mentor Console</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
       </div>
 
     </div>
@@ -814,10 +820,10 @@
                   <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg">🕯️</div>
                   <div>
                     <div class="text-xs font-bold text-brand-ink">Tratak Flame Focus (15m)</div>
-                    <div class="text-[11px] text-brand-muted">Steady gaze: <strong class="text-emerald-600">3 min 20 sec</strong></div>
+                    <div class="text-[11px] text-brand-muted">Steady gaze: <strong id="dashTratakStat" class="text-emerald-600">0s (Baseline)</strong></div>
                   </div>
                 </div>
-                <input type="checkbox" id="habitCheck0" checked onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
+                <input type="checkbox" id="habitCheck0" onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
               </div>
 
               <!-- Habit 2: Vedic Math -->
@@ -826,10 +832,10 @@
                   <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-800 flex items-center justify-center text-lg">🔢</div>
                   <div>
                     <div class="text-xs font-bold text-brand-ink">Vedic Speed Math (20m)</div>
-                    <div class="text-[11px] text-brand-muted">Sutra: Ekadhikena • <strong class="text-brand-ochre">24 sums/min</strong></div>
+                    <div class="text-[11px] text-brand-muted">Sutra: Ekadhikena • <strong id="dashMathStat" class="text-brand-ochre">0 sums/min</strong></div>
                   </div>
                 </div>
-                <input type="checkbox" id="habitCheck1" checked onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
+                <input type="checkbox" id="habitCheck1" onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
               </div>
 
               <!-- Habit 3: Sanskrit Shloka -->
@@ -841,7 +847,7 @@
                     <div class="text-[11px] text-brand-muted">Gita Chapter 2 (Verses 1–10)</div>
                   </div>
                 </div>
-                <input type="checkbox" id="habitCheck2" checked onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
+                <input type="checkbox" id="habitCheck2" onchange="updateHabitCount()" class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
               </div>
 
               <!-- Habit 4: Neuroscience Reflection -->
@@ -867,8 +873,8 @@
                 <span class="text-xl">🎙️</span>
                 <h4 class="font-bold text-xs uppercase tracking-wider text-brand-ink">Head Mentor Voice Feedback • Dr. Ujwal Vyas</h4>
               </div>
-              <p class="text-xs text-brand-muted italic leading-relaxed">
-                "Child was remarkably calm and attentive in today's Gurukul Tratak session. Gaze steadiness and short-term memory showed excellent progress."
+              <p id="dashMentorQuote" class="text-xs text-brand-muted italic leading-relaxed">
+                "Welcome to VedIQ Gurukul! Daily practice and mentor evaluation will update here as your child completes each live class."
               </p>
               
               <!-- Real HTML5 Web Audio Synthesizer / Player -->
@@ -968,7 +974,7 @@
             <div class="bg-white rounded-3xl p-6 border border-brand-border shadow-sm space-y-3">
               <h4 class="font-bold text-sm text-brand-ink">Vedic Mental Math Velocity</h4>
               <p class="text-xs text-brand-muted">Equations mentally solved per minute</p>
-              <div class="text-3xl font-extrabold text-brand-ochre font-display">24 sums/min</div>
+              <div id="dashMathVelocity" class="text-3xl font-extrabold text-brand-ochre font-display">0 sums/min</div>
               <div class="p-3 rounded-xl bg-brand-cream border border-brand-border text-xs flex justify-between">
                 <span>Speed Accuracy:</span>
                 <strong class="text-emerald-700 font-bold">96.4% (Top 2% in cohort)</strong>
@@ -1027,11 +1033,11 @@
               </div>
               <div class="p-3.5 bg-white/80 rounded-xl border border-brand-border">
                 <span class="text-brand-muted">Overall Cognitive Grade:</span>
-                <div class="font-bold text-sm text-emerald-700 mt-0.5">Grade A+ (Distinction with Honors)</div>
+                <div id="reportGrade" class="font-bold text-sm text-emerald-700 mt-0.5">Baseline in Progress</div>
               </div>
               <div class="p-3.5 bg-white/80 rounded-xl border border-brand-border">
                 <span class="text-brand-muted">Tratak Focus Gaze:</span>
-                <div class="font-bold text-sm text-brand-ink mt-0.5">3 mins 30 secs (Level 3 Certified)</div>
+                <div id="reportTratak" class="font-bold text-sm text-brand-ink mt-0.5">0s (Baseline Session)</div>
               </div>
               <div class="p-3.5 bg-white/80 rounded-xl border border-brand-border">
                 <span class="text-brand-muted">Head Mentor Sign:</span>
@@ -1160,6 +1166,14 @@
             <span class="text-base">🚪</span>
             <span>Logout from Parent Portal</span>
           </button>
+        </div>
+
+        <!-- Staff Portal Access Link -->
+        <div class="pt-6 pb-2 text-center border-t border-brand-border">
+          <a href="teacher.html" class="inline-flex items-center gap-2 text-xs font-semibold text-brand-muted hover:text-brand-ochre transition">
+            <span>🔐 Teacher &amp; Mentor Console</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
         </div>
 
       </div>
@@ -1777,18 +1791,26 @@
             childName: "Aarav Sharma",
             childGrade: "Ages 8-11 • Pravesh",
             batch: "Daily 5:00 PM – 6:00 PM IST",
-            focusScore: "88",
-            streak: "18",
-            habits: [true, true, true, false]
+            focusScore: "0",
+            streak: "0",
+            habits: [false, false, false, false],
+            tratakGaze: "0s (Day 1 Baseline)",
+            mathVelocity: "0 sums/min",
+            cognitiveGrade: "Baseline in Progress",
+            mentorNotes: "Welcome to VedIQ Gurukul! Daily cognitive evaluation starts from Day 1."
           },
           {
             childId: "VED-2026-102",
             childName: "Diya Sharma",
             childGrade: "Ages 5-7 • Foundation",
             batch: "Daily 4:00 PM – 5:00 PM IST",
-            focusScore: "92",
-            streak: "12",
-            habits: [true, true, false, false]
+            focusScore: "0",
+            streak: "0",
+            habits: [false, false, false, false],
+            tratakGaze: "0s (Day 1 Baseline)",
+            mathVelocity: "0 sums/min",
+            cognitiveGrade: "Baseline in Progress",
+            mentorNotes: "Welcome to VedIQ Gurukul! Daily cognitive evaluation starts from Day 1."
           }
         ]
       },
@@ -1805,18 +1827,13 @@
             childName: "Ananya Patel",
             childGrade: "Ages 5-7 • Foundation",
             batch: "Daily 4:00 PM – 5:00 PM IST",
-            focusScore: "94",
-            streak: "24",
-            habits: [true, true, true, true]
-          },
-          {
-            childId: "VED-2026-202",
-            childName: "Rohan Patel",
-            childGrade: "Ages 12-15 • Daksha",
-            batch: "Daily 6:00 PM – 7:00 PM IST",
-            focusScore: "96",
-            streak: "30",
-            habits: [true, true, true, false]
+            focusScore: "0",
+            streak: "0",
+            habits: [false, false, false, false],
+            tratakGaze: "0s (Day 1 Baseline)",
+            mathVelocity: "0 sums/min",
+            cognitiveGrade: "Baseline in Progress",
+            mentorNotes: "Welcome to VedIQ Gurukul! Daily cognitive evaluation starts from Day 1."
           }
         ]
       }
@@ -1838,9 +1855,13 @@
         childName: profile.childName || "Your Child",
         childGrade: profile.childGrade || "Ages 8-11 • Pravesh",
         batch: profile.batch || "Daily 5:00 PM – 6:00 PM IST",
-        focusScore: profile.focusScore || "90",
-        streak: profile.streak || "1",
-        habits: profile.habits || [false, false, false, false]
+        focusScore: profile.focusScore || "0",
+        streak: profile.streak || "0",
+        habits: profile.habits || [false, false, false, false],
+        tratakGaze: profile.tratakGaze || "0s (Day 1 Baseline)",
+        mathVelocity: profile.mathVelocity || "0 sums/min",
+        cognitiveGrade: profile.cognitiveGrade || "Baseline in Progress",
+        mentorNotes: profile.mentorNotes || "Welcome to VedIQ Gurukul! Daily cognitive evaluation starts from Day 1."
       };
       profile.children = [legacyChild];
       profile.activeChildIndex = 0;
@@ -3035,9 +3056,13 @@
         childName: childName,
         childGrade: childGrade,
         batch: "Daily 5:00 PM – 6:00 PM IST",
-        focusScore: "90",
-        streak: "1",
-        habits: [false, false, false, false]
+        focusScore: "0",
+        streak: "0",
+        habits: [false, false, false, false],
+        tratakGaze: "0s (Day 1 Baseline)",
+        mathVelocity: "0 sums/min",
+        cognitiveGrade: "Baseline in Progress",
+        mentorNotes: "Welcome to VedIQ Gurukul! Daily cognitive evaluations will update here as your child completes each live class."
       };
 
       const newParent = {
@@ -3055,7 +3080,7 @@
       loadDashboardForStudent(newParent);
     }
 
-    // Load Dashboard with Active Student (Supports Multi-Child Switcher)
+    // Load Dashboard with Active Student (Supports Multi-Child Switcher & Dynamic Baseline)
     function loadDashboardForStudent(parentProfile) {
       if (!parentProfile) return;
       normalizeParentProfile(parentProfile);
@@ -3071,8 +3096,35 @@
       document.getElementById('dashStudentId').innerText = "ID: " + (activeChild.childId || "VED-2026-101");
       document.getElementById('dashBatchText').innerText = "Batch: " + (activeChild.batch || "Daily 5:00 PM – 6:00 PM IST");
       document.getElementById('reportStudentName').innerText = cName;
-      document.getElementById('dashFocusScore').innerHTML = `${activeChild.focusScore || "90"} <span class="text-xs text-slate-400 font-normal">/100</span>`;
-      document.getElementById('dashStreakCount').innerText = `🔥 ${activeChild.streak || "1"} Days`;
+
+      // Dynamic Scores & Baseline Values
+      const focusVal = activeChild.focusScore !== undefined ? String(activeChild.focusScore) : "0";
+      const streakVal = activeChild.streak !== undefined ? String(activeChild.streak) : "0";
+      const tratakVal = activeChild.tratakGaze || (focusVal === "0" ? "0s (Day 1 Baseline)" : "3 min 20 sec");
+      const mathVal = activeChild.mathVelocity || (focusVal === "0" ? "0 sums/min" : "24 sums/min");
+      const gradeVal = activeChild.cognitiveGrade || (focusVal === "0" ? "Baseline in Progress" : "Grade A+ (Distinction with Honors)");
+      const mentorVal = activeChild.mentorNotes || (focusVal === "0" ? "Welcome to VedIQ Gurukul! Daily practice and mentor evaluation will update here as your child completes each live class." : "Child was remarkably calm and attentive in today's Gurukul Tratak session.");
+
+      document.getElementById('dashFocusScore').innerHTML = `${focusVal} <span class="text-xs text-slate-400 font-normal">/100</span>`;
+      document.getElementById('dashStreakCount').innerText = `🔥 ${streakVal} Days`;
+
+      const tratakEl = document.getElementById('dashTratakStat');
+      if (tratakEl) tratakEl.innerText = tratakVal;
+
+      const mathEl = document.getElementById('dashMathStat');
+      if (mathEl) mathEl.innerText = mathVal;
+
+      const mentorEl = document.getElementById('dashMentorQuote');
+      if (mentorEl) mentorEl.innerText = `"${mentorVal}"`;
+
+      const repGradeEl = document.getElementById('reportGrade');
+      if (repGradeEl) repGradeEl.innerText = gradeVal;
+
+      const repTratakEl = document.getElementById('reportTratak');
+      if (repTratakEl) repTratakEl.innerText = tratakVal;
+
+      const mathVelEl = document.getElementById('dashMathVelocity');
+      if (mathVelEl) mathVelEl.innerText = mathVal;
 
       const initials = cName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || "ST";
       document.getElementById('dashAvatarText').innerText = initials;
@@ -3249,9 +3301,13 @@
         childName: childName,
         childGrade: childGrade,
         batch: batch,
-        focusScore: "90",
-        streak: "1",
-        habits: [false, false, false, false]
+        focusScore: "0",
+        streak: "0",
+        habits: [false, false, false, false],
+        tratakGaze: "0s (Day 1 Baseline)",
+        mathVelocity: "0 sums/min",
+        cognitiveGrade: "Baseline in Progress",
+        mentorNotes: "Welcome to VedIQ Gurukul! Daily practice and mentor evaluation will update here as your child completes each live class."
       };
 
       activeStudent.children.push(newChild);
@@ -3368,9 +3424,13 @@
         childName: c1Name,
         childGrade: c1Grade,
         batch: c1Batch,
-        focusScore: "90",
-        streak: "1",
-        habits: [false, false, false, false]
+        focusScore: "0",
+        streak: "0",
+        habits: [false, false, false, false],
+        tratakGaze: "0s (Day 1 Baseline)",
+        mathVelocity: "0 sums/min",
+        cognitiveGrade: "Baseline in Progress",
+        mentorNotes: "Welcome to VedIQ Gurukul! Daily practice and mentor evaluation will update here as your child completes each live class."
       };
 
       pendingOnboardingProfile.children = [firstChild];
