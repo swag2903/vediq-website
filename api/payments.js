@@ -48,7 +48,11 @@ async function triggerEmailReceiptAsync(payment, apiKey, fromEmail) {
     return;
   }
 
-  const sender = fromEmail || "onboarding@resend.dev";
+  let sender = fromEmail || "VedIQ Academy <support@vediqacademy.com>";
+  if (!sender.includes("<") && sender.includes("@")) {
+    sender = `VedIQ Academy <${sender.trim()}>`;
+  }
+  const replyTo = process.env.RESEND_REPLY_TO || "myvediqacademy@gmail.com";
   const receiptUrl = `https://vediqacademy.com/parent.html?receipt=${payment.receiptNumber}`;
 
   const emailHtml = `
