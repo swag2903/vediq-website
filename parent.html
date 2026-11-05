@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
@@ -830,7 +830,7 @@
 
         <button onclick="switchDashTab('fees')" id="side-fees" class="sidebar-btn w-full py-3 px-4 rounded-xl text-left text-xs font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition flex items-center gap-3">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-          <span>Tuition & GST Invoices</span>
+          <span>Tuition &amp; Fee Receipts</span>
         </button>
         <button onclick="switchDashTab('videos')" id="mob-videos" class="sidebar-btn shrink-0 px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-muted shadow-xs flex items-center gap-1.5">
           <span>ðŸ“š</span>
@@ -1221,49 +1221,123 @@
 
         </section>
 
-        <!-- ================= TAB 5: FEES & INVOICES ================= -->
+                <!-- ================= TAB 5: FEES & INVOICES ================= -->
         <section id="dashTab-fees" class="tab-content space-y-6">
           
-          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-sm space-y-4">
-            <div class="flex items-center justify-between pb-3 border-b border-brand-border">
+          <!-- Tuition Fee & Plan Card -->
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-sm space-y-5">
+            <div class="flex items-start sm:items-center justify-between pb-3 border-b border-brand-border gap-2 flex-wrap">
               <div>
-                <h3 class="font-bold text-base text-brand-ink">Monthly Gurukul Tuition Fee</h3>
-                <p class="text-xs text-brand-muted">Auto-invoiced on 1st of every month</p>
+                <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-brand-ochre/15 text-brand-ochre text-[10px] font-bold uppercase tracking-wider mb-1">
+                  <span>ðŸ’³ Tuition Center</span>
+                  <span>â€¢</span>
+                  <span>UPI QR &amp; Tax Invoices</span>
+                </div>
+                <h3 class="font-bold text-base sm:text-lg text-brand-ink">Monthly Gurukul Tuition Fee</h3>
+                <p class="text-xs text-brand-muted">Auto-invoiced on 1st of every month â€¢ Zero processing fees</p>
               </div>
-              <span class="px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-lg">Active Enrolled</span>
+              <span id="tuitionStatusBadge" class="px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-lg shadow-2xs">
+                Active Enrolled
+              </span>
             </div>
 
+            <!-- Active Pending Verification Alert (Shown dynamically when a UTR is awaiting verification) -->
+            <div id="parentPendingUtrCard" class="hidden p-4 rounded-2xl bg-amber-50 border border-amber-300 text-amber-950 space-y-2 text-xs shadow-xs">
+              <div class="flex items-center justify-between gap-2">
+                <span class="font-extrabold uppercase tracking-wider text-[10px] px-2 py-0.5 rounded-full bg-amber-500 text-white">
+                  â³ Verification in Progress
+                </span>
+                <span id="pendingUtrTimestamp" class="text-[10px] text-amber-800 font-semibold">Today</span>
+              </div>
+              <p class="text-xs leading-relaxed">
+                You have submitted UPI Reference (UTR) <strong id="pendingUtrDisplay" class="font-mono bg-white/70 px-1.5 py-0.5 rounded border border-amber-300"></strong> for <strong>₹1,499</strong>. Master Mentors verify submissions against bank credits within 2 to 4 hours. Your official tuition fee receipt will appear below upon approval.
+              </p>
+            </div>
+
+            <!-- Plan Selection Chips -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-brand-ink uppercase tracking-wider">Select Cohort Plan Tier</label>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div onclick="selectParentFeeTier('basic', 999, 'Basic Tier (1 Hour / Day)')" id="tierCard-basic" class="p-3.5 rounded-2xl border border-brand-border hover:border-brand-ochre bg-white cursor-pointer transition shadow-2xs">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-brand-ink">Basic Tier</span>
+                    <span class="text-xs font-extrabold text-brand-ochre">â‚¹999/mo</span>
+                  </div>
+                  <p class="text-[10px] text-brand-muted mt-1">Daily 1-hour live batch + app portal</p>
+                </div>
+
+                <div onclick="selectParentFeeTier('standard', 1499, 'Standard Tier (1 Hour / Day)')" id="tierCard-standard" class="p-3.5 rounded-2xl border-2 border-brand-ochre bg-amber-50/50 cursor-pointer transition shadow-xs relative">
+                  <span class="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-brand-ochre text-white text-[9px] font-extrabold uppercase">Recommended</span>
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-brand-ink">Standard Tier</span>
+                    <span class="text-xs font-extrabold text-brand-ochre">â‚¹1,499/mo</span>
+                  </div>
+                  <p class="text-[10px] text-brand-muted mt-1">Daily live + physical workbook delivered home</p>
+                </div>
+
+                <div onclick="selectParentFeeTier('premium', 2499, 'Premium Immersion Tier')" id="tierCard-premium" class="p-3.5 rounded-2xl border border-brand-border hover:border-brand-ochre bg-white cursor-pointer transition shadow-2xs">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-brand-ink">Premium Immersion</span>
+                    <span class="text-xs font-extrabold text-brand-ochre">â‚¹2,499/mo</span>
+                  </div>
+                  <p class="text-[10px] text-brand-muted mt-1">1-on-1 mentorship &amp; leadership bootcamps</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Fee Summary Box -->
             <div class="p-4 bg-brand-cream rounded-2xl border border-brand-border space-y-2 text-xs">
               <div class="flex justify-between">
-                <span class="text-brand-muted">Plan:</span>
-                <span class="font-bold text-brand-ink">Foundation Tier (1 Hour / Day)</span>
+                <span class="text-brand-muted">Selected Tier:</span>
+                <span id="displaySelectedPlanName" class="font-bold text-brand-ink">Standard Tier (1 Hour / Day)</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-brand-muted">Monthly Fee:</span>
-                <span class="font-extrabold text-brand-ochre text-sm">₹1,499 / Month</span>
+                <span class="text-brand-muted">Payable Amount:</span>
+                <span id="displaySelectedPlanPrice" class="font-extrabold text-brand-ochre text-sm">â‚¹1,499 / Month</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-brand-muted">Next Due Date:</span>
-                <span class="font-semibold text-brand-ink">1 December 2026</span>
+                <span class="text-brand-muted">Billing Cycle:</span>
+                <span class="font-semibold text-brand-ink">1st of Every Month (Active Cycle: Novâ€“Dec 2026)</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-brand-muted">Payment Security:</span>
+                <span class="font-semibold text-emerald-700">âœ“ 14-Day 100% Money-Back Guarantee</span>
               </div>
             </div>
 
-            <button onclick="payTuition()" class="w-full py-3.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2">
-              <span>⚡ 1-Tap Pay ₹1,499 via UPI (GPay / PhonePe / Paytm)</span>
+            <!-- Payment Trigger Button -->
+            <button type="button" onclick="openUpiPaymentModal()" class="w-full py-3.5 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center justify-center gap-2 cursor-pointer">
+              <span>âš¡ Pay Fee via UPI QR (GPay / PhonePe / Paytm / BHIM)</span>
             </button>
           </div>
 
-          <!-- History Receipts -->
-          <div class="bg-white rounded-3xl p-6 border border-brand-border shadow-sm">
-            <h4 class="font-bold text-xs uppercase tracking-wider text-brand-ink mb-3">Official GST Tax Invoices</h4>
-            <div class="divide-y divide-brand-border text-xs">
-              <div class="py-3 flex items-center justify-between">
+          <!-- Official Tax Invoices & Verified Receipts History -->
+          <div class="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-sm space-y-4">
+            <div class="flex items-center justify-between pb-2 border-b border-brand-border flex-wrap gap-2">
+              <div>
+                <h4 class="font-bold text-sm uppercase tracking-wider text-brand-ink">Official Tuition Receipts &amp; Invoices</h4>
+                <p class="text-xs text-brand-muted">Verified digital records for educational fee payment &amp; fee acknowledgment</p>
+              </div>
+              <button type="button" onclick="refreshParentPaymentHistory()" class="text-xs text-brand-ochre font-bold hover:underline cursor-pointer">
+                â†» Refresh Status
+              </button>
+            </div>
+
+            <div id="parentReceiptsContainer" class="divide-y divide-brand-border text-xs">
+              <!-- Dynamically populated from payments ledger -->
+              <div class="py-3.5 flex items-center justify-between gap-3 flex-wrap">
                 <div>
-                  <div class="font-bold text-brand-ink">Receipt #VED-2026-108</div>
-                  <div class="text-[11px] text-brand-muted">1 Nov 2026 • ₹1,499 (UPI Paid • Confirmed)</div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-brand-ink">Receipt #REC-2026-108</span>
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 text-[10px]">âœ“ Verified</span>
+                  </div>
+                  <div class="text-[11px] text-brand-muted mt-0.5">
+                    1 Nov 2026 â€¢ â‚¹1,499 (Standard Tier â€¢ UPI Transfer) â€¢ UTR: 431289054321
+                  </div>
                 </div>
-                <button onclick="printOfficialCertificate()" class="text-xs text-brand-ochre font-bold hover:underline">
-                  Print Invoice PDF
+                <button type="button" onclick="openOfficialReceiptModal('REC-2026-108')" class="px-3 py-1.5 rounded-xl border border-brand-ochre/40 bg-amber-50 hover:bg-amber-100 text-brand-ochre font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-2xs">
+                  <span>ðŸ“„</span>
+                  <span>View &amp; Print Receipt</span>
                 </button>
               </div>
             </div>
@@ -1271,7 +1345,6 @@
 
         </section>
 
-        
         <!-- ================= TAB 6: GURUKUL COURSE VIDEOS & PDF STUDY MATERIALS ================= -->
         <section id="dashTab-videos" class="tab-content space-y-6">
           
@@ -3585,6 +3658,8 @@
 
       // Render Dynamic Multi-Child Family Selector Bar
       renderChildSelector();
+      loadPaymentSettings();
+      refreshParentPaymentHistory();
       renderStudentCurriculum();
 
       // Show Dashboard View
@@ -3732,6 +3807,8 @@
         alert("Maximum limit of 4 children reached for this account.");
         closeAddChildModal();
           closeStudentVideoPlayer();
+          closeUpiPaymentModal();
+          closeReceiptModal();
         return;
       }
 
@@ -4532,6 +4609,291 @@
       }
     }
 
+        // ==========================================
+    // VEDIQ FUTURE-PROOF PAYMENT ENGINE (PARENT)
+    // ==========================================
+    let currentFeeTier = {
+      key: 'standard',
+      price: 1499,
+      name: 'Standard Tier (1 Hour / Day)'
+    };
+
+    let activePaymentSettings = {
+      upiId: 'vediqacademy@upi',
+      payeeName: 'VedIQ Academy',
+      qrImageUrl: '',
+      courseFees: { foundation: 999, standard: 1499, premium: 2499 }
+    };
+
+    let activeStudentPaymentsLedger = [];
+
+    async function loadPaymentSettings() {
+      try {
+        const resp = await fetch(VEDIQ_BACKEND_URL + '/api/payment-settings');
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.upiId) {
+            activePaymentSettings = data;
+          }
+        }
+      } catch (e) {
+        console.warn("Payment settings load notice:", e);
+      }
+    }
+
+    function selectParentFeeTier(key, price, name) {
+      currentFeeTier = { key, price, name };
+
+      ['basic', 'standard', 'premium'].forEach(k => {
+        const el = document.getElementById('tierCard-' + k);
+        if (el) {
+          if (k === key) {
+            el.className = "p-3.5 rounded-2xl border-2 border-brand-ochre bg-amber-50/50 cursor-pointer transition shadow-xs relative";
+          } else {
+            el.className = "p-3.5 rounded-2xl border border-brand-border hover:border-brand-ochre bg-white cursor-pointer transition shadow-2xs";
+          }
+        }
+      });
+
+      const dispName = document.getElementById('displaySelectedPlanName');
+      const dispPrice = document.getElementById('displaySelectedPlanPrice');
+      if (dispName) dispName.innerText = name;
+      if (dispPrice) dispPrice.innerText = `â‚¹${price.toLocaleString('en-IN')} / Month`;
+    }
+
+    function openUpiPaymentModal() {
+      const modal = document.getElementById('upiPaymentModal');
+      const activeChild = activeStudent ? getActiveChild(activeStudent) : null;
+      const childName = activeChild ? activeChild.childName : "Student";
+      const studentId = activeChild ? activeChild.childId : "VED-2026-101";
+
+      const planNameEl = document.getElementById('modalPayPlanName');
+      const planPriceEl = document.getElementById('modalPayAmountDisplay');
+      const upiIdEl = document.getElementById('displayUpiId');
+      const qrImgEl = document.getElementById('upiQrImage');
+
+      if (planNameEl) planNameEl.innerText = currentFeeTier.name;
+      if (planPriceEl) planPriceEl.innerText = `â‚¹${currentFeeTier.price}`;
+      if (upiIdEl) upiIdEl.innerText = activePaymentSettings.upiId;
+
+      const upiUri = `upi://pay?pa=${encodeURIComponent(activePaymentSettings.upiId)}&pn=${encodeURIComponent(activePaymentSettings.payeeName)}&am=${currentFeeTier.price}&cu=INR&tn=${encodeURIComponent(studentId + ' ' + childName + ' Fee')}`;
+
+      // Live dynamic high-resolution QR
+      if (qrImgEl) {
+        if (activePaymentSettings.qrImageUrl) {
+          qrImgEl.src = activePaymentSettings.qrImageUrl;
+        } else {
+          qrImgEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
+        }
+      }
+
+      // Configure Deep Links for Mobile
+      const gpayDeep = document.getElementById('btnGpayDeep');
+      const phonePeDeep = document.getElementById('btnPhonePeDeep');
+      const paytmDeep = document.getElementById('btnPaytmDeep');
+      if (gpayDeep) gpayDeep.href = upiUri;
+      if (phonePeDeep) phonePeDeep.href = upiUri;
+      if (paytmDeep) paytmDeep.href = upiUri;
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeUpiPaymentModal() {
+      const modal = document.getElementById('upiPaymentModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function copyUpiIdToClipboard() {
+      const upiId = activePaymentSettings.upiId || 'vediqacademy@upi';
+      navigator.clipboard.writeText(upiId).then(() => {
+        alert(`âœ“ UPI ID "${upiId}" copied to clipboard! Open your UPI app and paste to pay.`);
+      }).catch(() => {
+        prompt("Copy UPI ID:", upiId);
+      });
+    }
+
+    async function handleUtrPaymentSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const utrInput = document.getElementById('inputUtrNumber');
+      const notesInput = document.getElementById('inputPaymentNotes');
+      const btn = document.getElementById('btnSubmitUtr');
+
+      if (!utrInput) return;
+      const rawUtr = utrInput.value.trim().replace(/\s+/g, "");
+      if (rawUtr.length < 8) {
+        alert("Please enter a valid 12-digit UPI Reference / UTR Number.");
+        return;
+      }
+
+      const activeChild = activeStudent ? getActiveChild(activeStudent) : null;
+      const childName = activeChild ? activeChild.childName : "Student";
+      const studentId = activeChild ? activeChild.childId : "VED-2026-101";
+      const cohort = activeChild ? activeChild.childGrade : "Pravesh (Ages 8-11)";
+      const parentName = activeStudent ? (activeStudent.parentName || "Parent") : "Parent";
+      const parentEmail = activeStudent ? (activeStudent.email || "") : "";
+      const parentPhone = activeStudent ? (activeStudent.phone || "") : "";
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>â³ Submitting to Master Mentors...</span>`;
+      }
+
+      try {
+        const resp = await fetch(VEDIQ_BACKEND_URL + '/api/payments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'submit_utr',
+            studentId,
+            childName,
+            parentName,
+            parentEmail,
+            parentPhone,
+            courseName: currentFeeTier.name,
+            cohort,
+            amount: currentFeeTier.price,
+            utrNumber: rawUtr,
+            notes: notesInput ? notesInput.value.trim() : ''
+          })
+        });
+
+        const data = await resp.json().catch(() => ({}));
+
+        if (resp.ok && data.success) {
+          alert(`Payment submitted successfully!\n\nUTR: ${rawUtr}\nAmount: ₹${currentFeeTier.price}\n\nOur Master Mentors will verify bank credits and issue your official tuition fee receipt within 2 to 4 hours.`);
+          closeUpiPaymentModal();
+          utrInput.value = '';
+          if (notesInput) notesInput.value = '';
+          await refreshParentPaymentHistory();
+        } else if (resp.status === 409 || data.duplicate) {
+          alert(`âš ï¸ Duplicate Submission Notice:\n\n${data.error}`);
+        } else {
+          alert(`Submission error: ${data.error || 'Please check your connection and retry.'}`);
+        }
+      } catch (err) {
+        alert("Network notice: Could not connect to payment backend. Please retry.");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>âœ“ Submit UTR for Master Mentor Verification</span>`;
+        }
+      }
+    }
+
+    async function refreshParentPaymentHistory() {
+      const activeChild = activeStudent ? getActiveChild(activeStudent) : null;
+      const studentId = activeChild ? activeChild.childId : "VED-2026-101";
+      const phone = activeStudent ? activeStudent.phone : "";
+      const email = activeStudent ? activeStudent.email : "";
+
+      try {
+        const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payments?action=student_history&studentId=${encodeURIComponent(studentId)}&phone=${encodeURIComponent(phone || '')}&email=${encodeURIComponent(email || '')}`);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.records) {
+            activeStudentPaymentsLedger = data.records;
+            renderParentPaymentLedger();
+          }
+        }
+      } catch (e) {
+        console.warn("Payment history refresh notice:", e);
+      }
+    }
+
+    function renderParentPaymentLedger() {
+      const pendingCard = document.getElementById('parentPendingUtrCard');
+      const pendingUtrDisplay = document.getElementById('pendingUtrDisplay');
+      const pendingUtrTimestamp = document.getElementById('pendingUtrTimestamp');
+      const receiptsContainer = document.getElementById('parentReceiptsContainer');
+
+      const pendingRecord = activeStudentPaymentsLedger.find(p => p.status === 'pending_verification');
+      if (pendingRecord) {
+        if (pendingCard) pendingCard.classList.remove('hidden');
+        if (pendingUtrDisplay) pendingUtrDisplay.innerText = pendingRecord.utrNumber;
+        if (pendingUtrTimestamp) {
+          pendingUtrTimestamp.innerText = new Date(pendingRecord.submittedAt).toLocaleDateString('en-IN', {
+            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+          });
+        }
+      } else {
+        if (pendingCard) pendingCard.classList.add('hidden');
+      }
+
+      const verifiedRecords = activeStudentPaymentsLedger.filter(p => p.status === 'verified' && p.receiptNumber);
+
+      if (receiptsContainer) {
+        if (verifiedRecords.length === 0) {
+          receiptsContainer.innerHTML = `
+            <div class="py-4 text-center text-brand-muted text-xs">
+              No verified receipts found for this billing cycle yet.
+            </div>
+          `;
+          return;
+        }
+
+        receiptsContainer.innerHTML = verifiedRecords.map(p => {
+          const dateStr = new Date(p.verifiedAt || p.submittedAt).toLocaleDateString('en-IN', {
+            day: 'numeric', month: 'short', year: 'numeric'
+          });
+          return `
+            <div class="py-3.5 flex items-center justify-between gap-3 flex-wrap">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-brand-ink">Receipt #${p.receiptNumber}</span>
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 text-[10px]">âœ“ Verified</span>
+                </div>
+                <div class="text-[11px] text-brand-muted mt-0.5">
+                  ${dateStr} â€¢ â‚¹${p.amount} (${p.courseName}) â€¢ UTR: ${p.utrNumber}
+                </div>
+              </div>
+              <button type="button" onclick="openOfficialReceiptModal('${p.receiptNumber}')" class="px-3 py-1.5 rounded-xl border border-brand-ochre/40 bg-amber-50 hover:bg-amber-100 text-brand-ochre font-bold text-xs transition cursor-pointer flex items-center gap-1 shadow-2xs">
+                <span>ðŸ“„</span>
+                <span>View &amp; Print Receipt</span>
+              </button>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function openOfficialReceiptModal(receiptNumber) {
+      const modal = document.getElementById('receiptViewerModal');
+      const box = document.getElementById('receiptIframeBox');
+      if (box) {
+        box.innerHTML = `<iframe src="${VEDIQ_BACKEND_URL}/api/receipt?receipt=${encodeURIComponent(receiptNumber)}" class="w-full h-[520px] rounded-2xl border border-brand-border"></iframe>`;
+      }
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function closeReceiptModal() {
+      const modal = document.getElementById('receiptViewerModal');
+      const box = document.getElementById('receiptIframeBox');
+      if (box) box.innerHTML = '';
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function printActiveReceipt() {
+      const box = document.getElementById('receiptIframeBox');
+      const iframe = box ? box.querySelector('iframe') : null;
+      if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.print();
+      } else {
+        window.print();
+      }
+    }
+
     // Close modals on Escape key
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -4592,6 +4954,132 @@
           </button>
 
           <button type="button" onclick="closeStudentVideoPlayer()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-ink font-bold transition cursor-pointer">
+            Close
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <!-- ========================================================================= -->
+  <!-- GURUKUL UPI QR PAYMENT & UTR VERIFICATION MODAL -->
+  <!-- ========================================================================= -->
+  <div id="upiPaymentModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 border border-brand-border shadow-2xl relative animate-fadeIn text-left max-h-[92vh] overflow-y-auto">
+      
+      <!-- Close button -->
+      <button type="button" onclick="closeUpiPaymentModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-brand-cream hover:bg-brand-border text-brand-muted text-xs font-bold flex items-center justify-center transition cursor-pointer">âœ•</button>
+
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3 pb-3 border-b border-brand-border">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-ochre to-amber-400 text-white flex items-center justify-center text-xl shrink-0 shadow-xs">
+          âš¡
+        </div>
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-brand-ink">Gurukul UPI Fee Transfer</h3>
+          <p class="text-[11px] text-brand-muted">Scan QR â€¢ Zero Processing Fee â€¢ Master Mentor Verified</p>
+        </div>
+      </div>
+
+      <!-- Payable Amount Pill -->
+      <div class="p-3 bg-brand-cream rounded-2xl border border-brand-border flex items-center justify-between text-xs">
+        <div>
+          <span class="text-brand-muted">Plan: </span>
+          <strong id="modalPayPlanName" class="text-brand-ink">Standard Tier (1 Hour / Day)</strong>
+        </div>
+        <div class="text-right">
+          <span class="text-[10px] text-brand-muted block">Payable Amount</span>
+          <strong id="modalPayAmountDisplay" class="text-base font-extrabold text-brand-ochre">â‚¹1,499</strong>
+        </div>
+      </div>
+
+      <!-- Dynamic UPI QR Code Box -->
+      <div class="bg-slate-900 rounded-2xl p-5 text-center text-white space-y-3">
+        <div class="inline-block p-2 bg-white rounded-2xl shadow-lg border-2 border-amber-400">
+          <img id="upiQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi%3A%2F%2Fpay%3Fpa%3Dvediqacademy%40upi%26pn%3DVedIQ%2520Academy%26am%3D1499%26cu%3DINR%26tn%3DTuition%2520Renewal" alt="VedIQ Academy UPI QR" class="w-48 h-48 mx-auto rounded-xl object-contain" />
+        </div>
+        <div class="space-y-1">
+          <div class="text-[11px] text-slate-300 font-medium">Official Gurukul UPI ID:</div>
+          <div class="flex items-center justify-center gap-2">
+            <span id="displayUpiId" class="font-mono font-bold text-amber-300 text-xs sm:text-sm bg-slate-800 px-3 py-1 rounded-xl border border-slate-700">vediqacademy@upi</span>
+            <button type="button" onclick="copyUpiIdToClipboard()" class="px-2.5 py-1 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-[10px] transition cursor-pointer">
+              Copy
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick UPI Deep Links (Mobile) -->
+      <div class="grid grid-cols-3 gap-2 text-center text-xs">
+        <a id="btnGpayDeep" href="#" class="p-2 rounded-xl border border-brand-border bg-white hover:bg-brand-cream text-brand-ink font-bold transition flex items-center justify-center gap-1 text-[11px] shadow-2xs">
+          <span>Google Pay</span>
+        </a>
+        <a id="btnPhonePeDeep" href="#" class="p-2 rounded-xl border border-brand-border bg-white hover:bg-brand-cream text-brand-ink font-bold transition flex items-center justify-center gap-1 text-[11px] shadow-2xs">
+          <span>PhonePe</span>
+        </a>
+        <a id="btnPaytmDeep" href="#" class="p-2 rounded-xl border border-brand-border bg-white hover:bg-brand-cream text-brand-ink font-bold transition flex items-center justify-center gap-1 text-[11px] shadow-2xs">
+          <span>Paytm</span>
+        </a>
+      </div>
+
+      <!-- UTR Reference Submission Form -->
+      <form onsubmit="handleUtrPaymentSubmit(event)" class="space-y-3 pt-2 border-t border-brand-border">
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-brand-ink">
+            12-Digit UPI Reference / UTR Number <span class="text-rose-600">*</span>
+          </label>
+          <input type="text" id="inputUtrNumber" required maxlength="18" placeholder="e.g. 431289054321" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/30 focus:bg-white text-xs font-mono font-bold text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" />
+          <p class="text-[10px] text-brand-muted">Find this in your payment receipt on GPay, PhonePe, or Paytm under 'UPI Transaction ID' or 'UTR'.</p>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-[11px] font-semibold text-brand-muted">Optional Parent Note / Remarks</label>
+          <input type="text" id="inputPaymentNotes" placeholder="e.g. Paid via father's HDFC account" class="w-full px-3 py-2 rounded-xl border border-brand-border bg-brand-cream/20 text-xs text-brand-ink focus:outline-none focus:border-brand-ochre transition" />
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <button type="submit" id="btnSubmitUtr" class="flex-1 py-3 bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-md cursor-pointer flex items-center justify-center gap-2">
+            <span>âœ“ Submit UTR for Master Mentor Verification</span>
+          </button>
+          <button type="button" onclick="closeUpiPaymentModal()" class="px-4 py-3 rounded-xl border border-brand-border text-xs font-bold text-brand-muted hover:text-brand-ink transition cursor-pointer">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- OFFICIAL TUITION RECEIPT & CERTIFICATE MODAL -->
+  <!-- ========================================================================= -->
+  <div id="receiptViewerModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full border border-brand-border shadow-2xl relative animate-fadeIn flex flex-col max-h-[92vh] overflow-hidden">
+      
+      <div class="p-4 bg-brand-ink text-white flex items-center justify-between border-b border-brand-borderDark shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📄</span>
+          <div>
+            <h4 class="font-bold text-xs uppercase tracking-wider text-white">Official Tuition Receipt &amp; Acknowledgment</h4>
+            <p class="text-[10px] text-brand-gold">Tamper-evident â€¢ Master Mentor Verified</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeReceiptModal()" class="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center justify-center transition cursor-pointer">âœ•</button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6" id="receiptIframeBox">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="p-3.5 bg-brand-cream border-t border-brand-border flex items-center justify-between gap-2 shrink-0">
+        <span class="text-[11px] text-brand-muted">Printable on A4 / Save as PDF</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="printActiveReceipt()" class="px-4 py-2 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs shadow-xs transition cursor-pointer">
+            ðŸ–¨ï¸ Print / Save PDF
+          </button>
+          <button type="button" onclick="closeReceiptModal()" class="px-3.5 py-2 rounded-xl border border-brand-border bg-white text-brand-ink font-bold text-xs transition cursor-pointer">
             Close
           </button>
         </div>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
@@ -249,6 +249,10 @@
         <span>🎬 Gurukul Video &amp; Notes Studio (CMS)</span>
         <span class="px-1.5 py-0.5 rounded-full bg-brand-ochre text-white text-[9px] font-extrabold uppercase">New</span>
       </button>
+      <button type="button" id="tabBtnPayments" onclick="switchTeacherTab('payments')" class="flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer flex items-center justify-center gap-2">
+        <span>ðŸ’³ Payment &amp; Fee Management</span>
+        <span id="adminPendingBadge" class="px-1.5 py-0.5 rounded-full bg-rose-600 text-white text-[9px] font-extrabold uppercase">0 Pending</span>
+      </button>
     </div>
 
     <!-- VIEW A: STUDENT PROGRESS ROSTER -->
@@ -439,6 +443,198 @@
         <h3 class="font-display font-bold text-lg text-brand-ink">Enroll New Student</h3>
         <p class="text-xs text-brand-muted">Creates student profile with 0 baseline metrics, ready for daily evaluation.</p>
       </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW C: GURUKUL PAYMENT & FEE MANAGEMENT STUDIO -->
+    <!-- ========================================================================= -->
+    <div id="teacherViewPayments" class="hidden space-y-5">
+      
+      <!-- Studio Header Banner -->
+      <div class="bg-brand-ink text-white rounded-3xl p-5 sm:p-7 border border-brand-borderDark shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
+        <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-brand-gold/10 rounded-full pointer-events-none"></div>
+
+        <div class="z-10 space-y-1">
+          <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-brand-ochre/20 text-amber-300 text-[11px] font-bold border border-brand-ochre/40">
+            <span>ðŸ’³ Payment &amp; Tuition Hub</span>
+            <span class="text-white">â€¢</span>
+            <span>Zero-Trust Verification</span>
+          </div>
+          <h2 class="font-display font-bold text-xl sm:text-2xl text-white">
+            Gurukul Payment &amp; Fee Management Studio
+          </h2>
+          <p class="text-xs text-slate-300 max-w-xl">
+            Verify UPI UTR submissions, manage dynamic QR settings, download GST tax receipts, and export official financial audit reports.
+          </p>
+        </div>
+
+        <!-- Quick Summary Metrics -->
+        <div class="z-10 flex items-center gap-3 flex-wrap">
+          <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl px-4 py-2.5 text-center shadow-md">
+            <span class="text-[10px] text-slate-400 block uppercase font-bold">Pending Review</span>
+            <span id="metricPendingCount" class="text-lg font-extrabold text-amber-400">0</span>
+          </div>
+          <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl px-4 py-2.5 text-center shadow-md">
+            <span class="text-[10px] text-slate-400 block uppercase font-bold">Verified Fees</span>
+            <span id="metricVerifiedTotal" class="text-lg font-extrabold text-emerald-400">â‚¹0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Sub-Navigation Switcher -->
+      <div class="bg-white rounded-2xl border border-brand-border p-2 shadow-xs flex items-center gap-1.5 flex-wrap">
+        <button type="button" onclick="switchPaymentsSubTab('queue')" id="btnPaySub-queue" class="pay-sub-btn px-4 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5">
+          <span>â³</span>
+          <span>Pending UTR Queue</span>
+          <span id="badgeSubPending" class="ml-1 px-1.5 py-0.2 rounded-full bg-white/20 text-white text-[9px] font-extrabold">0</span>
+        </button>
+        <button type="button" onclick="switchPaymentsSubTab('ledger')" id="btnPaySub-ledger" class="pay-sub-btn px-4 py-2 rounded-xl bg-transparent hover:bg-brand-cream text-brand-muted hover:text-brand-ink text-xs font-semibold transition cursor-pointer flex items-center gap-1.5">
+          <span>ðŸ“‹</span>
+          <span>Payment &amp; Tax Ledger</span>
+        </button>
+        <button type="button" onclick="switchPaymentsSubTab('settings')" id="btnPaySub-settings" class="pay-sub-btn px-4 py-2 rounded-xl bg-transparent hover:bg-brand-cream text-brand-muted hover:text-brand-ink text-xs font-semibold transition cursor-pointer flex items-center gap-1.5">
+          <span>âš™ï¸</span>
+          <span>UPI QR &amp; Gateway Settings</span>
+        </button>
+      </div>
+
+      <!-- SUB-VIEW 1: PENDING VERIFICATION QUEUE -->
+      <div id="paySubViewQueue" class="space-y-4">
+        <div id="adminPendingQueueContainer" class="space-y-3">
+          <!-- Dynamically populated -->
+        </div>
+        <div id="adminPendingEmptyState" class="hidden bg-white rounded-3xl p-10 border border-brand-border text-center space-y-2">
+          <div class="text-4xl">ðŸŽ‰</div>
+          <h3 class="font-bold text-sm text-brand-ink">Zero Pending Verifications</h3>
+          <p class="text-xs text-brand-muted max-w-sm mx-auto">
+            All parent UPI submissions have been verified and receipts dispatched.
+          </p>
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 2: FULL PAYMENT & TAX LEDGER -->
+      <div id="paySubViewLedger" class="hidden space-y-4">
+        <!-- Search, Filter & CSV Export Bar -->
+        <div class="bg-white rounded-2xl border border-brand-border p-3 sm:p-4 shadow-sm flex items-center justify-between gap-3 flex-wrap">
+          <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+            <input type="text" id="adminPaymentSearchInput" oninput="filterAdminPaymentsLedger()" placeholder="Search by Student ID, Child Name, or UTR..." class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/40 focus:bg-white text-xs font-semibold text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" />
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="adminPaymentStatusFilter" onchange="filterAdminPaymentsLedger()" class="px-3 py-2.5 rounded-xl border border-brand-border bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre cursor-pointer">
+              <option value="all">All Statuses</option>
+              <option value="verified">Verified &amp; Paid</option>
+              <option value="pending_verification">Pending Verification</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <button type="button" onclick="exportPaymentsCsv()" class="px-3.5 py-2.5 rounded-xl bg-brand-ink hover:bg-slate-800 text-white font-bold text-xs transition shadow-xs flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+              <span>ðŸ“¥</span>
+              <span>Export CSV</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Ledger Table Card -->
+        <div class="bg-white rounded-2xl border border-brand-border shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-brand-cream border-b border-brand-border text-[11px] font-bold uppercase text-brand-ink">
+                  <th class="p-3.5">Date</th>
+                  <th class="p-3.5">Student / Child</th>
+                  <th class="p-3.5">Course &amp; Cohort</th>
+                  <th class="p-3.5">Amount</th>
+                  <th class="p-3.5">UTR Reference</th>
+                  <th class="p-3.5">Status</th>
+                  <th class="p-3.5">Receipt #</th>
+                  <th class="p-3.5 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminPaymentsTableBody" class="divide-y divide-brand-border">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-VIEW 3: UPI QR & GATEWAY SETTINGS -->
+      <div id="paySubViewSettings" class="hidden bg-white rounded-3xl p-5 sm:p-7 border border-brand-border shadow-sm space-y-6 max-w-3xl">
+        <div class="pb-3 border-b border-brand-border">
+          <h3 class="font-bold text-base text-brand-ink">Live UPI QR &amp; Gateway Configuration</h3>
+          <p class="text-xs text-brand-muted">Changing details here instantly updates parent payment screens without website redeployment.</p>
+        </div>
+
+        <form onsubmit="handleSaveAdminPaymentSettings(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="block text-xs font-bold text-brand-ink">Official UPI ID (VPA)</label>
+              <input type="text" id="settingInputUpiId" required class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/30 focus:bg-white text-xs font-mono font-bold text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" placeholder="e.g. vediqacademy@upi" />
+            </div>
+
+            <div class="space-y-1">
+              <label class="block text-xs font-bold text-brand-ink">Payee Name</label>
+              <input type="text" id="settingInputPayeeName" required class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/30 focus:bg-white text-xs font-bold text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" placeholder="e.g. VedIQ Academy" />
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-xs font-bold text-brand-ink">Custom UPI QR Image URL (Optional)</label>
+            <input type="url" id="settingInputQrUrl" class="w-full px-3.5 py-2.5 rounded-xl border border-brand-border bg-brand-cream/30 focus:bg-white text-xs text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs" placeholder="Leave empty for auto-generated dynamic QR" />
+            <p class="text-[10px] text-brand-muted">If empty, a dynamic QR code matching the exact fee amount and student ID is automatically generated.</p>
+          </div>
+
+          <div class="space-y-1">
+            <label class="block text-xs font-bold text-brand-ink">Parent Payment Instructions</label>
+            <textarea id="settingInputInstructions" rows="3" class="w-full p-3 rounded-xl border border-brand-border bg-brand-cream/30 focus:bg-white text-xs text-brand-ink focus:outline-none focus:border-brand-ochre transition shadow-2xs"></textarea>
+          </div>
+
+          <!-- Course Fees Breakdown -->
+          <div class="space-y-2 pt-2 border-t border-brand-border">
+            <label class="block text-xs font-bold text-brand-ink uppercase tracking-wider">Course Fees Configuration (â‚¹ INR)</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[11px] text-brand-muted font-semibold">Basic Tier</label>
+                <input type="number" id="settingFeeBasic" class="w-full px-3 py-2 rounded-xl border border-brand-border font-bold text-xs" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-brand-muted font-semibold">Standard Tier</label>
+                <input type="number" id="settingFeeStandard" class="w-full px-3 py-2 rounded-xl border border-brand-border font-bold text-xs" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-brand-muted font-semibold">Premium Immersion</label>
+                <input type="number" id="settingFeePremium" class="w-full px-3 py-2 rounded-xl border border-brand-border font-bold text-xs" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Gateways Switch -->
+          <div class="p-3.5 bg-brand-cream rounded-2xl border border-brand-border space-y-2 text-xs">
+            <div class="font-bold text-brand-ink">Payment Gateway Status:</div>
+            <div class="flex items-center gap-3">
+              <label class="flex items-center gap-2 cursor-pointer font-semibold text-emerald-800">
+                <input type="checkbox" id="settingEnableUpi" checked disabled class="w-4 h-4 text-brand-ochre rounded" />
+                <span>UPI QR + Master Mentor Manual Verification (Active)</span>
+              </label>
+            </div>
+            <div class="flex items-center gap-3 pt-1">
+              <label class="flex items-center gap-2 cursor-pointer text-slate-500">
+                <input type="checkbox" id="settingEnableRazorpay" class="w-4 h-4 text-brand-ochre rounded" />
+                <span>Razorpay Automated Gateway (Prepared â€” Ready when activated)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center gap-3">
+            <button type="submit" id="btnSavePaymentSettings" class="px-5 py-3 rounded-xl bg-brand-ochre hover:bg-brand-ochreHover text-white font-bold text-xs transition shadow-md cursor-pointer flex items-center gap-1.5">
+              <span>ðŸ’¾</span>
+              <span>Save Payment Settings &amp; Sync Cloud</span>
+            </button>
+            <span id="saveSettingsNotice" class="hidden text-xs text-emerald-700 font-bold">âœ“ Saved!</span>
+          </div>
+        </form>
+      </div>
+
+    </div>
+    <!-- END VIEW C: PAYMENT & FEE MANAGEMENT -->
 
       <form onsubmit="handleEnrollStudentSubmit(event)" class="space-y-3.5">
         
@@ -1534,34 +1730,404 @@
       renderCurriculumList();
     }
 
+        // ==========================================
+    // VEDIQ ADMIN PAYMENT MANAGEMENT ENGINE
+    // ==========================================
+    let adminPaymentsLedger = [];
+    let currentPaymentsSubTab = 'queue';
+
     function switchTeacherTab(tab) {
       const viewRoster = document.getElementById('teacherViewRoster');
       const viewCms = document.getElementById('teacherViewCms');
+      const viewPayments = document.getElementById('teacherViewPayments');
       const btnRoster = document.getElementById('tabBtnRoster');
       const btnCms = document.getElementById('tabBtnCms');
+      const btnPayments = document.getElementById('tabBtnPayments');
+
+      [viewRoster, viewCms, viewPayments].forEach(v => { if (v) v.classList.add('hidden'); });
+      [btnRoster, btnCms, btnPayments].forEach(b => {
+        if (b) b.className = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer flex items-center justify-center gap-2";
+      });
 
       if (tab === 'cms') {
-        if (viewRoster) viewRoster.classList.add('hidden');
         if (viewCms) viewCms.classList.remove('hidden');
-        if (btnCms) {
-          btnCms.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2";
-        }
-        if (btnRoster) {
-          btnRoster.className = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer flex items-center justify-center gap-2";
-        }
+        if (btnCms) btnCms.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2";
         renderCurriculumList();
+      } else if (tab === 'payments') {
+        if (viewPayments) viewPayments.classList.remove('hidden');
+        if (btnPayments) btnPayments.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2";
+        loadAdminPaymentsData();
+        loadAdminPaymentSettings();
       } else {
         if (viewRoster) viewRoster.classList.remove('hidden');
-        if (viewCms) viewCms.classList.add('hidden');
-        if (btnRoster) {
-          btnRoster.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2";
-        }
-        if (btnCms) {
-          btnCms.className = "flex-1 py-2.5 px-4 rounded-xl font-semibold text-xs transition text-brand-muted hover:text-brand-ink bg-transparent cursor-pointer flex items-center justify-center gap-2";
-        }
+        if (btnRoster) btnRoster.className = "flex-1 py-2.5 px-4 rounded-xl font-bold text-xs transition shadow-xs bg-brand-ink text-white cursor-pointer flex items-center justify-center gap-2";
         renderStudentsList();
       }
     }
+
+    function switchPaymentsSubTab(subTab) {
+      currentPaymentsSubTab = subTab;
+      const vQueue = document.getElementById('paySubViewQueue');
+      const vLedger = document.getElementById('paySubViewLedger');
+      const vSettings = document.getElementById('paySubViewSettings');
+      const bQueue = document.getElementById('btnPaySub-queue');
+      const bLedger = document.getElementById('btnPaySub-ledger');
+      const bSettings = document.getElementById('btnPaySub-settings');
+
+      [vQueue, vLedger, vSettings].forEach(v => { if (v) v.classList.add('hidden'); });
+      [bQueue, bLedger, bSettings].forEach(b => {
+        if (b) b.className = "pay-sub-btn px-4 py-2 rounded-xl bg-transparent hover:bg-brand-cream text-brand-muted hover:text-brand-ink text-xs font-semibold transition cursor-pointer flex items-center gap-1.5";
+      });
+
+      if (subTab === 'ledger') {
+        if (vLedger) vLedger.classList.remove('hidden');
+        if (bLedger) bLedger.className = "pay-sub-btn px-4 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5";
+        renderAdminPaymentsLedger();
+      } else if (subTab === 'settings') {
+        if (vSettings) vSettings.classList.remove('hidden');
+        if (bSettings) bSettings.className = "pay-sub-btn px-4 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5";
+      } else {
+        if (vQueue) vQueue.classList.remove('hidden');
+        if (bQueue) bQueue.className = "pay-sub-btn px-4 py-2 rounded-xl bg-brand-ochre text-white text-xs font-bold transition shadow-xs cursor-pointer flex items-center gap-1.5";
+        renderAdminPaymentsQueue();
+      }
+    }
+
+    function getTeacherAdminToken() {
+      return localStorage.getItem('vediq_teacher_admin_key') || 'vediq-gurukul-mentor-master-key-2026';
+    }
+
+    async function loadAdminPaymentsData() {
+      try {
+        const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payments?action=list_all`, {
+          headers: { 'Authorization': 'Bearer ' + getTeacherAdminToken() }
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data && data.payments) {
+            adminPaymentsLedger = data.payments;
+            updateAdminPaymentsMetrics();
+            renderAdminPaymentsQueue();
+            renderAdminPaymentsLedger();
+          }
+        }
+      } catch (e) {
+        console.warn("Admin payments fetch notice:", e);
+      }
+    }
+
+    function updateAdminPaymentsMetrics() {
+      const pending = adminPaymentsLedger.filter(p => p.status === 'pending_verification');
+      const verified = adminPaymentsLedger.filter(p => p.status === 'verified');
+      const verifiedTotal = verified.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+
+      const mPending = document.getElementById('metricPendingCount');
+      const mVerified = document.getElementById('metricVerifiedTotal');
+      const bTop = document.getElementById('adminPendingBadge');
+      const bSub = document.getElementById('badgeSubPending');
+
+      if (mPending) mPending.innerText = pending.length;
+      if (mVerified) mVerified.innerText = `â‚¹${verifiedTotal.toLocaleString('en-IN')}`;
+      if (bTop) {
+        bTop.innerText = `${pending.length} Pending`;
+        bTop.className = pending.length > 0 ? "px-1.5 py-0.5 rounded-full bg-rose-600 text-white text-[9px] font-extrabold uppercase animate-pulse" : "px-1.5 py-0.5 rounded-full bg-slate-700 text-slate-300 text-[9px] font-bold uppercase";
+      }
+      if (bSub) bSub.innerText = pending.length;
+    }
+
+    function renderAdminPaymentsQueue() {
+      const container = document.getElementById('adminPendingQueueContainer');
+      const emptyState = document.getElementById('adminPendingEmptyState');
+      if (!container) return;
+
+      const pending = adminPaymentsLedger.filter(p => p.status === 'pending_verification');
+      if (pending.length === 0) {
+        container.innerHTML = '';
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      if (emptyState) emptyState.classList.add('hidden');
+
+      container.innerHTML = pending.map(p => {
+        const subDate = new Date(p.submittedAt).toLocaleDateString('en-IN', {
+          day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+        });
+
+        return `
+          <div class="bg-white rounded-3xl p-5 border border-amber-300 bg-amber-50/20 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1.5 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 text-[10px] font-bold uppercase">
+                  â³ Awaiting Verification
+                </span>
+                <span class="text-xs text-brand-muted">Submitted ${subDate}</span>
+              </div>
+              <h4 class="font-bold text-sm sm:text-base text-brand-ink">
+                ${p.childName} <span class="text-xs font-normal text-brand-muted">(${p.studentId} â€¢ ${p.cohort || 'Pravesh'})</span>
+              </h4>
+              <div class="text-xs text-brand-muted">
+                Parent: <strong class="text-brand-ink">${p.parentName}</strong> â€¢ Phone: <strong class="text-brand-ink">${p.parentPhone || 'N/A'}</strong> ${p.parentEmail ? 'â€¢ ' + p.parentEmail : ''}
+              </div>
+              <div class="flex items-center gap-3 pt-1 text-xs">
+                <div>Amount: <strong class="text-brand-ochre text-sm font-extrabold">â‚¹${p.amount}</strong></div>
+                <div>UPI UTR: <strong class="font-mono bg-white px-2 py-0.5 rounded border border-brand-border text-brand-ink">${p.utrNumber}</strong></div>
+              </div>
+              ${p.adminNotes ? `<div class="text-[11px] text-brand-muted italic mt-1">Note: "${p.adminNotes}"</div>` : ''}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2 shrink-0 w-full md:w-auto">
+              <button type="button" onclick="adminVerifyPayment('${p.paymentId}')" class="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition cursor-pointer flex items-center justify-center gap-1.5">
+                <span>âœ“</span>
+                <span>Verify &amp; Issue Receipt</span>
+              </button>
+              <button type="button" onclick="adminRejectPayment('${p.paymentId}')" class="px-3.5 py-2.5 rounded-xl bg-white hover:bg-rose-50 border border-rose-300 text-rose-700 font-bold text-xs transition cursor-pointer">
+                âœ• Reject
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderAdminPaymentsLedger() {
+      const tbody = document.getElementById('adminPaymentsTableBody');
+      const searchInp = document.getElementById('adminPaymentSearchInput');
+      const filterSel = document.getElementById('adminPaymentStatusFilter');
+      if (!tbody) return;
+
+      const q = searchInp ? searchInp.value.trim().toLowerCase() : '';
+      const filter = filterSel ? filterSel.value : 'all';
+
+      const filtered = adminPaymentsLedger.filter(p => {
+        if (filter !== 'all' && p.status !== filter) return false;
+        if (!q) return true;
+        return (
+          (p.childName && p.childName.toLowerCase().includes(q)) ||
+          (p.studentId && p.studentId.toLowerCase().includes(q)) ||
+          (p.utrNumber && p.utrNumber.toLowerCase().includes(q)) ||
+          (p.receiptNumber && p.receiptNumber.toLowerCase().includes(q)) ||
+          (p.parentName && p.parentName.toLowerCase().includes(q))
+        );
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-brand-muted text-xs">No transactions matching your criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const dateStr = new Date(p.verifiedAt || p.submittedAt).toLocaleDateString('en-IN', {
+          day: 'numeric', month: 'short', year: 'numeric'
+        });
+
+        const statusBadges = {
+          'verified': '<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold border border-emerald-200 text-[10px]">âœ“ Paid</span>',
+          'pending_verification': '<span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold border border-amber-300 text-[10px]">â³ Pending</span>',
+          'rejected': '<span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 font-bold border border-rose-200 text-[10px]">âœ• Rejected</span>'
+        };
+
+        return `
+          <tr class="hover:bg-brand-cream/30 transition text-xs">
+            <td class="p-3.5 text-brand-muted">${dateStr}</td>
+            <td class="p-3.5">
+              <strong class="text-brand-ink">${p.childName}</strong>
+              <div class="text-[10px] text-brand-muted">${p.studentId} â€¢ ${p.parentName}</div>
+            </td>
+            <td class="p-3.5 text-brand-muted">${p.courseName}</td>
+            <td class="p-3.5 font-extrabold text-brand-ochre">â‚¹${p.amount}</td>
+            <td class="p-3.5 font-mono text-[11px] text-slate-700">${p.utrNumber}</td>
+            <td class="p-3.5">${statusBadges[p.status] || p.status}</td>
+            <td class="p-3.5 font-mono font-bold text-brand-ink">${p.receiptNumber || 'â€”'}</td>
+            <td class="p-3.5 text-right">
+              ${p.receiptNumber ? `
+                <a href="${VEDIQ_BACKEND_URL}/api/receipt?receipt=${p.receiptNumber}" target="_blank" class="px-2.5 py-1 rounded-lg border border-brand-ochre/40 bg-amber-50 hover:bg-amber-100 text-brand-ochre font-bold text-[11px] transition shadow-2xs">
+                  ðŸ“„ Receipt
+                </a>
+              ` : (p.status === 'pending_verification' ? `
+                <button type="button" onclick="adminVerifyPayment('${p.paymentId}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-bold text-[11px]">
+                  Verify
+                </button>
+              ` : 'â€”')}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterAdminPaymentsLedger() {
+      renderAdminPaymentsLedger();
+    }
+
+    async function adminVerifyPayment(paymentId) {
+      if (!confirm("Approve this fee transfer and issue the official GST tax receipt?")) return;
+
+      const activeStaffName = currentLoggedInTeacher ? currentLoggedInTeacher.name : "Dr. Ujwal Vyas (Head Master Mentor)";
+
+      try {
+        const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getTeacherAdminToken()
+          },
+          body: JSON.stringify({
+            action: 'verify',
+            paymentId,
+            verifiedBy: activeStaffName,
+            notes: 'Approved via Master Mentor Studio'
+          })
+        });
+
+        const data = await resp.json().catch(() => ({}));
+        if (resp.ok && data.success) {
+          alert(`ðŸŽ‰ Payment verified successfully!\n\nOfficial Receipt: ${data.payment.receiptNumber}\nConfirmation email and receipt queued for parent.`);
+          await loadAdminPaymentsData();
+        } else {
+          alert(`Verification notice: ${data.error || 'Failed'}`);
+        }
+      } catch (err) {
+        alert("Network error contacting payment backend.");
+      }
+    }
+
+    async function adminRejectPayment(paymentId) {
+      const reason = prompt("Enter the reason for rejecting this UTR submission (e.g., UTR not found in bank statement):");
+      if (reason === null) return;
+
+      try {
+        const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getTeacherAdminToken()
+          },
+          body: JSON.stringify({
+            action: 'reject',
+            paymentId,
+            reason: reason.trim() || 'Transaction reference could not be verified in bank statement.'
+          })
+        });
+
+        const data = await resp.json().catch(() => ({}));
+        if (resp.ok && data.success) {
+          alert("Payment marked as rejected.");
+          await loadAdminPaymentsData();
+        }
+      } catch (e) {
+        alert("Network error.");
+      }
+    }
+
+    async function loadAdminPaymentSettings() {
+      try {
+        const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payment-settings`);
+        if (resp.ok) {
+          const s = await resp.json();
+          const inUpi = document.getElementById('settingInputUpiId');
+          const inName = document.getElementById('settingInputPayeeName');
+          const inQr = document.getElementById('settingInputQrUrl');
+          const inInst = document.getElementById('settingInputInstructions');
+          const fBasic = document.getElementById('settingFeeBasic');
+          const fStd = document.getElementById('settingFeeStandard');
+          const fPrem = document.getElementById('settingFeePremium');
+
+          if (inUpi) inUpi.value = s.upiId || 'vediqacademy@upi';
+          if (inName) inName.value = s.payeeName || 'VedIQ Academy';
+          if (inQr) inQr.value = s.qrImageUrl || '';
+          if (inInst) inInst.value = s.instructions || '';
+          if (fBasic) fBasic.value = s.courseFees?.foundation || 999;
+          if (fStd) fStd.value = s.courseFees?.standard || 1499;
+          if (fPrem) fPrem.value = s.courseFees?.premium || 2499;
+        }
+      } catch (e) {}
+    }
+
+    async function handleSaveAdminPaymentSettings(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const inUpi = document.getElementById('settingInputUpiId').value.trim();
+      const inName = document.getElementById('settingInputPayeeName').value.trim();
+      const inQr = document.getElementById('settingInputQrUrl').value.trim();
+      const inInst = document.getElementById('settingInputInstructions').value.trim();
+      const fBasic = Number(document.getElementById('settingFeeBasic').value) || 999;
+      const fStd = Number(document.getElementById('settingFeeStandard').value) || 1499;
+      const fPrem = Number(document.getElementById('settingFeePremium').value) || 2499;
+      const enableRazorpay = document.getElementById('settingEnableRazorpay').checked;
+
+      const btn = document.getElementById('btnSavePaymentSettings');
+      const notice = document.getElementById('saveSettingsNotice');
+
+      if (btn) btn.disabled = true;
+
+      try {
+        const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payment-settings`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getTeacherAdminToken()
+          },
+          body: JSON.stringify({
+            upiId: inUpi,
+            payeeName: inName,
+            qrImageUrl: inQr,
+            instructions: inInst,
+            courseFees: { foundation: fBasic, standard: fStd, premium: fPrem },
+            razorpay: { enabled: enableRazorpay }
+          })
+        });
+
+        const data = await resp.json().catch(() => ({}));
+        if (resp.ok && data.success) {
+          if (notice) {
+            notice.classList.remove('hidden');
+            setTimeout(() => notice.classList.add('hidden'), 3000);
+          }
+          alert("âœ“ Payment settings saved successfully! Parent screens will now reflect these updated details.");
+        } else {
+          alert(`Error saving: ${data.error || 'Failed'}`);
+        }
+      } catch (err) {
+        alert("Network error saving settings.");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function exportPaymentsCsv() {
+      if (adminPaymentsLedger.length === 0) {
+        alert("No payment records to export.");
+        return;
+      }
+
+      const headers = ["Payment ID", "Receipt Number", "Date", "Student ID", "Child Name", "Parent Name", "Parent Phone", "Parent Email", "Course Name", "Amount (INR)", "Payment Method", "UTR Number", "Status", "Verified By"];
+      const rows = adminPaymentsLedger.map(p => [
+        `"${p.paymentId || ''}"`,
+        `"${p.receiptNumber || ''}"`,
+        `"${new Date(p.verifiedAt || p.submittedAt).toISOString()}"`,
+        `"${p.studentId || ''}"`,
+        `"${p.childName || ''}"`,
+        `"${p.parentName || ''}"`,
+        `"${p.parentPhone || ''}"`,
+        `"${p.parentEmail || ''}"`,
+        `"${p.courseName || ''}"`,
+        p.amount || 0,
+        `"${p.paymentMethod || 'upi_qr'}"`,
+        `"${p.utrNumber || ''}"`,
+        `"${p.status || ''}"`,
+        `"${p.verifiedBy || ''}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `vediq_payments_report_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
 
     function filterCmsSubject(subjKey) {
       currentCmsSubject = subjKey;
