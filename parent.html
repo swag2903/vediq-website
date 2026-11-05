@@ -206,38 +206,172 @@
       color: transparent !important;
     }
 
-    /* Comprehensive Mobile, Tablet & Desktop Typography & Layout Optimization */
+    /* ========================================================================= */
+    /* COMPREHENSIVE PHONE & TABLET TYPOGRAPHY SYSTEM (Apple iOS & Android M3) */
+    /* ========================================================================= */
     @media (max-width: 1024px) {
       body {
-        font-size: 16px !important;
-        line-height: 1.7 !important;
+        font-size: 16.5px !important;
+        line-height: 1.68 !important;
       }
-      p {
-        font-size: 15px !important;
+      p, article {
+        font-size: 16px !important;
         line-height: 1.65 !important;
       }
       .text-xs {
-        font-size: 13.5px !important;
+        font-size: 14.5px !important;
         line-height: 1.55 !important;
       }
       .text-sm {
-        font-size: 15px !important;
+        font-size: 15.5px !important;
         line-height: 1.6 !important;
       }
-      .text-\[10px\], .text-\[11px\], .text-\[9px\], .text-\[8px\] {
-        font-size: 12.5px !important;
+      .text-\[10px\], .text-\[11px\], .text-\[9px\], .text-\[8px\], .text-\[12px\] {
+        font-size: 13px !important;
         line-height: 1.45 !important;
       }
-      /* Form inputs easy to type on touchscreens without iOS/Android zoom */
       input, select, textarea {
         font-size: 16px !important;
-        padding-top: 11px !important;
-        padding-bottom: 11px !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
       }
-      /* Buttons larger and comfortable for thumbs */
       button, a.btn, .btn {
+        font-size: 15px !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      /* Mobile Phone Optimization for Parent Portal: Large, Bold, Clear */
+      html {
+        font-size: 16.5px;
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        font-size: 17px !important;
+        line-height: 1.7 !important;
+      }
+
+      /* Main Auth Titles & Segment Tabs */
+      #authMainTitle {
+        font-size: 26px !important;
+      }
+      #tabBtnSignIn, #tabBtnSignUp {
+        font-size: 15.5px !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+      }
+
+      /* Form inputs & labels: High legibility & zero zoom bug */
+      #view-auth label {
+        font-size: 15.5px !important;
+        font-weight: 700 !important;
+        margin-bottom: 6px !important;
+      }
+      #view-auth input, #view-auth select, input[type="text"], input[type="tel"], input[type="password"], input[type="email"] {
+        font-size: 16.5px !important;
+        padding-top: 13px !important;
+        padding-bottom: 13px !important;
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+        border-radius: 12px !important;
+      }
+      #view-auth button[type="submit"] {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        padding-top: 14px !important;
+        padding-bottom: 14px !important;
+        min-height: 48px !important;
+      }
+      #subcardBox {
+        font-size: 15.5px !important;
+      }
+      #subcardBox button {
+        font-size: 15.5px !important;
+      }
+
+      /* Student Header Card on Phones */
+      #dashChildName {
+        font-size: 24px !important;
+        font-weight: 800 !important;
+      }
+      #dashChildGrade {
         font-size: 14px !important;
-        letter-spacing: 0.025em !important;
+        padding: 4px 10px !important;
+      }
+      #dashStudentId {
+        font-size: 13px !important;
+      }
+      #dashBatchText {
+        font-size: 14.5px !important;
+      }
+      #dashFocusScore {
+        font-size: 26px !important;
+      }
+      #dashStreakCount {
+        font-size: 20px !important;
+      }
+
+      /* Today's 1-Hour Habit Checklist on Phones */
+      #dashTab-today h3 {
+        font-size: 20px !important;
+      }
+      #ritualProgressBadge {
+        font-size: 14px !important;
+      }
+      .tab-content .text-xs.font-bold {
+        font-size: 16.5px !important;
+      }
+      .tab-content .text-\[11px\] {
+        font-size: 14.5px !important;
+        line-height: 1.5 !important;
+      }
+      input[type="checkbox"] {
+        width: 24px !important;
+        height: 24px !important;
+      }
+
+      /* Mobile Sticky Tabs Switcher */
+      .sidebar-btn {
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        padding: 10px 15px !important;
+      }
+
+      /* Multi-Child Tabs Bar */
+      #childSelectorTabs button {
+        font-size: 14.5px !important;
+        padding: 8px 14px !important;
+      }
+      #btnAddChildBtn {
+        font-size: 14.5px !important;
+        padding: 10px 16px !important;
+      }
+
+      /* General Paragraph & Label Scaling */
+      p, article, .text-base {
+        font-size: 16px !important;
+        line-height: 1.65 !important;
+      }
+      .text-xs {
+        font-size: 15px !important;
+        line-height: 1.55 !important;
+      }
+      .text-sm {
+        font-size: 16px !important;
+        line-height: 1.6 !important;
+      }
+      .text-\[10px\], .text-\[11px\], .text-\[9px\], .text-\[8px\], .text-\[12px\] {
+        font-size: 14px !important;
+        line-height: 1.45 !important;
+        font-weight: 600 !important;
+      }
+
+      /* Mentor & Card Headings */
+      .tab-content h3 {
+        font-size: 21px !important;
+      }
+      .tab-content h4 {
+        font-size: 18px !important;
       }
     }
   </style>
