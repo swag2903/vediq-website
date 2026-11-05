@@ -1,8 +1,8 @@
 /**
  * Serverless Function: Gemini AI Chatbot Handler
  * Supports multi-turn conversation history, robust system instructions,
- * cascading model fallbacks (gemini-3.8-flash, gemini-3.5-flash-lite, gemini-flash-latest),
- * key sanitization, and transparent error diagnostics.
+ * cascading model fallbacks (gemini-3.5-flash-lite, gemini-3.8-flash, gemini-3.6-flash, gemini-2.5-flash),
+ * Google Interactions API + generateContent dual support, per-model timeouts, and transparent diagnostics.
  * Compatible with Vercel and Netlify runtime.
  */
 
@@ -51,12 +51,10 @@ Conversational Behavioral Guidelines:
 5. TONE: Empathetic, culturally respectful, academically authoritative, and concise (1 to 2 crisp paragraphs, optionally using bullet points for readability). Respond in English or Hinglish matching the user's language.`;
 
 const CANDIDATE_MODELS = [
-  "gemini-3.8-flash",
   "gemini-3.5-flash-lite",
-  "gemini-flash-latest",
-  "gemini-2.5-flash",
-  "gemini-pro-latest",
-  "gemini-3.1-pro-preview"
+  "gemini-3.8-flash",
+  "gemini-3.6-flash",
+  "gemini-2.5-flash"
 ];
 
 const handler = async (req, res) => {
@@ -123,15 +121,23 @@ const handler = async (req, res) => {
       let lastErrorStatus = null;
       let lastErrorBody = null;
 
-      // Cascading model evaluation
+      // Cascading model evaluation with 7-second timeout per attempt
       for (const modelName of CANDIDATE_MODELS) {
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
         try {
+          const timeoutSignal = (typeof AbortSignal !== "undefined" && AbortSignal.timeout)
+            ? AbortSignal.timeout(7000)
+            : undefined;
+
           let resp = await fetch(endpoint, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody)
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": apiKey
+            },
+            body: JSON.stringify(requestBody),
+            signal: timeoutSignal
           });
 
           // Fallback if system_instruction rejected by older endpoint proxy
@@ -148,11 +154,15 @@ const handler = async (req, res) => {
 
             resp = await fetch(endpoint, {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": apiKey
+              },
               body: JSON.stringify({
                 contents: fallbackContents,
                 generationConfig: { temperature: 0.65, maxOutputTokens: 600 }
-              })
+              }),
+              signal: timeoutSignal
             });
           }
 
@@ -167,10 +177,42 @@ const handler = async (req, res) => {
           } else {
             lastErrorStatus = resp.status;
             lastErrorBody = await resp.text().catch(() => "");
-            console.warn(`Model ${modelName} returned status ${resp.status}`);
+            console.warn(`Model ${modelName} (:generateContent) returned status ${resp.status}`);
+
+            // If 404 or 400, also try the Google Interactions API endpoint for Gemini 3
+            if (resp.status === 404 || resp.status === 400) {
+              try {
+                const interactionsResp = await fetch("https://generativelanguage.googleapis.com/v1beta/interactions", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": apiKey
+                  },
+                  body: JSON.stringify({
+                    model: modelName,
+                    system_instruction: { parts: [{ text: GURUKUL_AI_SYSTEM_PROMPT }] },
+                    input: query
+                  }),
+                  signal: timeoutSignal
+                });
+
+                if (interactionsResp.ok) {
+                  const intData = await interactionsResp.json();
+                  const intText = intData.steps?.[0]?.content?.[0]?.text || intData.output?.text;
+                  if (intText && intText.trim()) {
+                    successData = intText.trim();
+                    successfulModel = `${modelName}-interactions`;
+                    break;
+                  }
+                }
+              } catch (intErr) {
+                // Ignore interactions fallback error
+              }
+            }
           }
         } catch (callErr) {
           lastErrorBody = callErr.message;
+          console.warn(`Model ${modelName} fetch notice:`, callErr.message);
         }
       }
 

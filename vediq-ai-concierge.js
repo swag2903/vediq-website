@@ -114,7 +114,7 @@
   async function queryLiveGeminiAi(prompt) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 12000); // 12-second timeout for reliable AI generation
+      const timeoutId = setTimeout(() => controller.abort(), 20000); // 20-second timeout for reliable AI generation
       
       const resp = await fetch(VEDIQ_BACKEND_URL + '/api/gemini-chat', {
         method: 'POST',

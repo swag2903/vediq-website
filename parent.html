@@ -3897,20 +3897,23 @@
     let pendingOnboardingProfile = null;
 
     function openFirstTimeOnboardingModal(profile) {
-      if (!window.userClickedGoogleAuth && !window.userClickedSignUp) {
-        console.log("Blocking unauthorized auto-popup of onboarding modal on page load.");
-        return;
+      pendingOnboardingProfile = profile || pendingOnboardingProfile;
+      if (pendingOnboardingProfile) {
+        try {
+          sessionStorage.setItem('vediq_pending_onboarding', JSON.stringify(pendingOnboardingProfile));
+        } catch (e) {}
       }
-      pendingOnboardingProfile = profile;
       const modal = document.getElementById('firstTimeOnboardingModal');
       const pInput = document.getElementById('obParentName');
       const phoneInput = document.getElementById('obPhone');
 
-      if (pInput && profile.parentName && profile.parentName !== "Parent" && profile.parentName !== "Gurukul Parent") {
-        pInput.value = profile.parentName;
-      }
-      if (phoneInput && profile.phone) {
-        phoneInput.value = profile.phone.replace(/\D/g, '').slice(-10);
+      if (profile) {
+        if (pInput && profile.parentName && profile.parentName !== "Parent" && profile.parentName !== "Gurukul Parent") {
+          pInput.value = profile.parentName;
+        }
+        if (phoneInput && profile.phone) {
+          phoneInput.value = profile.phone.replace(/\D/g, '').slice(-10);
+        }
       }
       if (modal) {
         modal.classList.remove('hidden');
@@ -3928,59 +3931,120 @@
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       }
-      pendingOnboardingProfile = null;
     }
 
     function saveFirstTimeChildSetup(e) {
-      e.preventDefault();
-      if (!pendingOnboardingProfile) return;
+      if (e && e.preventDefault) e.preventDefault();
 
-      const pName = document.getElementById('obParentName').value.trim();
-      const c1Name = document.getElementById('obChild1Name').value.trim();
-      const c1Grade = document.getElementById('obChild1Grade').value;
-      const c1Batch = document.getElementById('obChild1Batch').value;
-      const rawPhone = document.getElementById('obPhone').value.trim();
-      const phone = rawPhone.replace(/\D/g, '').slice(-10);
+      try {
+        const pName = (document.getElementById('obParentName') ? document.getElementById('obParentName').value : "").trim();
+        const c1Name = (document.getElementById('obChild1Name') ? document.getElementById('obChild1Name').value : "").trim();
+        const c1Grade = document.getElementById('obChild1Grade') ? document.getElementById('obChild1Grade').value : "Ages 8-11 Pravesh";
+        const c1Batch = document.getElementById('obChild1Batch') ? document.getElementById('obChild1Batch').value : "Daily 5:00 PM - 6:00 PM IST";
+        const rawPhone = (document.getElementById('obPhone') ? document.getElementById('obPhone').value : "").trim();
+        const phone = rawPhone.replace(/\D/g, '').slice(-10);
+        const obPass = document.getElementById('obPassword') ? document.getElementById('obPassword').value : "";
 
-      if (!c1Name) {
-        alert("Please enter child's name.");
-        return;
+        if (!c1Name) {
+          alert("Please enter your child's full name to complete Gurukul setup.");
+          const cInput = document.getElementById('obChild1Name');
+          if (cInput) cInput.focus();
+          return;
+        }
+
+        // Retrieve or reconstruct profile
+        let profile = pendingOnboardingProfile;
+        if (!profile) {
+          try {
+            const cached = sessionStorage.getItem('vediq_pending_onboarding');
+            if (cached) profile = JSON.parse(cached);
+          } catch (e) {}
+        }
+
+        // Active Firebase user fallback
+        let fbUser = null;
+        if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+          fbUser = firebase.auth().currentUser;
+        }
+
+        // Session or remembered identifier fallback
+        const rememberedId = localStorage.getItem('vediq_remembered_identifier') || '';
+        const isEmail = rememberedId.includes('@');
+
+        if (!profile) {
+          profile = {
+            parentId: "PAR-" + Math.floor(1000 + Math.random() * 9000),
+            parentName: pName || (fbUser ? fbUser.displayName : "") || "Gurukul Parent",
+            phone: phone || (isEmail ? "" : rememberedId),
+            email: (fbUser ? fbUser.email : "") || (isEmail ? rememberedId : "") || (phone ? ("parent_" + phone + "@vediqacademy.com") : "parent@vediqacademy.com"),
+            photoUrl: fbUser ? fbUser.photoURL : "",
+            firebaseUid: fbUser ? fbUser.uid : "",
+            activeChildIndex: 0,
+            children: []
+          };
+        }
+
+        // Update profile fields
+        profile.parentName = pName || profile.parentName || (fbUser ? fbUser.displayName : "") || "Gurukul Parent";
+        if (phone) profile.phone = phone;
+        if (obPass && obPass.length >= 6) {
+          profile.password = obPass;
+          if (typeof firebase !== 'undefined' && firebase.auth) {
+            try {
+              if (fbUser) {
+                fbUser.updatePassword(obPass).catch(function(err) { console.log("Firebase pass update notice:", err); });
+              } else if (profile.email && !profile.email.endsWith('@vediqacademy.com')) {
+                firebase.auth().createUserWithEmailAndPassword(profile.email, obPass).catch(function(err) { console.log("Firebase pass create notice:", err); });
+              }
+            } catch (e) {}
+          }
+        }
+
+        // Construct primary child record
+        const firstChild = {
+          childId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
+          childName: c1Name,
+          childGrade: c1Grade,
+          batch: c1Batch,
+          focusScore: "0",
+          streak: "0",
+          habits: [false, false, false, false],
+          tratakGaze: "0s (Day 1 Baseline)",
+          mathVelocity: "0 sums/min",
+          cognitiveGrade: "Baseline in Progress",
+          mentorNotes: "Welcome to VedIQ Gurukul! Daily cognitive practice and mentor evaluation will update here as your child completes each live class."
+        };
+
+        profile.children = [firstChild];
+        profile.activeChildIndex = 0;
+        normalizeParentProfile(profile);
+
+        // Save persistently to LocalStorage and Cloud DB
+        saveStudentToDatabase(profile);
+        localStorage.setItem('vediq_current_session', JSON.stringify(profile));
+        localStorage.setItem('vediq_remembered_identifier', profile.email || profile.phone || '');
+        localStorage.setItem('vediq_remember_me', 'true');
+        sessionStorage.removeItem('vediq_pending_onboarding');
+        pendingOnboardingProfile = null;
+
+        // Close modal
+        closeFirstTimeOnboardingModal();
+
+        // Load Dashboard
+        try {
+          loadDashboardForStudent(profile);
+        } catch (dashErr) {
+          console.warn("Dashboard direct render warning:", dashErr);
+          document.getElementById('view-auth').classList.add('hidden');
+          document.getElementById('view-dashboard').classList.remove('hidden');
+          document.getElementById('navUserPill').classList.remove('hidden');
+          switchDashTab('today');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } catch (err) {
+        console.error("Critical onboarding error:", err);
+        alert("An error occurred while saving your child's profile: " + err.message);
       }
-
-      pendingOnboardingProfile.parentName = pName || pendingOnboardingProfile.parentName || "Parent";
-      if (phone) pendingOnboardingProfile.phone = phone;
-
-      const obPass = document.getElementById('obPassword') ? document.getElementById('obPassword').value : "";
-      if (obPass && obPass.length >= 6) {
-        pendingOnboardingProfile.password = obPass;
-      }
-
-      const firstChild = {
-        childId: "VED-2026-" + Math.floor(100 + Math.random() * 900),
-        childName: c1Name,
-        childGrade: c1Grade,
-        batch: c1Batch,
-        focusScore: "0",
-        streak: "0",
-        habits: [false, false, false, false],
-        tratakGaze: "0s (Day 1 Baseline)",
-        mathVelocity: "0 sums/min",
-        cognitiveGrade: "Baseline in Progress",
-        mentorNotes: "Welcome to VedIQ Gurukul! Daily practice and mentor evaluation will update here as your child completes each live class."
-      };
-
-      pendingOnboardingProfile.children = [firstChild];
-      pendingOnboardingProfile.activeChildIndex = 0;
-
-      saveStudentToDatabase(pendingOnboardingProfile);
-      localStorage.setItem('vediq_remembered_identifier', pendingOnboardingProfile.email || pendingOnboardingProfile.phone || '');
-      localStorage.setItem('vediq_remember_me', 'true');
-      const modal = document.getElementById('firstTimeOnboardingModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-      }
-      loadDashboardForStudent(pendingOnboardingProfile);
     }
 
     // Tab Navigation
