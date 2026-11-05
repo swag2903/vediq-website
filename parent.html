@@ -1438,7 +1438,7 @@
             </span>
           </div>
           <p class="text-xs text-brand-ink">
-            Verification code sent to: <strong id="otpRecipientLabel" class="text-brand-ochre font-bold">parent@gmail.com</strong>
+            Verification code sent to: <strong id="otpRecipientLabel" class="text-brand-ochre font-bold">your registered email / mobile</strong>
           </p>
           <p class="text-[10px] text-amber-900/80 font-medium">
             "Your official VedIQ login OTP is valid for 2 minutes."
@@ -1900,15 +1900,15 @@
     const INITIAL_STUDENTS = [
       {
         parentId: "PAR-100",
-        parentName: "Swagatam Shukla",
+        parentName: "VedIQ Gurukul Parent",
         phone: "9594806822",
-        email: "swagatam2903@gmail.com",
+        email: "myvediqacademy@gmail.com",
         password: "password123",
         activeChildIndex: 0,
         children: [
           {
             childId: "VED-2026-001",
-            childName: "Kabir Shukla",
+            childName: "Kabir",
             childGrade: "Ages 8-11 • Pravesh",
             batch: "Daily 5:00 PM – 6:00 PM IST",
             focusScore: "0",
@@ -2032,7 +2032,10 @@
       if (db.length === 0) {
         db = INITIAL_STUDENTS.map(p => normalizeParentProfile(p));
       } else {
-        // Guarantee all predefined founders & default accounts (Swagatam Shukla, etc.) exist
+        // Strip out any legacy personal emails completely
+        db = db.filter(s => !(s.email && s.email.toLowerCase().includes('swagatam2903')));
+        
+        // Guarantee all predefined default accounts exist
         INITIAL_STUDENTS.forEach(initUser => {
           const found = db.find(s => 
             (s.email && initUser.email && s.email.toLowerCase() === initUser.email.toLowerCase()) ||
@@ -2711,6 +2714,11 @@
     async function triggerOtpSignIn() {
       const idInput = document.getElementById('loginIdentifier');
       let identifier = idInput ? idInput.value.trim() : "";
+      if (identifier.toLowerCase().includes('swagatam2903')) {
+        identifier = "";
+        if (idInput) idInput.value = "";
+        localStorage.removeItem('vediq_remembered_identifier');
+      }
       // ALWAYS open Step 1 so the user can enter/verify their own email or phone first!
       openOtpPhoneInputModal(identifier);
     }
@@ -3911,8 +3919,12 @@
         } catch (e) {}
       }
 
-      // Restore remembered email/phone permanently so user never has to re-type
-      const rememberedId = localStorage.getItem('vediq_remembered_identifier');
+      // Restore remembered email/phone permanently (auto-clean legacy personal emails)
+      let rememberedId = localStorage.getItem('vediq_remembered_identifier');
+      if (rememberedId && rememberedId.toLowerCase().includes('swagatam2903')) {
+        localStorage.removeItem('vediq_remembered_identifier');
+        rememberedId = null;
+      }
       const input = document.getElementById('loginIdentifier');
       if (input && rememberedId) {
         input.value = rememberedId;
