@@ -170,6 +170,56 @@
   async function generateAiResponse(query) {
     const clean = query.trim().toLowerCase();
 
+        // 0. Dedicated Payment & Receipt Status Intent (Secure Tenant Isolation)
+    const paymentKeywords = [
+      'payment verified', 'is my payment verified', 'payment status',
+      'where is my receipt', 'resend receipt', 'fee receipt', 'my receipt',
+      'receipt download', 'payment receipt', 'utr verified', 'fee status'
+    ];
+    if (paymentKeywords.some(kw => clean.includes(kw))) {
+      let activeChildId = null;
+      let activeChildName = "your child";
+      let parentPhone = null;
+
+      try {
+        const sessionStr = localStorage.getItem('vediq_current_session');
+        if (sessionStr) {
+          const session = JSON.parse(sessionStr);
+          parentPhone = session.phone;
+          if (session.children && session.children.length > 0) {
+            const child = session.children[session.activeChildIndex || 0];
+            if (child) {
+              activeChildId = child.childId;
+              activeChildName = child.childName;
+            }
+          }
+        }
+      } catch (e) {}
+
+      if (activeChildId) {
+        try {
+          const resp = await fetch(`${VEDIQ_BACKEND_URL}/api/payments?action=student_history&studentId=${encodeURIComponent(activeChildId)}`);
+          if (resp.ok) {
+            const data = await resp.json();
+            const records = data.records || [];
+            if (records.length > 0) {
+              const latest = records[0];
+              if (latest.status === 'verified') {
+                return `ðŸ’³ <strong>Fee Payment Verified:</strong><br><br>Namaste! Your tuition payment of <strong>â‚¹${latest.amount}</strong> for <strong>${activeChildName}</strong> (Student ID: <strong>${activeChildId}</strong>) is <span class="text-emerald-700 font-bold">âœ“ VERIFIED &amp; CONFIRMED</span>.<br><br>â€¢ <strong>Receipt Number:</strong> #${latest.receiptNumber}<br>â€¢ <strong>Transaction Ref (UTR):</strong> <code>${latest.utrNumber}</code><br><br><a href="${VEDIQ_BACKEND_URL}/api/receipt?receipt=${latest.receiptNumber}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-ochre text-white font-bold text-xs shadow-xs hover:bg-brand-ochreHover transition">ðŸ“„ Download Official GST Receipt &rarr;</a>`;
+              } else if (latest.status === 'pending_verification') {
+                return `â³ <strong>Payment Under Verification:</strong><br><br>We have recorded your UPI submission (UTR: <code>${latest.utrNumber}</code>) for <strong>â‚¹${latest.amount}</strong> for <strong>${activeChildName}</strong>.<br><br>Our Master Mentors verify bank credits within <strong>2 to 4 business hours</strong>. Your official GST receipt will appear in your Parent Portal upon approval.`;
+              } else {
+                return `âš ï¸ <strong>Payment Notice:</strong> Your previous submission has status: <strong>${latest.status.toUpperCase()}</strong>.<br>Reason: ${latest.rejectionReason || "Could not verify in bank credits"}. Please re-submit your valid 12-digit UTR on <a href="parent.html" class="text-brand-ochre font-bold underline">parent.html</a>.`;
+              }
+            } else {
+              return `ðŸ’³ <strong>Tuition Fee Status for ${activeChildName}:</strong><br><br>No payment submissions found for this billing cycle yet.<br><br>â€¢ Standard Tier: <strong>â‚¹1,499 / Month</strong><br>â€¢ Monthly Due Date: 1st of every month<br><br>To pay via UPI QR and generate your official tax receipt, open the <a href="parent.html" class="text-brand-ochre font-bold underline">Parent Portal Tuition Center</a>.`;
+            }
+          }
+        } catch (err) {}
+      } else {
+        return `ðŸ” <strong>Secure Payment &amp; Receipt Lookup:</strong><br><br>To protect student financial privacy, fee records are strictly isolated to authenticated parents.<br><br>1. Please sign in at <a href="parent.html" class="text-brand-ochre font-bold underline">vediqacademy.com/parent.html</a> using Google 1-Click, Email OTP, or password.<br>2. Visit the <strong>"Tuition &amp; Invoices"</strong> tab to view your real-time payment verification status and download official GST receipts.<br><br>Need immediate help? Message our Finance Desk directly on <a href="https://wa.me/918390332500?text=Namaste%20VedIQ!%20I%20have%20a%20fee%20receipt%20inquiry." target="_blank" class="text-emerald-700 font-bold underline">WhatsApp (+91 8390332500)</a>.`;
+      }
+    }
     // 1. Query Live Gemini First with multi-turn history
     const geminiResult = await queryLiveGeminiAi(query);
     if (geminiResult && geminiResult.isLiveAi) {
