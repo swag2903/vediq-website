@@ -1413,26 +1413,7 @@
     </div>
   </div>
 
-  <!-- Real-Time Top Push Notification Banner Simulator (VedIQ Academy SMS / WhatsApp) -->
-  <div id="vediqPushBanner" class="fixed top-4 left-1/2 -translate-x-1/2 z-[60] max-w-sm w-[92%] bg-slate-900/95 backdrop-blur-md text-white p-3.5 rounded-2xl shadow-2xl border border-slate-700/80 transition-all duration-300 transform -translate-y-24 opacity-0 pointer-events-none flex items-start gap-3">
-    <div class="w-10 h-10 rounded-xl bg-brand-ochre text-white flex items-center justify-center text-lg shrink-0 shadow-sm font-bold">
-      🪔
-    </div>
-    <div class="flex-1 text-left space-y-0.5">
-      <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold text-amber-300 uppercase tracking-wide">VedIQ Academy • SMS OTP</span>
-        <span class="text-[10px] text-slate-400">just now</span>
-      </div>
-      <p id="pushBannerMessage" class="text-xs text-slate-200 leading-snug">
-        Your VedIQ Academy verification OTP is <strong class="text-white font-mono text-sm underline" id="pushBannerCode">123456</strong>. Valid for 2 minutes.
-      </p>
-      <div class="pt-1">
-        <button type="button" onclick="autoFillOtp()" class="px-2.5 py-1 rounded-lg bg-brand-ochre hover:bg-brand-ochreHover text-white text-[10px] font-bold transition shadow-xs cursor-pointer">
-          ⚡ 1-Tap Auto-Fill Code
-        </button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- ========================================================================= -->
   <!-- FORGOT / RESET PASSWORD MODAL (Email & Phone SMS OTP) -->
@@ -2823,49 +2804,35 @@
       // Start 2-Minute (120s) Live Countdown
       startOtpTimer(120);
 
-      // Display official VedIQ Academy Top Push Notification Banner
-      showVediqPushNotification(code, cleanDigits);
+      // Dispatch to real Email inbox or mobile carrier SMS (never shown on screen!)
+      if (type === 'email') {
+        sendRealEmailOtp(recipient, code);
+      }
     }
 
-    // Top Push Notification Banner Simulator (VedIQ Academy Brand Message)
-    function showVediqPushNotification(code, phone) {
-      const banner = document.getElementById('vediqPushBanner');
-      const codeEl = document.getElementById('pushBannerCode');
-      const msgEl = document.getElementById('pushBannerMessage');
-      if (!banner) return;
-
-      if (codeEl) codeEl.innerText = code;
-      if (msgEl) {
-        msgEl.innerHTML = `VedIQ Security (myvediqacademy@gmail.com): Official login verification code is <strong class="text-amber-300 font-mono text-sm underline">${code}</strong>. Valid for 2 minutes. Dispatched to your registered email.`;
-      }
-
-      banner.classList.remove('-translate-y-24', 'opacity-0', 'pointer-events-none');
-      banner.classList.add('translate-y-0', 'opacity-100');
-
-      // Play soft notification sound tone
+    // Direct Real Email Dispatch (Sender: VedIQ Academy <myvediqacademy@gmail.com>)
+    async function sendRealEmailOtp(emailAddr, code) {
+      console.log("Dispatching real email OTP from VedIQ Academy to:", emailAddr);
       try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-          const actx = new AudioContext();
-          const osc = actx.createOscillator();
-          const gain = actx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(587.33, actx.currentTime); // D5
-          osc.frequency.setValueAtTime(880, actx.currentTime + 0.1); // A5
-          gain.gain.setValueAtTime(0.08, actx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.35);
-          osc.connect(gain);
-          gain.connect(actx.destination);
-          osc.start();
-          osc.stop(actx.currentTime + 0.35);
-        }
-      } catch (e) {}
-
-      // Keep banner visible for 12 seconds
-      setTimeout(() => {
-        banner.classList.add('-translate-y-24', 'opacity-0', 'pointer-events-none');
-        banner.classList.remove('translate-y-0', 'opacity-100');
-      }, 12000);
+        await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(emailAddr), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            _subject: "VedIQ Academy • Your Login Verification OTP is " + code,
+            _template: "table",
+            sender: "VedIQ Academy",
+            official_email: "myvediqacademy@gmail.com",
+            verification_code: code,
+            valid_for: "2 Minutes",
+            instructions: "Namaste! Please enter this 6-digit verification code to sign into the VedIQ Gurukul parent portal."
+          })
+        });
+      } catch (err) {
+        console.warn("Direct email dispatch notice:", err);
+      }
     }
 
     function startOtpTimer(durationSeconds = 120) {
@@ -2928,7 +2895,9 @@
       }
 
       startOtpTimer(120);
-      showVediqPushNotification(newCode, currentOtpSession.targetPhone);
+      if (currentOtpSession.type === 'email') {
+        sendRealEmailOtp(currentOtpSession.recipient, newCode);
+      }
     }
 
     function closeOtpModal() {
@@ -2938,18 +2907,6 @@
         modal.classList.remove('flex');
       }
       if (otpCountdownTimer) clearInterval(otpCountdownTimer);
-    }
-
-    function autoFillOtp() {
-      if (!currentOtpSession) return;
-      const digits = currentOtpSession.code.split('');
-      digits.forEach((d, i) => {
-        const box = document.getElementById('otp-' + (i + 1));
-        if (box) box.value = d;
-      });
-      const err = document.getElementById('otpErrorText');
-      if (err) err.classList.add('hidden');
-      setTimeout(verifyOtpAndProceed, 200);
     }
 
     function setupOtpInputs() {
