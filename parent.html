@@ -2066,7 +2066,9 @@
                 const cur = JSON.parse(savedSession);
                 loadDashboardForStudent(cur);
               } catch (e) {}
-            } else if (window.userClickedGoogleAuth) {
+            } else if (window.userClickedGoogleAuth || sessionStorage.getItem('vediq_google_auth_active')) {
+              sessionStorage.removeItem('vediq_google_auth_active');
+              window.userClickedGoogleAuth = true;
               handleSuccessfulGoogleLogin(user);
             }
           }
@@ -2411,28 +2413,18 @@
           provider.setCustomParameters({ prompt: 'select_account' });
 
           try {
-            // 1. Try Native Google OAuth Popup
+            // Smooth Seamless Redirect (No popup mini-window, no exposed URL bar parameters)
+            if (btnText) btnText.innerText = "Redirecting to Google...";
+            sessionStorage.setItem('vediq_google_auth_active', 'true');
+            window.userClickedGoogleAuth = true;
+            await firebase.auth().signInWithRedirect(provider);
+            return;
+          } catch (redirectError) {
+            console.warn("Redirect error, trying popup fallback:", redirectError);
             const result = await firebase.auth().signInWithPopup(provider);
             if (result && result.user) {
               handleSuccessfulGoogleLogin(result.user);
               return;
-            }
-          } catch (popupError) {
-            console.warn("Popup blocked or failed, switching to Google Redirect:", popupError);
-            
-            // If user intentionally closed popup, revert text
-            if (popupError.code === 'auth/popup-closed-by-user') {
-              if (btnText) btnText.innerText = "Continue with Google";
-              return;
-            }
-
-            // 2. If popup was blocked by browser, redirect current tab directly to Google login!
-            try {
-              if (btnText) btnText.innerText = "Redirecting to Google...";
-              await firebase.auth().signInWithRedirect(provider);
-              return;
-            } catch (redirectError) {
-              console.error("Firebase Google Redirect Error:", redirectError);
             }
           }
         }
@@ -3808,7 +3800,10 @@
       // Check if user is returning from Google OAuth Redirect
       if (typeof firebase !== 'undefined' && firebase.auth) {
         firebase.auth().getRedirectResult().then(result => {
-          if (result && result.user && window.userClickedGoogleAuth) {
+          const wasActive = sessionStorage.getItem('vediq_google_auth_active');
+          if (result && result.user && (wasActive || window.userClickedGoogleAuth)) {
+            sessionStorage.removeItem('vediq_google_auth_active');
+            window.userClickedGoogleAuth = true;
             handleSuccessfulGoogleLogin(result.user);
           }
         }).catch(err => {
