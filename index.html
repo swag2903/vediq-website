@@ -153,27 +153,35 @@
     }
 
     :root {
-      --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+      --ios-spring: cubic-bezier(0.32, 0.72, 0, 1);
+      --ios-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ios-rubber: cubic-bezier(0.2, 0.9, 0.3, 1);
+      --spring-easing: cubic-bezier(0.32, 0.72, 0, 1);
       --soothing-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
-    /* Interactive Elevate Cards */
-    .soothing-card {
-      transition: transform 0.35s var(--spring-easing), box-shadow 0.35s var(--spring-easing), border-color 0.35s ease;
-      will-change: transform, box-shadow;
+    /* Apple iOS Tactile Spring Interaction on All Clickables */
+    button, a.btn, .btn, .tactile-btn, .s-btn, .stage-tab, .pay-tab, .ios-btn {
+      transition: transform 0.22s var(--ios-spring), box-shadow 0.22s var(--ios-spring), background-color 0.18s ease, filter 0.18s ease !important;
+      will-change: transform;
+      -webkit-tap-highlight-color: transparent;
     }
-    .soothing-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 32px -8px rgba(12, 17, 29, 0.08), 0 4px 12px rgba(200, 109, 36, 0.06);
+    button:active, a.btn:active, .btn:active, .tactile-btn:active, .s-btn:active, .stage-tab:active, .pay-tab:active, .ios-btn:active {
+      transform: scale(0.955) translateZ(0) !important;
+      filter: brightness(0.94);
     }
 
-    /* Tactile Spring Buttons */
-    button, a.btn, .tactile-btn {
-      transition: transform 0.2s var(--spring-easing), box-shadow 0.2s var(--spring-easing), background-color 0.2s ease, opacity 0.2s ease;
-      will-change: transform;
+    /* iOS Fluid Surface & Cards */
+    .soothing-card, .ios-card {
+      transition: transform 0.4s var(--ios-spring), box-shadow 0.4s var(--ios-spring), border-color 0.3s ease;
+      will-change: transform, box-shadow;
     }
-    button:active, a.btn:active, .tactile-btn:active {
-      transform: scale(0.97);
+    .soothing-card:hover, .ios-card:hover {
+      transform: translateY(-6px) scale(1.008) translateZ(0);
+      box-shadow: 0 20px 40px -12px rgba(12, 17, 29, 0.10), 0 8px 16px -4px rgba(200, 109, 36, 0.08);
+    }
+    .soothing-card:active, .ios-card:active {
+      transform: scale(0.985) translateZ(0);
     }
 
     /* Gentle Floating Animation (Sacred & Modern) */
@@ -213,30 +221,45 @@
       pointer-events: none;
     }
 
-    /* Hardware Accelerated Glassmorphism */
+    /* Hardware Accelerated Glassmorphism (Apple Liquid Retina) */
     .fluid-glass {
       background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(232, 226, 216, 0.75);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(232, 226, 216, 0.85);
     }
     .dark-fluid-glass {
       background: rgba(12, 17, 29, 0.88);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    /* Soft Scroll Reveal (GPU Accelerated Compositor) */
+    /* Apple iOS Sheet Presentation */
+    @keyframes iosSheetIn {
+      0% {
+        opacity: 0;
+        transform: translateY(32px) scale(0.97) translateZ(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) translateZ(0);
+      }
+    }
+    .animate-ios-sheet {
+      animation: iosSheetIn 0.35s var(--ios-spring) forwards;
+    }
+
+    /* Soft Scroll Reveal (GPU Accelerated Compositor with Apple Spring) */
     .reveal-on-scroll {
       opacity: 0;
-      transform: translateY(22px) translateZ(0);
-      transition: opacity 0.65s var(--spring-easing), transform 0.65s var(--spring-easing);
+      transform: translateY(24px) scale(0.985) translateZ(0);
+      transition: opacity 0.65s var(--ios-spring), transform 0.65s var(--ios-spring);
       will-change: opacity, transform;
     }
     .reveal-on-scroll.is-revealed {
       opacity: 1;
-      transform: translateY(0) translateZ(0);
+      transform: translateY(0) scale(1) translateZ(0);
     }
 
     .delay-100 { transition-delay: 0.1s; }
@@ -548,10 +571,10 @@
         <a href="#system" class="hover:text-brand-ochre transition">1-Hour Daily</a>
         <a href="#curriculum" class="hover:text-brand-ochre transition">10-Year Roadmap</a>
         <a href="#scripts" class="hover:text-brand-ochre transition">Teaching Scripts</a>
+        <a href="#plans" class="hover:text-brand-ochre transition font-bold text-brand-ochre">Tuition</a>
         <a href="parent.html" class="text-brand-ochre hover:text-brand-ochreHover transition flex items-center gap-1 font-bold">Parent App <span class="text-[9px] px-1.5 py-0.5 rounded bg-brand-ochre/10 border border-brand-ochre/30">Portal</span></a>
-        <a href="#contact" class="hover:text-brand-ochre transition flex items-center gap-1 text-brand-ink font-bold"><span>🤖 Contact &amp; AI Help</span></a>
         <a href="#franchise" class="hover:text-brand-ochre transition">Franchise</a>
-        <a href="#plans" class="hover:text-brand-ochre transition">Tuition</a>
+        <a href="#contact" class="hover:text-brand-ochre transition flex items-center gap-1 text-brand-ink font-bold"><span>🤖 Contact &amp; AI Help</span></a>
       </nav>
 
       <!-- Mobile Button -->
@@ -593,9 +616,9 @@
       <a href="#system" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">1-Hour Daily System</a>
       <a href="#curriculum" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">10-Year Roadmap</a>
       <a href="#scripts" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">Word-to-Word Scripts</a>
-      <a href="parent.html" onclick="toggleMobileNav()" class="block py-2 text-base text-brand-ochre font-bold flex items-center gap-1">📱 Open Parent App Portal</a>
+      <a href="#plans" onclick="toggleMobileNav()" class="block py-2 text-base font-bold text-brand-ochre">Tuition Plans & Fees</a>
+      <a href="parent.html" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre flex items-center gap-1">📱 Open Parent App Portal</a>
       <a href="#franchise" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">Franchise & Teachers</a>
-      <a href="#plans" onclick="toggleMobileNav()" class="block py-2 text-base font-semibold hover:text-brand-ochre">Tuition Plans</a>
       <div class="pt-4 border-t border-brand-border flex flex-col gap-2.5">
         <button onclick="toggleMobileNav(); openDemoModal();" class="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-brand-ink">
           Book Free 3-Day Demo
@@ -883,8 +906,141 @@
     </div>
   </section>
 
+  <!-- TUITION PLANS (Minimalist Harmonious Cards with Integrated Payment Gateways) -->
+  <section id="plans" class="py-24 bg-brand-cream border-b border-brand-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-16">
+        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Investment in Character</span>
+        <h2 class="mt-2 text-3xl font-light text-brand-ink tracking-tight">
+          Simple, Transparent Tuition
+        </h2>
+        <p class="text-xs text-brand-muted mt-2">
+          Less than ₹50 a day to establish unbroken focus and emotional resilience. All Indian & Global payment methods supported.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
+        
+        <!-- Basic -->
+        <div class="ios-card p-8 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between hover:shadow-subtle transition">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Foundation Tier</span>
+            <h3 class="text-lg font-bold text-brand-ink mt-2">Basic Plan</h3>
+            <div class="mt-4 flex items-baseline gap-1">
+              <span class="text-3xl font-display font-bold text-brand-ink">₹999</span>
+              <span class="text-xs text-brand-muted">/ month</span>
+            </div>
+            <p class="text-[11px] text-brand-faint mt-0.5">Approx. ₹33 per day</p>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-brand-muted">
+              <li class="flex items-center gap-2 text-brand-ink">✓ Daily 1-Hour Live Gurukul Session</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Guided Surya Namaskar & Breath</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Tratak Concentration Drills</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Student Daily App Access</li>
+              <li class="flex items-center gap-2 text-brand-faint">✕ Physical Premium Workbook Kit</li>
+            </ul>
+          </div>
+          <div class="mt-8 space-y-2">
+            <button onclick="openPaymentModal('Basic Plan', '₹999')" class="ios-btn w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink hover:bg-brand-ochre transition flex items-center justify-center gap-2 shadow-sm">
+              <span>Enroll & Pay ₹999</span>
+              <svg class="w-3.5 h-3.5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="openDemoModal('Basic Plan')" class="ios-btn w-full py-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition">
+              or Book 3-Day Free Demo
+            </button>
+          </div>
+        </div>
+
+        <!-- Standard (Highlighted) -->
+        <div class="ios-card p-8 rounded-2xl bg-brand-ink text-white border-2 border-brand-ochre flex flex-col justify-between shadow-darkCard relative">
+          <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-brand-ochre text-white text-[9px] font-bold uppercase tracking-widest">
+            Recommended • 82% Enrolled
+          </span>
+
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-gold">Complete System</span>
+            <h3 class="text-lg font-bold text-white mt-2">Standard Plan</h3>
+            <div class="mt-4 flex items-baseline gap-1">
+              <span class="text-3xl font-display font-bold text-white">₹1,499</span>
+              <span class="text-xs text-brand-faint">/ month</span>
+            </div>
+            <p class="text-[11px] text-brand-gold mt-0.5">Approx. ₹50 per day</p>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-brand-faint">
+              <li class="flex items-center gap-2 text-white">✓ Everything in Basic Tier</li>
+              <li class="flex items-center gap-2 text-white">✓ Full Vedic Maths Sutras (1–3)</li>
+              <li class="flex items-center gap-2 text-white">✓ Micro-Batch: Max 8 Students</li>
+              <li class="flex items-center gap-2 text-white">✓ Physical Activity Workbook Sent Home</li>
+              <li class="flex items-center gap-2 text-white">✓ Weekly Parent Progress Reports</li>
+            </ul>
+          </div>
+
+          <div class="mt-8 space-y-2">
+            <button onclick="openPaymentModal('Standard Plan', '₹1,499')" class="ios-btn shimmer-btn w-full py-3 rounded-lg text-xs font-bold bg-brand-ochre text-white hover:bg-brand-ochreHover shadow-ochre transition flex items-center justify-center gap-2">
+              <span>Enroll & Pay ₹1,499</span>
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="openDemoModal('Standard Plan')" class="ios-btn w-full py-2 rounded-lg text-[11px] font-semibold text-brand-faint hover:text-white transition">
+              or Claim 3-Day Free Demo
+            </button>
+          </div>
+        </div>
+
+        <!-- Premium -->
+        <div class="ios-card p-8 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between hover:shadow-subtle transition">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Leadership Tier</span>
+            <h3 class="text-lg font-bold text-brand-ink mt-2">Premium Immersion</h3>
+            <div class="mt-4 flex items-baseline gap-1">
+              <span class="text-3xl font-display font-bold text-brand-ink">₹2,499</span>
+              <span class="text-xs text-brand-muted">/ month</span>
+            </div>
+            <p class="text-[11px] text-brand-faint mt-0.5">Approx. ₹83 per day</p>
+
+            <ul class="mt-6 space-y-2.5 text-xs text-brand-muted">
+              <li class="flex items-center gap-2 text-brand-ink">✓ Everything in Standard Tier</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Weekend Leadership Bootcamps</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ 1-on-1 Master Trainer Mentorship</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Shloka Chanting & Public Speech Drills</li>
+              <li class="flex items-center gap-2 text-brand-ink">✓ Annual Certification & Medals</li>
+            </ul>
+          </div>
+          <div class="mt-8 space-y-2">
+            <button onclick="openPaymentModal('Premium Plan', '₹2,499')" class="ios-btn w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink hover:bg-brand-ochre transition flex items-center justify-center gap-2 shadow-sm">
+              <span>Enroll & Pay ₹2,499</span>
+              <svg class="w-3.5 h-3.5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="openDemoModal('Premium Plan')" class="ios-btn w-full py-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition">
+              or Book 3-Day Free Demo
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Payment Gateways & Trust Badges Strip -->
+      <div class="mt-14 max-w-4xl mx-auto p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-wrap items-center justify-between gap-4 text-xs text-brand-muted">
+        <div class="flex items-center gap-3">
+          <span class="font-bold text-brand-ink text-[11px] uppercase tracking-wider">Accepted Payment Gateways:</span>
+          <div class="flex items-center gap-2 flex-wrap text-[11px]">
+            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">⚡ UPI (GPay / PhonePe / Paytm / BHIM)</span>
+            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">💳 Cards (Visa, Mastercard, RuPay)</span>
+            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">🏦 Netbanking (All Banks)</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-[10px] text-emerald-700 font-bold">
+          <span>🔒 256-Bit SSL Encrypted</span>
+          <span>•</span>
+          <span>Instant WhatsApp Receipt</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- PARENT APP & TRACKING DASHBOARD PREVIEW -->
-  <section id="app" class="py-24 bg-brand-cream border-b border-brand-border overflow-hidden">
+  <section id="app" class="py-24 bg-brand-surface border-b border-brand-border overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -987,7 +1143,7 @@
   </section>
 
   <!-- FRANCHISE & TEACHER CERTIFICATION (Minimal Financial Modeler) -->
-  <section id="franchise" class="py-24 bg-brand-surface border-b border-brand-border">
+  <section id="franchise" class="py-24 bg-brand-cream border-b border-brand-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="max-w-3xl mb-16">
@@ -1084,139 +1240,6 @@
           </button>
         </div>
 
-      </div>
-
-    </div>
-  </section>
-
-  <!-- TUITION PLANS (Minimalist Harmonious Cards with Integrated Payment Gateways) -->
-  <section id="plans" class="py-24 bg-brand-cream border-b border-brand-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="text-[11px] font-bold uppercase tracking-widest text-brand-ochre">Investment in Character</span>
-        <h2 class="mt-2 text-3xl font-light text-brand-ink tracking-tight">
-          Simple, Transparent Tuition
-        </h2>
-        <p class="text-xs text-brand-muted mt-2">
-          Less than ₹50 a day to establish unbroken focus and emotional resilience. All Indian & Global payment methods supported.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
-        
-        <!-- Basic -->
-        <div class="p-8 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between hover:shadow-subtle transition">
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Foundation Tier</span>
-            <h3 class="text-lg font-bold text-brand-ink mt-2">Basic Plan</h3>
-            <div class="mt-4 flex items-baseline gap-1">
-              <span class="text-3xl font-display font-bold text-brand-ink">₹999</span>
-              <span class="text-xs text-brand-muted">/ month</span>
-            </div>
-            <p class="text-[11px] text-brand-faint mt-0.5">Approx. ₹33 per day</p>
-
-            <ul class="mt-6 space-y-2.5 text-xs text-brand-muted">
-              <li class="flex items-center gap-2 text-brand-ink">✓ Daily 1-Hour Live Gurukul Session</li>
-              <li class="flex items-center gap-2 text-brand-ink">✓ Guided Surya Namaskar & Breath</li>
-              <li class="flex items-center gap-2 text-brand-ink">✓ Tratak Concentration Drills</li>
-              <li class="flex items-center gap-2 text-brand-ink">✓ Student Daily App Access</li>
-              <li class="flex items-center gap-2 text-brand-faint">✕ Physical Premium Workbook Kit</li>
-            </ul>
-          </div>
-          <div class="mt-8 space-y-2">
-            <button onclick="openPaymentModal('Basic Plan', '₹999')" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink hover:bg-brand-ochre transition flex items-center justify-center gap-2 shadow-sm">
-              <span>Enroll & Pay ₹999</span>
-              <svg class="w-3.5 h-3.5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </button>
-            <button onclick="openDemoModal('Basic Plan')" class="w-full py-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition">
-              or Book 3-Day Free Demo
-            </button>
-          </div>
-        </div>
-
-        <!-- Standard (Highlighted) -->
-        <div class="p-8 rounded-2xl bg-brand-ink text-white border-2 border-brand-ochre flex flex-col justify-between shadow-darkCard relative">
-          <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-brand-ochre text-white text-[9px] font-bold uppercase tracking-widest">
-            Recommended • 82% Enrolled
-          </span>
-
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-gold">Complete System</span>
-            <h3 class="text-lg font-bold text-white mt-2">Standard Plan</h3>
-            <div class="mt-4 flex items-baseline gap-1">
-              <span class="text-3xl font-display font-bold text-white">₹1,499</span>
-              <span class="text-xs text-brand-faint">/ month</span>
-            </div>
-            <p class="text-[11px] text-brand-gold mt-0.5">Approx. ₹50 per day</p>
-
-            <ul class="mt-6 space-y-2.5 text-xs text-brand-faint">
-              <li class="flex items-center gap-2 text-white">✓ Everything in Basic Tier</li>
-              <li class="flex items-center gap-2 text-white">✓ Full Vedic Maths Sutras (1–3)</li>
-              <li class="flex items-center gap-2 text-white">✓ Micro-Batch: Max 8 Students</li>
-              <li class="flex items-center gap-2 text-white">✓ Physical Activity Workbook Sent Home</li>
-              <li class="flex items-center gap-2 text-white">✓ Weekly Parent Progress Reports</li>
-            </ul>
-          </div>
-
-          <div class="mt-8 space-y-2">
-            <button onclick="openPaymentModal('Standard Plan', '₹1,499')" class="w-full py-3 rounded-lg text-xs font-bold bg-brand-ochre text-white hover:bg-brand-ochreHover shadow-ochre transition flex items-center justify-center gap-2">
-              <span>Enroll & Pay ₹1,499</span>
-              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </button>
-            <button onclick="openDemoModal('Standard Plan')" class="w-full py-2 rounded-lg text-[11px] font-semibold text-brand-faint hover:text-white transition">
-              or Claim 3-Day Free Demo
-            </button>
-          </div>
-        </div>
-
-        <!-- Premium -->
-        <div class="p-8 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between hover:shadow-subtle transition">
-          <div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Leadership Tier</span>
-            <h3 class="text-lg font-bold text-brand-ink mt-2">Premium Immersion</h3>
-            <div class="mt-4 flex items-baseline gap-1">
-              <span class="text-3xl font-display font-bold text-brand-ink">₹2,499</span>
-              <span class="text-xs text-brand-muted">/ month</span>
-            </div>
-            <p class="text-[11px] text-brand-faint mt-0.5">Approx. ₹83 per day</p>
-
-            <ul class="mt-6 space-y-2.5 text-xs text-brand-muted">
-              <li class="flex items-center gap-2 text-brand-ink">✓ Everything in Standard Tier</li>
-              <li class="flex items-center gap-2 text-brand-ink">✓ Weekend Leadership Bootcamps</li>
-              <li class="flex items-center gap-2 text-brand-ink">✓ 1-on-1 Master Trainer Mentorship</li>
-              <li class="flex items-center gap-2 text-brand-ink">✓ Shloka Chanting & Public Speech Drills</li>
-              <li class="flex items-center gap-2 text-brand-ink">✓ Annual Certification & Medals</li>
-            </ul>
-          </div>
-          <div class="mt-8 space-y-2">
-            <button onclick="openPaymentModal('Premium Plan', '₹2,499')" class="w-full py-2.5 rounded-lg text-xs font-bold text-white bg-brand-ink hover:bg-brand-ochre transition flex items-center justify-center gap-2 shadow-sm">
-              <span>Enroll & Pay ₹2,499</span>
-              <svg class="w-3.5 h-3.5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </button>
-            <button onclick="openDemoModal('Premium Plan')" class="w-full py-2 rounded-lg text-[11px] font-semibold text-brand-muted hover:text-brand-ink hover:bg-brand-subtle transition">
-              or Book 3-Day Free Demo
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Payment Gateways & Trust Badges Strip -->
-      <div class="mt-14 max-w-4xl mx-auto p-5 rounded-2xl bg-brand-surface border border-brand-border flex flex-wrap items-center justify-between gap-4 text-xs text-brand-muted">
-        <div class="flex items-center gap-3">
-          <span class="font-bold text-brand-ink text-[11px] uppercase tracking-wider">Accepted Payment Gateways:</span>
-          <div class="flex items-center gap-2 flex-wrap text-[11px]">
-            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">⚡ UPI (GPay / PhonePe / Paytm / BHIM)</span>
-            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">💳 Cards (Visa, Mastercard, RuPay)</span>
-            <span class="px-2 py-0.5 rounded bg-brand-subtle font-semibold text-brand-ink border border-brand-border">🏦 Netbanking (All Banks)</span>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 text-[10px] text-emerald-700 font-bold">
-          <span>🔒 256-Bit SSL Encrypted</span>
-          <span>•</span>
-          <span>Instant WhatsApp Receipt</span>
-        </div>
       </div>
 
     </div>

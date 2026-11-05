@@ -97,27 +97,35 @@
     }
 
     :root {
-      --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+      --ios-spring: cubic-bezier(0.32, 0.72, 0, 1);
+      --ios-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ios-rubber: cubic-bezier(0.2, 0.9, 0.3, 1);
+      --spring-easing: cubic-bezier(0.32, 0.72, 0, 1);
       --soothing-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
-    /* Interactive Elevate Cards */
-    .soothing-card {
-      transition: transform 0.35s var(--spring-easing), box-shadow 0.35s var(--spring-easing), border-color 0.35s ease;
-      will-change: transform, box-shadow;
+    /* Apple iOS Tactile Spring Interaction on All Clickables */
+    button, a.btn, .btn, .tactile-btn, .s-btn, .stage-tab, .pay-tab, .ios-btn {
+      transition: transform 0.22s var(--ios-spring), box-shadow 0.22s var(--ios-spring), background-color 0.18s ease, filter 0.18s ease !important;
+      will-change: transform;
+      -webkit-tap-highlight-color: transparent;
     }
-    .soothing-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 32px -8px rgba(12, 17, 29, 0.08), 0 4px 12px rgba(200, 109, 36, 0.06);
+    button:active, a.btn:active, .btn:active, .tactile-btn:active, .s-btn:active, .stage-tab:active, .pay-tab:active, .ios-btn:active {
+      transform: scale(0.955) translateZ(0) !important;
+      filter: brightness(0.94);
     }
 
-    /* Tactile Spring Buttons */
-    button, a.btn, .tactile-btn {
-      transition: transform 0.2s var(--spring-easing), box-shadow 0.2s var(--spring-easing), background-color 0.2s ease, opacity 0.2s ease;
-      will-change: transform;
+    /* iOS Fluid Surface & Cards */
+    .soothing-card, .ios-card {
+      transition: transform 0.4s var(--ios-spring), box-shadow 0.4s var(--ios-spring), border-color 0.3s ease;
+      will-change: transform, box-shadow;
     }
-    button:active, a.btn:active, .tactile-btn:active {
-      transform: scale(0.97);
+    .soothing-card:hover, .ios-card:hover {
+      transform: translateY(-5px) scale(1.006) translateZ(0);
+      box-shadow: 0 20px 40px -12px rgba(12, 17, 29, 0.10), 0 8px 16px -4px rgba(200, 109, 36, 0.08);
+    }
+    .soothing-card:active, .ios-card:active {
+      transform: scale(0.985) translateZ(0);
     }
 
     /* Gentle Floating Animation (Sacred & Modern) */
@@ -157,12 +165,27 @@
       pointer-events: none;
     }
 
-    /* Fluid Luxury Glassmorphism */
+    /* Apple Liquid Retina Glassmorphism */
     .fluid-glass {
       background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(232, 226, 216, 0.75);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(232, 226, 216, 0.85);
+    }
+
+    /* Apple iOS Sheet Presentation */
+    @keyframes iosSheetIn {
+      0% {
+        opacity: 0;
+        transform: translateY(32px) scale(0.97) translateZ(0);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) translateZ(0);
+      }
+    }
+    .animate-ios-sheet {
+      animation: iosSheetIn 0.35s var(--ios-spring) forwards;
     }
 
     /* Completely hide backend dev badges across iPhone, Mobile & Laptop */
