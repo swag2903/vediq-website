@@ -620,6 +620,7 @@
       // Login Successful!
       activeTeacher = matchStaff;
       localStorage.setItem('vediq_teacher_session', JSON.stringify(matchStaff));
+      localStorage.setItem('vediq_teacher_identifier', identifier);
       showTeacherDashboard();
     }
 
@@ -1164,8 +1165,13 @@
         } catch (e) {}
       }
 
-      // Check if logged out, prefill default
-      quickFillStaff('9766772819', 'vyas123');
+      const rememberedTeacher = localStorage.getItem('vediq_teacher_identifier');
+      if (rememberedTeacher) {
+        const idInp = document.getElementById('teacherIdentifier');
+        if (idInp) idInp.value = rememberedTeacher;
+      } else {
+        quickFillStaff('9766772819', 'vyas123');
+      }
     });
   </script>
 
